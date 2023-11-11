@@ -15,7 +15,6 @@ import { toast } from "react-hot-toast";
 import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.helper";
 import { FC } from "react";
 import Input from "../../../ui/input";
-import styles from "./RegustrationForm.module.css";
 import { VscChromeClose } from "react-icons/Vsc";
 import { login } from "../../UserModule/slices/userSlice";
 
@@ -143,14 +142,14 @@ const RegistrationForm: FC = () => {
     <>
       {!isAuth ? (
         <section>
-          <header className={styles.header}>
+          <header className="">
             <h3>Зарегистрироваться</h3>
             {/* <button onClick={() => navigate(-1)}>
               <VscChromeClose />
             </button> */}
           </header>
 
-          <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+          <form className="" onSubmit={handleSubmit(onSubmit)}>
             <Input
               id="email"
               type="email"
@@ -175,17 +174,13 @@ const RegistrationForm: FC = () => {
               errorMessage={errors.passwordConfirmation?.message}
             />
 
-            <div className={styles.divSubmit}>
-              <input
-                type="submit"
-                value="Зарегистрироваться"
-                className={styles.btnSubmit}
-              />
+            <div className="">
+              <input type="submit" value="Зарегистрироваться" className="" />
 
-              <p className={styles.textUnderSubmit}>
+              <p className="">
                 Есть аккаунт?
                 {/* {error ? <div className={}>{error}</div> : null} */}
-                <Link to="/login" className={styles.linkToRegister}>
+                <Link to="/login" className="">
                   Войдите
                 </Link>
               </p>

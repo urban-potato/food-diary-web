@@ -1,44 +1,40 @@
 import { FC } from "react";
 import { Link } from "react-router-dom";
 import { useIsAuth } from "../../modules/AuthorizationModule/index";
-import styles from "./Header.module.css";
 import classNames from "classnames";
 
 const Header: FC = () => {
   const isAuth = useIsAuth();
 
   return (
-    <nav className={styles.container}>
+    <nav className="">
       {!isAuth ? (
         ""
       ) : (
         <>
-          <Link to="/diary" className={styles.item}>
+          <Link to="/diary" className="">
             Дневник
           </Link>
-          <Link to="/food" className={styles.item}>
+          <Link to="/food" className="">
             Блюда
           </Link>
         </>
       )}
 
-      <Link to="/" className={classNames(styles.item, styles.logo)}>
+      <Link to="/" className="">
         Logo
       </Link>
       {!isAuth ? (
         <>
-          <Link to="/login" className={classNames(styles.item, styles.login)}>
+          <Link to="/login" className="">
             Вход
           </Link>
-          <Link
-            to="/register"
-            className={classNames(styles.item, styles.register)}
-          >
+          <Link to="/register" className="">
             Регистрация
           </Link>
         </>
       ) : (
-        <Link to="/profile" className={styles.item}>
+        <Link to="/profile" className="">
           Профиль
         </Link>
       )}

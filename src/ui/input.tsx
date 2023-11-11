@@ -1,5 +1,4 @@
 import { FC } from "react";
-import styles from "./input.module.css";
 
 interface PropsType {
   id: string;
@@ -20,8 +19,8 @@ const Input: FC<PropsType> = ({
   bg = "#FFFFFF",
 }) => {
   return (
-    <div className={styles.form}>
-      <label htmlFor={id} className={styles.label}>
+    <div className="">
+      <label htmlFor={id} className="">
         {placeholder}
       </label>
       <input
@@ -29,9 +28,9 @@ const Input: FC<PropsType> = ({
         type={type}
         {...register}
         style={{ backgroundColor: bg }}
-        className={styles.input}
+        className=""
       />
-      <p className={styles.errorMessage}>{errorMessage}</p>
+      <p className="">{errorMessage}</p>
     </div>
   );
 };

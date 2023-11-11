@@ -12,7 +12,6 @@ import { login } from "../../UserModule/slices/userSlice";
 import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.helper";
 import { FC } from "react";
 import Input from "../../../ui/input";
-import styles from "./AuthorizationForm.module.css";
 import { VscChromeClose } from "react-icons/Vsc";
 
 interface FormType {
@@ -129,14 +128,14 @@ const AuthorizationForm: FC = () => {
     <>
       {!isAuth ? (
         <section>
-          <header className={styles.header}>
+          <header className="">
             <h3>Войти в аккаунт</h3>
             {/* <button onClick={() => navigate(-1)}>
               <VscChromeClose />
             </button> */}
           </header>
 
-          <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+          <form className="" onSubmit={handleSubmit(onSubmit)}>
             <Input
               id="email"
               type="email"
@@ -153,12 +152,12 @@ const AuthorizationForm: FC = () => {
               errorMessage={errors.password?.message}
             />
 
-            <div className={styles.divSubmit}>
-              <input type="submit" value="Войти" className={styles.btnSubmit} />
+            <div className="">
+              <input type="submit" value="Войти" className="" />
 
-              <p className={styles.textUnderSubmit}>
+              <p className="">
                 У вас нет аккаунта?{" "}
-                <Link to="/register" className={styles.linkToRegister}>
+                <Link to="/register" className="">
                   Зарегистрируйтесь
                 </Link>
               </p>
