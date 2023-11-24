@@ -8,6 +8,7 @@ import {
 import { useLazyGetUserInfoQuery, login } from "./modules/UserModule/index";
 import { useEffect } from "react";
 import { getTokenFromLocalStorage } from "./global/helpers/local_storage.helper";
+// import "./App.css";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -38,7 +39,10 @@ function App() {
     checkAuth();
   }, [isAuth]);
 
+  // return <section className="flex flex-wrap h-full"><RouterProvider router={router} /></section>;
   return <RouterProvider router={router} />;
+
+  // return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
 }
 
 export default App;
