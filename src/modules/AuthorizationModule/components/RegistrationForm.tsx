@@ -17,6 +17,7 @@ import { FC } from "react";
 import Input from "../../../ui/input";
 import { VscChromeClose } from "react-icons/Vsc";
 import { login } from "../../UserModule/slices/userSlice";
+import { FaAngleLeft } from "react-icons/fa6";
 
 interface FormType {
   email: string;
@@ -141,15 +142,20 @@ const RegistrationForm: FC = () => {
   return (
     <>
       {!isAuth ? (
-        <section>
-          <header className="">
-            <h3>Зарегистрироваться</h3>
-            {/* <button onClick={() => navigate(-1)}>
-              <VscChromeClose />
-            </button> */}
-          </header>
+        <section className=" 
+        flex-grow max-w-[416px] min-w-[130px]
+        flex flex-col gap-y-3 
+        ">
+          {/* <button className="small_btn btn_colored" onClick={() => navigate(-1)}>
+            <FaAngleLeft className="" />
+          </button> */}
 
-          <form className="" onSubmit={handleSubmit(onSubmit)}>
+          <h2 className="">Зарегистрируйтесь в FoodDiary</h2>
+
+          <form
+            className=""
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <Input
               id="email"
               type="email"
@@ -174,17 +180,17 @@ const RegistrationForm: FC = () => {
               errorMessage={errors.passwordConfirmation?.message}
             />
 
-            <div className="">
-              <input type="submit" value="Зарегистрироваться" className="" />
+            <button type="submit" className="btn btn_dark">
+              Зарегистрироваться
+            </button>
 
-              <p className="">
-                Есть аккаунт?
-                {/* {error ? <div className={}>{error}</div> : null} */}
-                <Link to="/login" className="">
-                  Войдите
-                </Link>
-              </p>
-            </div>
+            <p className="truncate">
+              Есть аккаунт?{" "}
+              {/* {error ? <div className={}>{error}</div> : null} */}
+              <Link to="/login" className="underline hover:text-light_near_black transition duration-1000 hover:duration-200">
+                Войдите
+              </Link>
+            </p>
           </form>
         </section>
       ) : (

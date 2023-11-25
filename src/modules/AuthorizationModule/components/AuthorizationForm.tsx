@@ -13,6 +13,7 @@ import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.he
 import { FC } from "react";
 import Input from "../../../ui/input";
 import { VscChromeClose } from "react-icons/Vsc";
+import { FaAngleLeft } from "react-icons/fa6";
 
 interface FormType {
   email: string;
@@ -127,13 +128,18 @@ const AuthorizationForm: FC = () => {
   return (
     <>
       {!isAuth ? (
-        <section>
-          <header className="">
-            <h3>Войти в аккаунт</h3>
-            {/* <button onClick={() => navigate(-1)}>
-              <VscChromeClose />
-            </button> */}
-          </header>
+        <section
+          className=" 
+        flex-grow max-w-[416px] min-w-[130px]
+        
+        flex flex-col gap-y-3 
+        "
+        >
+          {/* <button className="small_btn btn_colored" onClick={() => navigate(-1)}>
+            <FaAngleLeft className="" />
+          </button> */}
+
+          <h2 className="">Войдите в аккаунт</h2>
 
           <form className="" onSubmit={handleSubmit(onSubmit)}>
             <Input
@@ -153,11 +159,22 @@ const AuthorizationForm: FC = () => {
             />
 
             <div className="">
-              <input type="submit" value="Войти" className="" />
+              {/* <input type="submit" value="Войти" className="" /> */}
 
-              <p className="">
-                У вас нет аккаунта?{" "}
+              <button type="submit" className="btn btn_dark">
+                Войти
+              </button>
+
+              {/* <p className="">
+                Нет аккаунта?{" "}
                 <Link to="/register" className="">
+                  <p className="truncate underline">Зарегистрируйтесь</p>
+                </Link>
+              </p> */}
+
+              <p className="truncate">
+                Нет аккаунта?{" "}
+                <Link to="/register" className="underline hover:text-light_near_black transition duration-1000 hover:duration-200">
                   Зарегистрируйтесь
                 </Link>
               </p>

@@ -18,7 +18,7 @@ const Profile: FC = () => {
 
   return (
     <div>
-      <button className="" onClick={(): void => handleExitAccount()}>
+      <button className="btn btn_dark" onClick={(): void => handleExitAccount()}>
         Выйти
       </button>
     </div>
