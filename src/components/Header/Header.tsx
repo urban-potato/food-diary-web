@@ -58,14 +58,14 @@ const Header: FC = () => {
 
         
         min-w-[120px]
-        max-w-[250px]
+        max-w-[270px]
 
         "
         >
           <Link
             to="/login"
-            className="nav_item max-w-[80px] min-w-[80px] font-bold 
-            hover:text-light_near_black transition duration-1000 hover:duration-200 "
+            className="nav_item max-w-[120px] min-w-[120px] font-bold 
+            hover:text-light_near_black transition duration-1000 hover:duration-200"
           >
             Вход
           </Link>
