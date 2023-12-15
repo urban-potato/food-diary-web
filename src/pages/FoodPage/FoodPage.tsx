@@ -7,7 +7,8 @@ const FoodPage = () => {
   const [selectedValue, setSelectedValue] = useState("foodElementary");
 
   return (
-    <section className=" flex flex-col h-fit w-full">
+    <section className=" flex flex-col h-fit w-full flex-grow 
+    ">
       <FoodPageHeader
         selectedValue={selectedValue}
         setSelectedValue={setSelectedValue}

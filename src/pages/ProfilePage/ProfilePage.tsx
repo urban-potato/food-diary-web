@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { ProfileModule } from "../../modules/UserModule";
+import { ProfileView } from "../../modules/UserModule/index";
 
 const ProfilePage: FC = () => {
-  return <ProfileModule/>;
+  return <ProfileView />;
 };
 
 export default ProfilePage;

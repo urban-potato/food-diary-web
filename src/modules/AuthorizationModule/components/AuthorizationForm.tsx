@@ -16,14 +16,12 @@ import { VscChromeClose } from "react-icons/Vsc";
 import { FaAngleLeft } from "react-icons/fa6";
 import { AuthorizationFormType } from "../types/types";
 
-
-
 const AuthorizationForm: FC = () => {
   const validationSchema = yup.object<AuthorizationFormType>().shape({
     email: yup
       .string()
       .email(validValues.email.error)
-      .required(validValues.requiredMessage)
+      .required(`• Почта: ${validValues.requiredErrorMessage}`)
       .matches(
         /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
         validValues.email.error
@@ -38,7 +36,7 @@ const AuthorizationForm: FC = () => {
         validValues.password.max.value,
         validValues.password.max.message(validValues.password.min.value)
       )
-      .required(validValues.requiredMessage),
+      .required(`• Пароль: ${validValues.requiredErrorMessage}`),
   });
 
   // TODO: ИЗУЧИТЬ useForm и yup
@@ -131,6 +129,10 @@ const AuthorizationForm: FC = () => {
         flex-grow max-w-[416px] min-w-[130px]
         
         flex flex-col gap-y-3 
+
+        justify-center
+
+ 
         "
         >
           {/* <button className="small_btn btn_colored" onClick={() => navigate(-1)}>
@@ -145,7 +147,9 @@ const AuthorizationForm: FC = () => {
               type="email"
               placeholder="Почта"
               register={{ ...register("email") }}
-              errorMessage={errors.email?.message}
+              // errorMessage={errors.email?.message}
+              isError={errors.email ? true : false}
+              isRequired={true}
             />
 
             <Input
@@ -153,8 +157,27 @@ const AuthorizationForm: FC = () => {
               type="password"
               placeholder="Пароль"
               register={{ ...register("password") }}
-              errorMessage={errors.password?.message}
+              // errorMessage={errors.password?.message}
+              isError={errors.password ? true : false}
+              isRequired={true}
             />
+
+            <div
+              className={
+                Object.keys(errors).length > 0
+                  ? "  flex flex-col mt-5 px-2 gap-y-2 justify-center "
+                  : " hidden "
+              }
+            >
+              <p className={errors.email ? "text-pink-500 " : " hidden "}>
+                {errors.email?.message}
+              </p>
+              <p
+                className={errors.password ? "text-pink-500 " : " hidden "}
+              >
+                {errors.password?.message}
+              </p>
+            </div>
 
             <div className="">
               {/* <input type="submit" value="Войти" className="" /> */}
@@ -172,7 +195,10 @@ const AuthorizationForm: FC = () => {
 
               <p className="truncate">
                 Нет аккаунта?{" "}
-                <Link to="/register" className="underline hover:text-light_near_black transition duration-1000 hover:duration-200">
+                <Link
+                  to="/register"
+                  className="underline hover:text-light_near_black transition duration-1000 hover:duration-200"
+                >
                   Зарегистрируйтесь
                 </Link>
               </p>

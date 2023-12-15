@@ -11,7 +11,7 @@ const FoodPageHeader = ({
     justify-center items-center 
     text-center 
     
-
+ 
 
     gap-x-5
     gap-y-3

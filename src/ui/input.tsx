@@ -10,6 +10,7 @@ interface InputPropsType {
   inset?: string;
   bg?: string;
   bgError?: string;
+  isRequired?: boolean;
 }
 
 const Input: FC<InputPropsType> = ({
@@ -23,6 +24,7 @@ const Input: FC<InputPropsType> = ({
   bg = "#FFFFFF",
   bgError = "#f8e8ee",
   // bgError = "#F8E4EB",
+  isRequired = false,
 }) => {
   const illumination = {
     base:
@@ -50,7 +52,10 @@ const Input: FC<InputPropsType> = ({
   return (
     <div className="">
       <label htmlFor={id} className="">
-        <h3>{placeholder}</h3>
+        <h3 className="flex gap-x-1">
+          {placeholder}
+          <p className={isRequired ? "text-red" : "hidden"}>*</p>
+        </h3>
       </label>
 
       <div className=" relative group/input ">

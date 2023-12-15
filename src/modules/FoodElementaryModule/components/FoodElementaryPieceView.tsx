@@ -88,6 +88,7 @@ const FoodElementaryPieceView = ({
       >
         {isEditMode ? (
           <FoodElementaryPieceEdit
+            key={`edit_${id}`}
             id={id}
             name={name}
             characteristics={characteristics}
@@ -95,6 +96,7 @@ const FoodElementaryPieceView = ({
           />
         ) : (
           <div
+            key={id}
             className="flex flex-col flex-wrap w-full 
             
           "

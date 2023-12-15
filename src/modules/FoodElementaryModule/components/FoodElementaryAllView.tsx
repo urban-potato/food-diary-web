@@ -23,7 +23,7 @@ const FoodElementaryAllView: FC = () => {
 
   let totalFoodCount: number = dataGetAllFoodElementary?.metadata.totalCount;
 
-  console.log(dataGetAllFoodElementary);
+  // console.log(dataGetAllFoodElementary);
 
   let foodItems = dataGetAllFoodElementary?.items.map(
     (item: IFoodElementaryItem) => {
@@ -52,6 +52,7 @@ const FoodElementaryAllView: FC = () => {
           c.localId = localId;
           localId++;
         }
+        c.key = c.foodCharacteristicId;
         return c;
       });
 
@@ -68,6 +69,8 @@ const FoodElementaryAllView: FC = () => {
       preparedCharacteristics.sort(compare);
 
       parsedItem.characteristics = preparedCharacteristics;
+
+      parsedItem.key = parsedItem.id;
 
       return parsedItem;
     }

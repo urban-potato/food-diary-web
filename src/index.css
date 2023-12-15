@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    font-family: 'Merriweather', serif;
+    font-family: "Merriweather", serif;
   }
   h1 {
     @apply text-[48px] font-bold;
@@ -56,8 +56,7 @@
      truncate
 
      p-3
-     h-14
-     ;
+     h-14;
   }
 
   .btn {
@@ -110,7 +109,7 @@
 
   .btn_dark_secondary {
     @apply text-near_white 
-    border-near_black bg-near_black  ;
+    border-near_black bg-near_black;
   }
 
   .btn_colored {
@@ -132,11 +131,8 @@
   } */
 
   .text_border {
-    text-shadow:
-    0 0 5px #f8f7f4,  
-    0 0 5px #f8f7f4,
-    0 0 5px #f8f7f4,
-    0 0 5px #f8f7f4;
+    text-shadow: 0 0 5px #f8f7f4, 0 0 5px #f8f7f4, 0 0 5px #f8f7f4,
+      0 0 5px #f8f7f4;
   }
 }
 

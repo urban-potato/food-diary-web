@@ -2,9 +2,10 @@ import * as yup from "yup";
 import {
   useChangeFoodCharacteristicValueMutation,
   useChangeFoodElementaryNameMutation,
+  useDeleteFoodElementaryMutation,
 } from "../api/foodElementary.api";
 import { validValues } from "../constants/constants";
-import { FoodElementaryPieceViewProps } from "../types/types";
+import { FoodElementaryPieceEditProps } from "../types/types";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "../../../ui/input";
@@ -20,7 +21,13 @@ const FoodElementaryPieceEdit = ({
   name,
   characteristics,
   setIsEditMode,
-}) => {
+}: FoodElementaryPieceEditProps) => {
+  const [doDeleteFood, doDeleteFoodResult] = useDeleteFoodElementaryMutation();
+
+  let deleteFood = () => {
+    doDeleteFood(id);
+  };
+
   let validationSchemaObject = {
     name: yup
       .string()
@@ -50,6 +57,9 @@ const FoodElementaryPieceEdit = ({
   });
 
   const validationSchema = yup.object().shape(validationSchemaObject);
+
+  console.log("validationSchema");
+  console.log(validationSchema);
 
   let defaultValues = {
     name: name,
@@ -82,6 +92,7 @@ const FoodElementaryPieceEdit = ({
     return (
       <div className="flex-grow-100 ">
         <Input
+          key={`${id}_${c.foodCharacteristicId}`}
           id={c.foodCharacteristicId}
           type="number"
           placeholder={c.characteristicName}
@@ -94,6 +105,9 @@ const FoodElementaryPieceEdit = ({
   });
 
   const onSubmit = async (data) => {
+    console.log("data");
+    console.log(data);
+
     let submitFoodNameData = {
       name: data.name,
     };
@@ -146,6 +160,7 @@ const FoodElementaryPieceEdit = ({
   const editFoodCharacteristicsErrors = characteristics.map((c) => {
     return (
       <p
+        key={`error_${id}_${c.foodCharacteristicId}`}
         className={
           errors[`${c.foodCharacteristicId}`] ? "text-pink-500 " : " hidden "
         }
@@ -174,6 +189,7 @@ const FoodElementaryPieceEdit = ({
             isError={errors.name ? true : false}
             // inset=" inset-0 "
             // bgError = "#F8E4EB"
+            isRequired={true}
           />
         </div>
 
@@ -210,7 +226,7 @@ const FoodElementaryPieceEdit = ({
         <div
           className=" mt-6 
         flex flex-wrap w-full 
-        gap-x-4 gap-y-1 
+        gap-x-4 gap-y-3
         justify-stretch items-center"
         >
           <span className=" flex-grow">

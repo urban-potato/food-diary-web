@@ -11,7 +11,7 @@ export interface IFoodElementaryItem {
   name: string;
   userId: string;
   isDefault: boolean;
-  characteristics: [any];
+  characteristics: any;
 }
 
 export interface IFoodCharacteristicProps {
@@ -28,7 +28,14 @@ export interface IFoodCharacteristic {
 }
 
 export interface FoodElementaryPieceViewProps {
-    id: string;
-    name: string;
-    characteristics: [any];
+  id: string;
+  name: string;
+  characteristics: any;
+}
+
+export interface FoodElementaryPieceEditProps {
+  id: string;
+  name: string;
+  characteristics: any;
+  setIsEditMode: any;
 }

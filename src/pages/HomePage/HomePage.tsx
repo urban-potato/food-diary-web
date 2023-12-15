@@ -7,8 +7,12 @@ const Homepage: FC = () => {
     // border-2 border-black
 
     <section
-      className="bg-food_img bg-no-repeat h-full w-full 
-      min-h-screen
+      className="bg-food_img bg-no-repeat 
+      w-full 
+      
+      h-full 
+      flex-grow
+    
 
       relative 
 

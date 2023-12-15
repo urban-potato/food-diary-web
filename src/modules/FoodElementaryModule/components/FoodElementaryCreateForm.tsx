@@ -173,6 +173,7 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
               // errorMessage={errors.name?.message}
               isError={errors.name ? true : false}
               // inset=" inset-0 "
+              isRequired={true}
             />
           </div>
           <div className="mt-4 ">
@@ -268,7 +269,7 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
               // additionalStyles=" w-[280px] "
               isButton={true}
               type="submit"
-              additionalStyles="  "
+              additionalStyles=""
             />
           </div>
         </form>

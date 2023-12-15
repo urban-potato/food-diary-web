@@ -30,7 +30,7 @@ const RegistrationForm: FC = () => {
     email: yup
       .string()
       .email(validValues.email.error)
-      .required(validValues.requiredMessage)
+      .required(`• Почта: ${validValues.requiredErrorMessage}`)
       .matches(
         /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
         validValues.email.error
@@ -45,7 +45,7 @@ const RegistrationForm: FC = () => {
         validValues.password.max.value,
         validValues.password.max.message(validValues.password.min.value)
       )
-      .required(validValues.requiredMessage),
+      .required(`• Пароль: ${validValues.requiredErrorMessage}`),
     passwordConfirmation: yup
       .string()
       // .min(
@@ -56,7 +56,7 @@ const RegistrationForm: FC = () => {
       //   validValues.passwordConfirmation.max.value,
       //   validValues.passwordConfirmation.max.message(validValues.passwordConfirmation.min.value)
       // )
-      .required(validValues.requiredMessage)
+      .required(`• Повторите пароль: ${validValues.requiredErrorMessage}`)
       .oneOf([yup.ref("password")], validValues.passwordsMustMatchMessage),
   });
 
@@ -142,26 +142,30 @@ const RegistrationForm: FC = () => {
   return (
     <>
       {!isAuth ? (
-        <section className=" 
+        <section
+          className=" 
         flex-grow max-w-[416px] min-w-[130px]
         flex flex-col gap-y-3 
-        ">
+        justify-center
+
+     
+        "
+        >
           {/* <button className="small_btn btn_colored" onClick={() => navigate(-1)}>
             <FaAngleLeft className="" />
           </button> */}
 
           <h2 className="">Зарегистрируйтесь в FoodDiary</h2>
 
-          <form
-            className=""
-            onSubmit={handleSubmit(onSubmit)}
-          >
+          <form className="" onSubmit={handleSubmit(onSubmit)}>
             <Input
               id="email"
               type="email"
               placeholder="Почта"
               register={{ ...register("email") }}
-              errorMessage={errors.email?.message}
+              // errorMessage={errors.email?.message}
+              isError={errors.email ? true : false}
+              isRequired={true}
             />
 
             <Input
@@ -169,7 +173,9 @@ const RegistrationForm: FC = () => {
               type="password"
               placeholder="Пароль"
               register={{ ...register("password") }}
-              errorMessage={errors.password?.message}
+              // errorMessage={errors.password?.message}
+              isError={errors.password ? true : false}
+              isRequired={true}
             />
 
             <Input
@@ -177,17 +183,53 @@ const RegistrationForm: FC = () => {
               type="password"
               placeholder="Повторите пароль"
               register={{ ...register("passwordConfirmation") }}
-              errorMessage={errors.passwordConfirmation?.message}
+              // errorMessage={errors.passwordConfirmation?.message}
+              isError={errors.passwordConfirmation ? true : false}
+              isRequired={true}
             />
 
-            <button type="submit" className="btn btn_dark">
-              Зарегистрироваться
-            </button>
+            <div
+              className={
+                Object.keys(errors).length > 0
+                  ? "  flex flex-col mt-5 px-2 gap-y-2 justify-center "
+                  : " hidden "
+              }
+            >
+              <p
+                className={errors.email ? "text-pink-500 truncate" : " hidden "}
+              >
+                {errors.email?.message}
+              </p>
+              <p className={errors.password ? "text-pink-500 " : " hidden "}>
+                {errors.password?.message}
+              </p>
+              <p
+                className={
+                  errors.passwordConfirmation ? "text-pink-500 " : " hidden "
+                }
+              >
+                {errors.passwordConfirmation?.message}
+              </p>
+            </div>
+
+            {/* <div
+              className=" mt-6 
+        flex flex-wrap w-full 
+        gap-x-4 gap-y-3
+        justify-stretch items-center"
+            > */}
+              <button type="submit" className="btn btn_dark flex-grow ">
+                Зарегистрироваться
+              </button>
+            {/* </div> */}
 
             <p className="truncate">
               Есть аккаунт?{" "}
               {/* {error ? <div className={}>{error}</div> : null} */}
-              <Link to="/login" className="underline hover:text-light_near_black transition duration-1000 hover:duration-200">
+              <Link
+                to="/login"
+                className="underline hover:text-light_near_black transition duration-1000 hover:duration-200"
+              >
                 Войдите
               </Link>
             </p>

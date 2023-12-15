@@ -1,6 +1,5 @@
 import { useLazyGetUserInfoQuery } from "./api/user.api";
-import ProfileModule from "./components/ProfileModule";
-
+import ProfileView from "./components/ProfileView";
 import { login, logout } from "./slices/userSlice";
 
-export { useLazyGetUserInfoQuery, login, logout, ProfileModule };
+export { useLazyGetUserInfoQuery, login, logout, ProfileView };

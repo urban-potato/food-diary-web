@@ -1,26 +1,26 @@
 export const validValues = {
-  requiredMessage: "Обязательное поле",
+  requiredErrorMessage: "Обязательное поле",
   name: {
     min: {
       value: 3,
-      message: (min: number) => `Имя должно составлять от ${min} символов`,
+      message: (min: number) => `• Имя: Минимальная длина - ${min} символа`,
     },
     max: {
       value: 256,
-      message: (max: number) => `Имя должно составлять до ${max} символов`,
+      message: (max: number) => `• Имя: Максимальная длина - ${max} символов`,
     },
   },
   email: {
-    error: "Введены некорректные данные",
+    error: "• Почта: Введены некорректные данные",
   },
   password: {
     min: {
       value: 6,
-      message: (min: number) => `Пароль должен составлять от ${min} символов`,
+      message: (min: number) => `• Пароль: Минимальная длина - ${min} символов`,
     },
     max: {
       value: 80,
-      message: (max: number) => `Пароль должен составлять до ${max} символов`,
+      message: (max: number) => `• Пароль: Максимальная длина - ${max} символов`,
     },
   },
   // passwordConfirmation: {
@@ -33,5 +33,5 @@ export const validValues = {
   //     message: (max: number) => `Пароль должен составлять до ${max} символов`,
   //   },
   // },
-  passwordsMustMatchMessage: "Пароли должны совпадать",
+  passwordsMustMatchMessage: "• Повторите пароль: Пароль не совпадает",
 };
