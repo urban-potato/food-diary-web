@@ -77,17 +77,23 @@ const Header: FC = () => {
             <div
               className="absolute -inset-0.5 
             bg-gradient-to-r from-indigo-700 to-purple-700 
-            rounded-full blur opacity-80 
-            group-hover:opacity-100 transition duration-1000 
-            group-hover:duration-200 
+            rounded-full 
+            blur 
+            opacity-80 
+            group-hover:opacity-100 
+            transition duration-1000 
+            group-hover:duration-500 
             animate-tilt"
             ></div>
             <Link
               to="/register"
-              className=" relative
-              truncate 
+              className=" relative 
               nav_item 
-              max-w-[150px] min-w-[120px] btn_register "
+              
+              max-w-[150px] min-w-[120px] 
+
+            text-near_white 
+            border-near_black bg-near_black "
             >
               Регистрация
             </Link>

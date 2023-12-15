@@ -3,11 +3,11 @@ export const validValues = {
   name: {
     min: {
       value: 3,
-      message: (min: number) => `Имя должно состовлять от ${min} символов`,
+      message: (min: number) => `Имя должно составлять от ${min} символов`,
     },
     max: {
       value: 256,
-      message: (max: number) => `Имя должно состовлять до ${max} символов`,
+      message: (max: number) => `Имя должно составлять до ${max} символов`,
     },
   },
   email: {
@@ -16,21 +16,21 @@ export const validValues = {
   password: {
     min: {
       value: 6,
-      message: (min: number) => `Пароль должен состовлять от ${min} символов`,
+      message: (min: number) => `Пароль должен составлять от ${min} символов`,
     },
     max: {
       value: 80,
-      message: (max: number) => `Пароль должен состовлять до ${max} символов`,
+      message: (max: number) => `Пароль должен составлять до ${max} символов`,
     },
   },
   // passwordConfirmation: {
   //   min: {
   //     value: 6,
-  //     message: (min: number) => `Пароль должен состовлять от ${min} символов`,
+  //     message: (min: number) => `Пароль должен составлять от ${min} символов`,
   //   },
   //   max: {
   //     value: 80,
-  //     message: (max: number) => `Пароль должен состовлять до ${max} символов`,
+  //     message: (max: number) => `Пароль должен составлять до ${max} символов`,
   //   },
   // },
   passwordsMustMatchMessage: "Пароли должны совпадать",

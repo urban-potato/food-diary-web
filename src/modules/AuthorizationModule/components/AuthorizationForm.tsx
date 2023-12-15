@@ -14,14 +14,12 @@ import { FC } from "react";
 import Input from "../../../ui/input";
 import { VscChromeClose } from "react-icons/Vsc";
 import { FaAngleLeft } from "react-icons/fa6";
+import { AuthorizationFormType } from "../types/types";
 
-interface FormType {
-  email: string;
-  password: string;
-}
+
 
 const AuthorizationForm: FC = () => {
-  const validationSchema = yup.object<FormType>().shape({
+  const validationSchema = yup.object<AuthorizationFormType>().shape({
     email: yup
       .string()
       .email(validValues.email.error)
@@ -62,8 +60,8 @@ const AuthorizationForm: FC = () => {
   const [doGetMe, doGetMeResult] = useLazyGetMeQuery();
   const [doGetUserInfo, doGetUserInfoResult] = useLazyGetUserInfoQuery();
 
-  // TODO: ИЗУЧИТЬ SubmitHandler<FormType>
-  const onSubmit: SubmitHandler<FormType> = async (data) => {
+  // TODO: ИЗУЧИТЬ SubmitHandler<AuthorizationFormType>
+  const onSubmit: SubmitHandler<AuthorizationFormType> = async (data) => {
     const { email, password } = data;
 
     const loginData = {

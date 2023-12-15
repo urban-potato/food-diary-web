@@ -1,10 +1,5 @@
 import { api } from "../../../global/api/api";
-import { IUserAuthData } from "../types/types";
-
-interface loginResponseType {
-  token: string;
-  expiresIn: number;
-}
+import { IUserAuthData, loginResponseType } from "../types/types";
 
 const authApi = api.injectEndpoints({
   endpoints: (builder) => ({

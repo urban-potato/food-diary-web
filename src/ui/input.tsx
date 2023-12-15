@@ -1,66 +1,83 @@
 import { FC } from "react";
 
-interface PropsType {
+interface InputPropsType {
   id: string;
   type: string;
   placeholder?: string | number;
   register: any;
-  errorMessage: any;
-  bg?: string | null;
+  errorMessage?: any;
+  isError?: boolean;
+  inset?: string;
+  bg?: string;
+  bgError?: string;
 }
 
-const Input: FC<PropsType> = ({
+const Input: FC<InputPropsType> = ({
   id,
   type,
   placeholder,
   register,
-  errorMessage,
-  // bg = "#1B1B23",
+  errorMessage = null,
+  isError = false,
+  inset = " -inset-0.5 ",
   bg = "#FFFFFF",
+  bgError = "#f8e8ee",
+  // bgError = "#F8E4EB",
 }) => {
+  const illumination = {
+    base:
+      "absolute " +
+      " bg-gradient-to-r from-purple-500 to-purple-500 " +
+      " rounded-xl " +
+      " blur-sm " +
+      " opacity-40 " +
+      " group-hover/input:opacity-70 " +
+      " group-focus/input:opacity-70 " +
+      " transition duration-1000 " +
+      " group-hover/input:duration-500 ",
+    error:
+      "absolute " +
+      " bg-gradient-to-r from-pink-500 to-pink-500 " +
+      " rounded-xl " +
+      " blur-sm " +
+      " opacity-40 " +
+      " group-hover/input:opacity-70 " +
+      " group-focus/input:opacity-70 " +
+      " transition duration-1000 " +
+      " group-hover/input:duration-500 ",
+  };
+
   return (
     <div className="">
       <label htmlFor={id} className="">
         <h3>{placeholder}</h3>
       </label>
 
-      <div className="relative group ">
-            <div className={errorMessage ? ("absolute -inset-0.5 bg-gradient-to-r from-pink-500 to-pink-500 rounded-xl blur-sm opacity-40 group-hover:opacity-70 group-focus:opacity-70 transition duration-1000 group-hover:duration-200 ") 
-            : ("absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-purple-500 rounded-xl blur-sm opacity-40 group-hover:opacity-70 group-focus:opacity-70 transition duration-1000 group-hover:duration-200 ")}></div>
-      <input
-        id={id}
-        type={type}
-        {...register}
-        // style={{ backgroundColor: bg }}
-        style={{ backgroundColor: errorMessage ? "#f8e8ee" : bg }}
-        
-        // className="relative text-sm"
-        className={errorMessage ? "relative text-sm border-0" : "relative text-sm"}
-
-        // className="text-sm"
-
-      />
+      <div className=" relative group/input ">
+        <div
+          className={
+            errorMessage || isError
+              ? illumination.error + inset
+              : illumination.base + inset
+          }
+        ></div>
+        <input
+          id={id}
+          type={type}
+          {...register}
+          style={{ backgroundColor: errorMessage || isError ? bgError : bg }}
+          className={
+            errorMessage || isError
+              ? "relative text-sm border-0 "
+              : "relative text-sm "
+          }
+          // onClick={(event) => {event.stopPropagation();}}
+        />
       </div>
 
       <p className="text-pink-500 mt-3">{errorMessage}</p>
     </div>
   );
-
-  // return (
-  //   <div className="">
-  //     <label htmlFor={id} className="">
-  //       <h3>{placeholder}</h3>
-  //     </label>
-  //     <input
-  //       id={id}
-  //       type={type}
-  //       {...register}
-  //       style={{ backgroundColor: bg }}
-  //       className=""
-  //     />
-  //     <p className="text-red-500">{errorMessage}</p>
-  //   </div>
-  // );
 };
 
 export default Input;

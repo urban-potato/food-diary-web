@@ -7,8 +7,33 @@ const userApi = api.injectEndpoints({
         url: `/api/profile/${id}`,
         credentials: "same-origin",
       }),
+
+      providesTags: () => [
+        {
+          type: "Profile",
+        },
+      ],
+    }),
+
+    changeUserInfo: builder.mutation({
+      query: ({ id, data }) => ({
+        body: data,
+        url: `/api/profile/${id}`,
+        method: "PUT",
+        credentials: "same-origin",
+      }),
+
+      invalidatesTags: () => [
+        {
+          type: "Profile",
+        },
+      ],
     }),
   }),
 });
 
-export const { useGetUserInfoQuery, useLazyGetUserInfoQuery } = userApi;
+export const {
+  useGetUserInfoQuery,
+  useLazyGetUserInfoQuery,
+  useChangeUserInfoMutation,
+} = userApi;

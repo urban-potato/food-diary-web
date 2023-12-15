@@ -8,18 +8,18 @@ const Homepage: FC = () => {
 
     <section
       className="bg-food_img bg-no-repeat h-full w-full 
-    relative 
+      min-h-screen
 
-    bg-bg_position
+      relative 
 
-    rounded-3xl 
+      bg-bg_position
 
-    "
+      rounded-3xl 
+      "
     >
       <section
         className="flex flex-col gap-y-3 
-      
-      max-w-4xl"
+          max-w-4xl"
       >
         <section
           className="
@@ -87,8 +87,8 @@ const Homepage: FC = () => {
              "
             >
               <p className="text_border bg-blur">
-              Дневник питания помогает осознать привычки, контролировать питание
-              и улучшить здоровье.
+                Дневник питания помогает осознать привычки, контролировать
+                питание и улучшить здоровье.
               </p>
             </div>
             <p className="relative leading-relaxed ">

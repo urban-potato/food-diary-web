@@ -12,6 +12,7 @@ import {
   RegistrationForm,
 } from "../../modules/AuthorizationModule/index";
 import DiaryPage from "../../pages/DiaryPage/DiaryPage";
+import FoodPage from "../../pages/FoodPage/FoodPage";
 
 export const router = createBrowserRouter(
   [
@@ -52,7 +53,7 @@ export const router = createBrowserRouter(
           path: "food",
           element: (
             <ProtectedPage>
-              <div>БЛЮДА</div>
+              <FoodPage/>
             </ProtectedPage>
           ),
         },

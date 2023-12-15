@@ -1,11 +1,10 @@
-import { FC } from "react";
-import { logout } from "../slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../global/store/hooks";
+import { logout } from "../slices/userSlice";
 import { removeTokenFromLocalStorage } from "../../../global/helpers/local_storage.helper";
 import { toast } from "react-hot-toast";
 
-const Profile: FC = () => {
+const ProfileModule = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -17,12 +16,10 @@ const Profile: FC = () => {
   };
 
   return (
-    <div>
-      <button className="btn btn_dark" onClick={(): void => handleExitAccount()}>
-        Выйти
-      </button>
-    </div>
+    <button className="btn btn_dark" onClick={(): void => handleExitAccount()}>
+      Выйти
+    </button>
   );
 };
 
-export default Profile;
+export default ProfileModule;

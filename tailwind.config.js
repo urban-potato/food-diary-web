@@ -3,6 +3,15 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      inset: {
+        '01': '0.1px',
+      },
+      blur: {
+        xs: '2px',
+      },
+      scale: {
+        '101': '1.01',
+      },
       animation: {
         tilt: "tilt 10s infinite linear",
 
@@ -57,7 +66,7 @@ export default {
         light_gray: "#565564",
 
         near_black: "#0d0b26",
-        light_near_black: "#67667a",
+        light_near_black: "#535264",
 
         main_blue: "#7190FF",
 
@@ -71,6 +80,7 @@ export default {
         deep_blue_sea: "#3d3d4e",
 
         near_white: "#f8f7f4",
+        near_white_dark: "#FFE0B2",
 
         red: "#FF7777CC",
 

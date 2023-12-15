@@ -1,12 +1,8 @@
 import { FC } from "react";
-import { Profile } from "../../modules/UserModule/index";
+import { ProfileModule } from "../../modules/UserModule";
 
 const ProfilePage: FC = () => {
-  return (
-    <>
-      <Profile />
-    </>
-  );
+  return <ProfileModule/>;
 };
 
 export default ProfilePage;
