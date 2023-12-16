@@ -68,6 +68,13 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
       .integer(),
   });
 
+  let defaultValues = {
+    proteinValue: 0,
+    fatValue: 0,
+    carbohydrateValue: 0,
+    caloriesValue: 0,
+  };
+
   const {
     register,
     reset,
@@ -76,6 +83,7 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
   } = useForm({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
+    defaultValues: defaultValues,
   });
 
   const dispatch = useAppDispatch();

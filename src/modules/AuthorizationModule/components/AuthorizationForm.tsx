@@ -126,13 +126,13 @@ const AuthorizationForm: FC = () => {
       {!isAuth ? (
         <section
           className=" 
-        flex-grow max-w-[416px] min-w-[130px]
+        flex-grow 
         
         flex flex-col gap-y-3 
 
         justify-center
 
- 
+        w-full max-w-md
         "
         >
           {/* <button className="small_btn btn_colored" onClick={() => navigate(-1)}>
