@@ -15,6 +15,12 @@ const illumination = {
     " rounded-full " +
     " blur-sm " +
     " opacity-80 ",
+  disabled: 
+  " absolute " + 
+  "  " + 
+  " rounded-full " + 
+  "  " + 
+  "  ",
 };
 
 const buttonStyle = {
@@ -27,7 +33,7 @@ const buttonStyle = {
     " bg-[#fff] " +
     " text-near_black  " +
     " transition duration-1000 " +
-    " hover:duration-500 " ,
+    " hover:duration-500 ",
   dark:
     " relative cursor-pointer " +
     " flex-grow flex-shrink " +
@@ -35,7 +41,18 @@ const buttonStyle = {
     " rounded-full " +
     " truncate " +
     " bg-near_black " +
-    " text-[#f8f7f4] " +
+    " text-near_white " +
+    " transition duration-1000 " +
+    " hover:duration-500 ",
+  disabled:
+    " relative " +
+    " flex-grow flex-shrink " +
+    " flex justify-center items-center " +
+    " rounded-full " +
+    " truncate " +
+    " bg-light_near_black " +
+    " border-light_near_black " +
+    " text-near_white " +
     " transition duration-1000 " +
     " hover:duration-500 ",
 };
@@ -50,6 +67,7 @@ interface IIlluminatedButtonData {
   isButton?: boolean;
   type?: string;
   buttonPadding?: string;
+  isDisabled?: boolean;
 }
 
 const IlluminatedButton = ({
@@ -61,16 +79,21 @@ const IlluminatedButton = ({
   onClick = () => {},
   additionalStyles = "",
   isButton = false,
-  type = "undefined",
+  type = "submit",
   buttonPadding = " p-5 ",
+  isDisabled = false,
 }: IIlluminatedButtonData) => {
   return (
-    <div className=" relative group/illuminatedButton flex 
+    <div
+      className=" relative group/illuminatedButton flex 
     
-    ">
+    "
+    >
       <div
         className={
-          isIlluminationFull
+          isDisabled
+            ? illumination.disabled + inset
+            : isIlluminationFull
             ? illumination.full + inset
             : illumination.light + inset
         }
@@ -78,11 +101,14 @@ const IlluminatedButton = ({
       {isButton ? (
         <button
           className={
-            isDarkButton
+            isDisabled
+              ? buttonStyle.disabled + buttonPadding + additionalStyles
+              : isDarkButton
               ? buttonStyle.dark + buttonPadding + additionalStyles
               : buttonStyle.light + buttonPadding + additionalStyles
           }
           type={type}
+          disabled={isDisabled}
         >
           {label}
         </button>

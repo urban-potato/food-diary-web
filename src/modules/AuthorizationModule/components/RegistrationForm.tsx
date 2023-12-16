@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import { validValues } from "../constants/constants";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, useFormState } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../global/store/hooks";
@@ -13,7 +13,7 @@ import {
 import { useLazyGetUserInfoQuery } from "../../UserModule/index";
 import { toast } from "react-hot-toast";
 import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.helper";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import Input from "../../../ui/input";
 import { VscChromeClose } from "react-icons/Vsc";
 import { login } from "../../UserModule/slices/userSlice";
@@ -65,10 +65,15 @@ const RegistrationForm: FC = () => {
     reset,
     handleSubmit,
     formState: { errors },
+    getValues,
+    control,
+    trigger,
   } = useForm({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
   });
+
+  const { dirtyFields, touchedFields } = useFormState({ control });
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -138,6 +143,25 @@ const RegistrationForm: FC = () => {
   };
 
   const isAuth = useIsAuth();
+
+  // console.log("getValues(email)");
+  // console.log(getValues("email"));
+
+  let isFilledRight =
+    getValues("email") &&
+    getValues("password") &&
+    getValues("passwordConfirmation") &&
+    !errors?.email &&
+    !errors?.password &&
+    !errors?.passwordConfirmation
+      ? true
+      : false;
+
+  useEffect(() => {
+    if (Object.keys(dirtyFields).length && !Object.keys(touchedFields).length) {
+      trigger();
+    }
+  }, [dirtyFields, touchedFields]);
 
   return (
     <>
@@ -218,9 +242,17 @@ const RegistrationForm: FC = () => {
         gap-x-4 gap-y-3
         justify-stretch items-center"
             > */}
-              <button type="submit" className="btn btn_dark flex-grow ">
-                Зарегистрироваться
-              </button>
+            <button
+              type="submit"
+              disabled={isFilledRight ? false : true}
+              className={
+                isFilledRight
+                  ? "btn btn_dark flex-grow"
+                  : "btn btn_disabled flex-grow "
+              }
+            >
+              Зарегистрироваться
+            </button>
             {/* </div> */}
 
             <p className="truncate">

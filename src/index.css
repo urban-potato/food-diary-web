@@ -107,6 +107,12 @@
     transition duration-1000 hover:duration-500;
   }
 
+  .btn_disabled {
+    @apply text-near_white 
+    bg-light_near_black border-light_near_black 
+    transition duration-1000 hover:duration-500;
+  }
+
   .btn_dark_secondary {
     @apply text-near_white 
     border-near_black bg-near_black;

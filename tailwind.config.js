@@ -63,7 +63,9 @@ export default {
 
       colors: {
         very_light_gray: "#E7E7E9",
-        light_gray: "#565564",
+        // light_gray: "#565564",
+        light_gray: "#474747",
+
 
         near_black: "#0d0b26",
         light_near_black: "#535264",

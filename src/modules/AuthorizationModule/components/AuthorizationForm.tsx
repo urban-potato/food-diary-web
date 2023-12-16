@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import { validValues } from "../constants/constants";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, useFormState } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../global/store/hooks";
@@ -10,7 +10,7 @@ import { useLazyGetUserInfoQuery } from "../../UserModule/api/user.api";
 import { toast } from "react-hot-toast";
 import { login } from "../../UserModule/slices/userSlice";
 import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.helper";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import Input from "../../../ui/input";
 import { VscChromeClose } from "react-icons/Vsc";
 import { FaAngleLeft } from "react-icons/fa6";
@@ -45,10 +45,16 @@ const AuthorizationForm: FC = () => {
     reset,
     handleSubmit,
     formState: { errors },
+    getValues,
+    control,
+    trigger,
   } = useForm({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
   });
+
+  const { dirtyFields, touchedFields } = useFormState({ control });
+
   // TODO: ИЗУЧИТЬ useNavigate
   const navigate = useNavigate();
   // TODO: ИЗУЧИТЬ useAppDispatch
@@ -118,6 +124,23 @@ const AuthorizationForm: FC = () => {
   // TODO: ИЗУЧИТЬ useAppSelector
   const isAuth = useIsAuth();
 
+  let isFilledRight =
+    getValues("email") &&
+    getValues("password") &&
+    !errors?.email &&
+    !errors?.password
+      ? true
+      : false;
+
+  console.log("getValues(email)");
+  console.log(getValues("email"));
+
+  useEffect(() => {
+    if (Object.keys(dirtyFields).length && !Object.keys(touchedFields).length) {
+      trigger();
+    }
+  }, [dirtyFields, touchedFields]);
+
   //--------------------------------------------------------
 
   // TODO: ИЗУЧИТЬ получше кастомный Input
@@ -172,9 +195,7 @@ const AuthorizationForm: FC = () => {
               <p className={errors.email ? "text-pink-500 " : " hidden "}>
                 {errors.email?.message}
               </p>
-              <p
-                className={errors.password ? "text-pink-500 " : " hidden "}
-              >
+              <p className={errors.password ? "text-pink-500 " : " hidden "}>
                 {errors.password?.message}
               </p>
             </div>
@@ -182,7 +203,15 @@ const AuthorizationForm: FC = () => {
             <div className="">
               {/* <input type="submit" value="Войти" className="" /> */}
 
-              <button type="submit" className="btn btn_dark">
+              <button
+                type="submit"
+                disabled={isFilledRight ? false : true}
+                className={
+                  isFilledRight
+                    ? "btn btn_dark flex-grow"
+                    : "btn btn_disabled flex-grow "
+                }
+              >
                 Войти
               </button>
 

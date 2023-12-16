@@ -1,7 +1,7 @@
 import * as yup from "yup";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, useFormState } from "react-hook-form";
 import { validValues } from "../constants/constants";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { IFoodElementaryPostData } from "../types/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAppDispatch } from "../../../global/store/hooks";
@@ -80,11 +80,16 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
     reset,
     handleSubmit,
     formState: { errors },
+    getValues,
+    control,
+    trigger,
   } = useForm({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
     defaultValues: defaultValues,
   });
+
+  const { dirtyFields, touchedFields } = useFormState({ control });
 
   const dispatch = useAppDispatch();
 
@@ -116,6 +121,22 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
       alert(error?.data?.title);
     }
   };
+
+  let isFilledRight =
+    getValues("name") &&
+    !errors?.name &&
+    !errors?.proteinValue &&
+    !errors?.fatValue &&
+    !errors?.carbohydrateValue &&
+    !errors?.caloriesValue
+      ? true
+      : false;
+
+  useEffect(() => {
+    if (Object.keys(dirtyFields).length && !Object.keys(touchedFields).length) {
+      trigger();
+    }
+  }, [dirtyFields, touchedFields]);
 
   return (
     <section
@@ -278,6 +299,7 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
               isButton={true}
               type="submit"
               additionalStyles=""
+              isDisabled={isFilledRight ? false : true}
             />
           </div>
         </form>

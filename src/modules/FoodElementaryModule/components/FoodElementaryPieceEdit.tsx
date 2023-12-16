@@ -6,14 +6,14 @@ import {
 } from "../api/foodElementary.api";
 import { validValues } from "../constants/constants";
 import { FoodElementaryPieceEditProps } from "../types/types";
-import { useForm } from "react-hook-form";
+import { useForm, useFormState } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "../../../ui/input";
 
 import { Player } from "@lordicon/react";
 import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import IlluminatedButton from "../../../components/Buttons/IlluminatedButton";
 
 const FoodElementaryPieceEdit = ({
@@ -46,6 +46,10 @@ const FoodElementaryPieceEdit = ({
     validationSchemaObject[`${item.foodCharacteristicId}`] = yup
       .number()
       .typeError(validValues.numberTypeErrorMessage)
+      // .matches(
+      //   /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      //   `• ${item.characteristicName}: ${validValues.foodCharacteristic.error}`
+      // )
       .transform((cv) => (isNaN(cv) ? undefined : cv))
       .min(
         validValues.foodCharacteristic.min.value,
@@ -53,13 +57,14 @@ const FoodElementaryPieceEdit = ({
           validValues.foodCharacteristic.min.value
         )
       )
+      // .positive()
       .integer();
   });
 
   const validationSchema = yup.object().shape(validationSchemaObject);
 
-  console.log("validationSchema");
-  console.log(validationSchema);
+  // console.log("validationSchema");
+  // console.log(validationSchema);
 
   let defaultValues = {
     name: name,
@@ -74,11 +79,16 @@ const FoodElementaryPieceEdit = ({
     reset,
     handleSubmit,
     formState: { errors },
+    getValues,
+    control,
+    trigger,
   } = useForm({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
     defaultValues: defaultValues,
   });
+
+  const { dirtyFields, touchedFields } = useFormState({ control });
 
   const [doChangeFoodElementaryName, doChangeFoodElementaryNameResult] =
     useChangeFoodElementaryNameMutation();
@@ -131,8 +141,8 @@ const FoodElementaryPieceEdit = ({
         data: submitFoodNameData,
       });
 
-      console.log("foodCharacteristicsToChange");
-      console.log(foodCharacteristicsToChange);
+      // console.log("foodCharacteristicsToChange");
+      // console.log(foodCharacteristicsToChange);
 
       foodCharacteristicsToChangeKeys.forEach((key) => {
         const resultChangeFoodCharacteristicValue =
@@ -169,6 +179,41 @@ const FoodElementaryPieceEdit = ({
       </p>
     );
   });
+
+  // let isCharacteristicsFilledRight = characteristics.forEach((c) => {
+  //   let errorsKeys = Object.keys(errors);
+  //   if (errorsKeys.length > 0 && errorsKeys.includes(c.foodCharacteristicId)) {
+  //     return false;
+  //   }
+  //   return true;
+  // });
+  let isCharacteristicsFilledWrong = characteristics.some((c) => {
+    return (
+      Object.keys(errors).length &&
+      Object.keys(errors).includes(c.foodCharacteristicId)
+    );
+  });
+
+  let isFilledRight =
+    getValues("name") && !errors?.name && !isCharacteristicsFilledWrong
+      ? true
+      : false;
+
+  // console.log("isCharacteristicsFilledWrong");
+  // console.log(isCharacteristicsFilledWrong);
+  // console.log("isFilledRight");
+  // console.log(isFilledRight);
+
+  // console.log("dirtyFields");
+  // console.log(dirtyFields);
+  // console.log("touchedFields");
+  // console.log(touchedFields);
+
+  useEffect(() => {
+    if (Object.keys(dirtyFields).length && !Object.keys(touchedFields).length) {
+      trigger();
+    }
+  }, [dirtyFields, touchedFields]);
 
   return (
     <div
@@ -238,6 +283,7 @@ const FoodElementaryPieceEdit = ({
               isButton={true}
               type="submit"
               buttonPadding=" p-4 "
+              isDisabled={isFilledRight ? false : true}
             />
           </span>
           <span className=" flex-grow">

@@ -2,11 +2,11 @@ import * as yup from "yup";
 import { useChangeUserInfoMutation } from "../api/user.api";
 import { validValues } from "../constants/constants";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
+import { useForm, useFormState } from "react-hook-form";
 import IlluminatedButton from "../../../components/Buttons/IlluminatedButton";
 import { Player } from "@lordicon/react";
 import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Input from "../../../ui/input";
 
 const ProfileEdit = ({ id, email, firstName, lastName, setIsEditMode }) => {
@@ -60,11 +60,16 @@ const ProfileEdit = ({ id, email, firstName, lastName, setIsEditMode }) => {
     reset,
     handleSubmit,
     formState: { errors },
+    getValues,
+    control,
+    trigger,
   } = useForm({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
     defaultValues: defaultValues,
   });
+
+  const { dirtyFields, touchedFields } = useFormState({ control });
 
   const onSubmit = async (data) => {
     let submitData = {
@@ -87,6 +92,22 @@ const ProfileEdit = ({ id, email, firstName, lastName, setIsEditMode }) => {
       alert(error?.data?.title);
     }
   };
+
+  let isFilledRight =
+    getValues("email") &&
+    getValues("firstName") &&
+    getValues("lastName") &&
+    !errors?.email &&
+    !errors?.firstName &&
+    !errors?.lastName
+      ? true
+      : false;
+
+  useEffect(() => {
+    if (Object.keys(dirtyFields).length && !Object.keys(touchedFields).length) {
+      trigger();
+    }
+  }, [dirtyFields, touchedFields]);
 
   return (
     <div
@@ -167,10 +188,11 @@ const ProfileEdit = ({ id, email, firstName, lastName, setIsEditMode }) => {
               label="Сохранить"
               isDarkButton={true}
               isIlluminationFull={false}
-              // additionalStyles=" w-[280px] "
               isButton={true}
               type="submit"
               buttonPadding=" p-4 "
+              isDisabled={isFilledRight ? false : true}
+              // additionalStyles=" w-[280px] "
             />
           </span>
           <span className=" flex-grow">
