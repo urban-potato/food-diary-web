@@ -75,7 +75,7 @@ const FoodElementaryPieceView = ({
         className="relative flex flex-wrap w-full 
       justify-center items-start 
       
-      px-6  py-7
+      pl-7 pr-6  py-7
      
       transition duration-1000 
 
