@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { Link } from "react-router-dom";
 import { useIsAuth } from "../../modules/AuthorizationModule/index";
-import classNames from "classnames";
 import { BiSolidFoodMenu } from "react-icons/bi";
 
 const Header: FC = () => {
@@ -15,13 +14,6 @@ const Header: FC = () => {
         className="nav_item max-w-[150px] min-w-[150px] font-bold 
         hover:text-light_near_black transition duration-1000 hover:duration-200 mr-5 "
       >
-        {/* <Link
-        to="/"
-        className="nav_item max-w-[150px] min-w-[150px] font-bold 
-        hover:bg-gradient-to-r hover:from-pink-700 hover:to-violet-700 
-        transition duration-1000 hover:duration-200 mr-5
-        bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500"
-      > */}
         Food <BiSolidFoodMenu className=" w-[50px] h-[50px] text-pink-500" />{" "}
         Diary
       </Link>

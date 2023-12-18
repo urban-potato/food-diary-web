@@ -8,13 +8,13 @@ import { validValues } from "../constants/constants";
 import { FoodElementaryPieceEditProps } from "../types/types";
 import { useForm, useFormState } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Input from "../../../ui/input";
+import IlluminatedInput from "../../../ui/IlluminatedInput.tsx";
 
 import { Player } from "@lordicon/react";
 import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import { useEffect, useRef } from "react";
-import IlluminatedButton from "../../../components/Buttons/IlluminatedButton";
+import IlluminatedButton from "../../../ui/IlluminatedButton.tsx";
 
 const FoodElementaryPieceEdit = ({
   id,
@@ -101,7 +101,7 @@ const FoodElementaryPieceEdit = ({
   const editFoodCharacteristicsInputs = characteristics.map((c) => {
     return (
       <div className="flex-grow-100 ">
-        <Input
+        <IlluminatedInput
           key={`${id}_${c.foodCharacteristicId}`}
           id={c.foodCharacteristicId}
           type="number"
@@ -225,7 +225,7 @@ const FoodElementaryPieceEdit = ({
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="text-xl -mt-6">
-          <Input
+          <IlluminatedInput
             id="name"
             type="text"
             placeholder="Название блюда"

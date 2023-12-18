@@ -11,7 +11,7 @@ import { toast } from "react-hot-toast";
 import { login } from "../../UserModule/slices/userSlice";
 import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.helper";
 import { FC, useEffect } from "react";
-import Input from "../../../ui/input";
+import IlluminatedInput from "../../../ui/IlluminatedInput.tsx";
 import { VscChromeClose } from "react-icons/Vsc";
 import { FaAngleLeft } from "react-icons/fa6";
 import { AuthorizationFormType } from "../types/types";
@@ -143,7 +143,7 @@ const AuthorizationForm: FC = () => {
 
   //--------------------------------------------------------
 
-  // TODO: ИЗУЧИТЬ получше кастомный Input
+  // TODO: ИЗУЧИТЬ получше кастомный IlluminatedInput
   return (
     <>
       {!isAuth ? (
@@ -165,7 +165,7 @@ const AuthorizationForm: FC = () => {
           <h2 className="">Войдите в аккаунт</h2>
 
           <form className="" onSubmit={handleSubmit(onSubmit)}>
-            <Input
+            <IlluminatedInput
               id="email"
               type="email"
               placeholder="Почта"
@@ -175,7 +175,7 @@ const AuthorizationForm: FC = () => {
               isRequired={true}
             />
 
-            <Input
+            <IlluminatedInput
               id="password"
               type="password"
               placeholder="Пароль"

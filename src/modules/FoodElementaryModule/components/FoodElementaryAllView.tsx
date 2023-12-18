@@ -1,6 +1,5 @@
 import { FC, Key, useEffect, useRef } from "react";
 import { useGetAllFoodElementaryQuery } from "../api/foodElementary.api";
-import Preloader from "../../../components/Preloader/Preloader";
 import FoodElementaryPieceView from "./FoodElementaryPieceView";
 import { IFoodElementaryItem } from "../types/types";
 
@@ -110,7 +109,6 @@ const FoodElementaryAllView: FC = () => {
 
       {foodItemsSorted}
 
-      {/* {isLoadingGetAllFoodElementary ? <Preloader /> : null} */}
       {isLoadingGetAllFoodElementary ? (
         <span className="m-10">
           <Player
@@ -120,14 +118,6 @@ const FoodElementaryAllView: FC = () => {
             colorize="#0d0b26"
             onComplete={() => preloaderPlayerRef.current?.playFromBeginning()}
           />
-
-          {/* <Player
-            src={PRELOADER}
-            className="player"
-            loop
-            autoplay
-            style={{ height: "100px", width: "100px", color: "#FF7777CC" }}
-          /> */}
         </span>
       ) : null}
     </div>

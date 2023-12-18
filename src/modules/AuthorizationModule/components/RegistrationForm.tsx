@@ -14,7 +14,7 @@ import { useLazyGetUserInfoQuery } from "../../UserModule/index";
 import { toast } from "react-hot-toast";
 import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.helper";
 import { FC, useEffect } from "react";
-import Input from "../../../ui/input";
+import IlluminatedInput from "../../../ui/IlluminatedInput.tsx";
 import { VscChromeClose } from "react-icons/Vsc";
 import { login } from "../../UserModule/slices/userSlice";
 import { FaAngleLeft } from "react-icons/fa6";
@@ -182,7 +182,7 @@ const RegistrationForm: FC = () => {
           <h2 className="">Зарегистрируйтесь в FoodDiary</h2>
 
           <form className="" onSubmit={handleSubmit(onSubmit)}>
-            <Input
+            <IlluminatedInput
               id="email"
               type="email"
               placeholder="Почта"
@@ -192,7 +192,7 @@ const RegistrationForm: FC = () => {
               isRequired={true}
             />
 
-            <Input
+            <IlluminatedInput
               id="password"
               type="password"
               placeholder="Пароль"
@@ -202,7 +202,7 @@ const RegistrationForm: FC = () => {
               isRequired={true}
             />
 
-            <Input
+            <IlluminatedInput
               id="passwordConfirmation"
               type="password"
               placeholder="Повторите пароль"

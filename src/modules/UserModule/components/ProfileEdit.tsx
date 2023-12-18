@@ -3,11 +3,11 @@ import { useChangeUserInfoMutation } from "../api/user.api";
 import { validValues } from "../constants/constants";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, useFormState } from "react-hook-form";
-import IlluminatedButton from "../../../components/Buttons/IlluminatedButton";
+import IlluminatedButton from "../../../ui/IlluminatedButton.tsx";
 import { Player } from "@lordicon/react";
 import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
 import { useEffect, useRef } from "react";
-import Input from "../../../ui/input";
+import IlluminatedInput from "../../../ui/IlluminatedInput.tsx";
 
 const ProfileEdit = ({ id, email, firstName, lastName, setIsEditMode }) => {
   const [doChangeUserInfo, doChangeUserInfoResult] =
@@ -119,7 +119,7 @@ const ProfileEdit = ({ id, email, firstName, lastName, setIsEditMode }) => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="text-xl -mt-6">
-          <Input
+          <IlluminatedInput
             id="email"
             type="email"
             placeholder="Почта"
@@ -133,7 +133,7 @@ const ProfileEdit = ({ id, email, firstName, lastName, setIsEditMode }) => {
         </div>
 
         <div className="text-xl">
-          <Input
+          <IlluminatedInput
             id="firstName"
             type="text"
             placeholder="Имя"
@@ -146,7 +146,7 @@ const ProfileEdit = ({ id, email, firstName, lastName, setIsEditMode }) => {
           />
         </div>
         <div className="text-xl">
-          <Input
+          <IlluminatedInput
             id="lastName"
             type="text"
             placeholder="Фамилия"

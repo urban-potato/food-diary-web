@@ -14,7 +14,6 @@
     "@lordicon/react": "^1.4.1",
     "@lottiefiles/react-lottie-player": "^3.5.3",
     "@reduxjs/toolkit": "^1.9.7",
-    "classnames": "^2.3.2",
     "formik": "^2.4.5",
     "lord-icon-element": "^4.1.2",
     "lottie-web": "^5.12.2",

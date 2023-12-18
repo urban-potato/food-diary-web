@@ -13,7 +13,7 @@ interface InputPropsType {
   isRequired?: boolean;
 }
 
-const Input: FC<InputPropsType> = ({
+const IlluminatedInput: FC<InputPropsType> = ({
   id,
   type,
   placeholder,
@@ -85,4 +85,4 @@ const Input: FC<InputPropsType> = ({
   );
 };
 
-export default Input;
+export default IlluminatedInput;

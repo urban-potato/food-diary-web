@@ -1,7 +1,7 @@
 import { useState } from "react";
 import FoodElementaryCreateForm from "./FoodElementaryCreateForm";
 import FoodElementaryAllView from "./FoodElementaryAllView";
-import IlluminatedButton from "../../../components/Buttons/IlluminatedButton";
+import IlluminatedButton from "../../../ui/IlluminatedButton.tsx";
 
 const FoodElementaryModule = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);

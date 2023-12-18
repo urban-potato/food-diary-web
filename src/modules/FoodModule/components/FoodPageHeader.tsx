@@ -1,5 +1,5 @@
 import { IFoodPageHeaderData } from "../types/types";
-import IlluminatedButton from "../../../components/Buttons/IlluminatedButton";
+import IlluminatedButton from "../../../ui/IlluminatedButton.tsx";
 
 const FoodPageHeader = ({
   selectedValue,

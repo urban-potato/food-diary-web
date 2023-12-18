@@ -1,11 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../../pages/Layout";
-import ProtectedPage from "../../pages/ProtectedPage";
+import ProtectedPage from "./ProtectedPage";
 import ErrorPage from "../../pages/ErrorPage/ErrorPage";
 import Homepage from "../../pages/HomePage/HomePage";
 import ProfilePage from "../../pages/ProfilePage/ProfilePage";
-// import Login from "../../pages/AuthPage/LoginPage";
-// import Registration from "../../pages/AuthPage/RegistrationPage";
 
 import {
   AuthorizationForm,
@@ -53,7 +51,7 @@ export const router = createBrowserRouter(
           path: "food",
           element: (
             <ProtectedPage>
-              <FoodPage/>
+              <FoodPage />
             </ProtectedPage>
           ),
         },

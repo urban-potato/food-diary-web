@@ -10,7 +10,7 @@ import { useAppDispatch } from "../../../global/store/hooks";
 import { logout } from "../slices/userSlice";
 import { removeTokenFromLocalStorage } from "../../../global/helpers/local_storage.helper";
 import { toast } from "react-hot-toast";
-import IlluminatedButton from "../../../components/Buttons/IlluminatedButton";
+import IlluminatedButton from "../../../ui/IlluminatedButton.tsx";
 
 import PRELOADER from "../../../global/assets/system-regular-18-autorenew.json";
 
