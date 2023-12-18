@@ -1,12 +1,11 @@
-import { FC, Key, useEffect, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import { useGetAllFoodElementaryQuery } from "../api/foodElementary.api";
 import FoodElementaryPieceView from "./FoodElementaryPieceView";
 import { IFoodElementaryItem } from "../types/types";
 
 import { Player } from "@lordicon/react";
-// import { Player } from "@lottiefiles/react-lottie-player";
 
-import PRELOADER from "../../../global/assets/system-regular-18-autorenew.json";
+import PRELOADER from "../../../../public/system-regular-18-autorenew.json";
 
 const PROTEIN_DEFAULT_ID = "0141a646-e0ce-4f7a-9433-97112f05db0f";
 const FAT_DEFAULT_ID = "d126d15b-853a-4b7e-b122-af811a160609";

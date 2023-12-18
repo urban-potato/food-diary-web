@@ -44,7 +44,7 @@ export default {
       },
 
       backgroundImage: {
-        food_img: "url('./src/global/assets/food_1.png')",
+        food_img: "url('/food_1.png')",
       },
 
       backgroundPosition: {

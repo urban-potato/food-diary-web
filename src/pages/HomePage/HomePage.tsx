@@ -1,5 +1,4 @@
 import { FC } from "react";
-import food_img from "../../global/assets/food_1.png";
 
 const Homepage: FC = () => {
   return (
@@ -13,7 +12,6 @@ const Homepage: FC = () => {
       h-full 
       flex-grow
     
-
       relative 
 
       bg-bg_position

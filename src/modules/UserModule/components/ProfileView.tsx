@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useGetUserInfoQuery, useLazyGetUserInfoQuery } from "../api/user.api";
 import ProfileEdit from "./ProfileEdit";
-import { Player } from "@lordicon/react";
-import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
 import { useRef } from "react";
 import { useGetMeQuery } from "../../AuthorizationModule/api/auth.api";
 import { useNavigate } from "react-router-dom";
@@ -11,8 +9,9 @@ import { logout } from "../slices/userSlice";
 import { removeTokenFromLocalStorage } from "../../../global/helpers/local_storage.helper";
 import { toast } from "react-hot-toast";
 import IlluminatedButton from "../../../ui/IlluminatedButton.tsx";
-
-import PRELOADER from "../../../global/assets/system-regular-18-autorenew.json";
+import { Player } from "@lordicon/react";
+import EDIT_ICON from "../../../../public/system-regular-63-settings-cog.json";
+import PRELOADER from "../../../../public/system-regular-18-autorenew.json";
 
 const ProfileView = () => {
   const navigate = useNavigate();

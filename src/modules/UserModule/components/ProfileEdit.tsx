@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, useFormState } from "react-hook-form";
 import IlluminatedButton from "../../../ui/IlluminatedButton.tsx";
 import { Player } from "@lordicon/react";
-import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
+import EDIT_ICON from "../../../../public/system-regular-63-settings-cog.json";
 import { useEffect, useRef } from "react";
 import IlluminatedInput from "../../../ui/IlluminatedInput.tsx";
 
