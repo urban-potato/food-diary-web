@@ -4,13 +4,10 @@ import ProtectedPage from "./ProtectedPage";
 import ErrorPage from "../../pages/ErrorPage/ErrorPage";
 import Homepage from "../../pages/HomePage/HomePage";
 import ProfilePage from "../../pages/ProfilePage/ProfilePage";
-
-import {
-  AuthorizationForm,
-  RegistrationForm,
-} from "../../modules/AuthorizationModule/index";
 import DiaryPage from "../../pages/DiaryPage/DiaryPage";
 import FoodPage from "../../pages/FoodPage/FoodPage";
+import AuthorizationPage from "../../pages/AuthorizationPage/AuthorizationPage";
+import RegistrationPage from "../../pages/RegistrationPage/RegistrationPage";
 
 export const router = createBrowserRouter(
   [
@@ -25,11 +22,11 @@ export const router = createBrowserRouter(
         },
         {
           path: "login",
-          element: <AuthorizationForm />,
+          element: <AuthorizationPage />,
         },
         {
           path: "register",
-          element: <RegistrationForm />,
+          element: <RegistrationPage />,
         },
         {
           path: "profile",

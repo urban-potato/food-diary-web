@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useIsAuth } from "../../modules/AuthorizationModule";
+import { useIsAuth } from "../../modules/AuthorizationRegistrationModule";
 
 type ProtectedPagePropsType = {
   children: JSX.Element;

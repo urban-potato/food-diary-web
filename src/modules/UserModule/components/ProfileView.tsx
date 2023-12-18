@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useGetUserInfoQuery, useLazyGetUserInfoQuery } from "../api/user.api";
 import ProfileEdit from "./ProfileEdit";
 import { useRef } from "react";
-import { useGetMeQuery } from "../../AuthorizationModule/api/auth.api";
+import { useGetMeQuery } from "../../AuthorizationRegistrationModule/api/auth.api";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../global/store/hooks";
 import { logout } from "../slices/userSlice";

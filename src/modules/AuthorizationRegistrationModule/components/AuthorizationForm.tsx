@@ -5,28 +5,17 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../global/store/hooks";
 import { useIsAuth } from "../hooks/hooks";
-import {
-  useLoginMutation,
-  useLazyGetMeQuery,
-  useRegisterMutation,
-} from "../api/auth.api";
-import { useLazyGetUserInfoQuery } from "../../UserModule/index";
+import { useLoginMutation, useLazyGetMeQuery } from "../api/auth.api";
+import { useLazyGetUserInfoQuery } from "../../UserModule/api/user.api";
 import { toast } from "react-hot-toast";
+import { login } from "../../UserModule/slices/userSlice";
 import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.helper";
 import { FC, useEffect } from "react";
 import IlluminatedInput from "../../../ui/IlluminatedInput.tsx";
-import { VscChromeClose } from "react-icons/Vsc";
-import { login } from "../../UserModule/slices/userSlice";
-import { FaAngleLeft } from "react-icons/fa6";
+import { AuthorizationFormType } from "../types/types";
 
-interface FormType {
-  email: string;
-  password: string;
-  passwordConfirmation: string;
-}
-
-const RegistrationForm: FC = () => {
-  const validationSchema = yup.object<FormType>().shape({
+const AuthorizationForm: FC = () => {
+  const validationSchema = yup.object<AuthorizationFormType>().shape({
     email: yup
       .string()
       .email(validValues.email.error)
@@ -46,20 +35,9 @@ const RegistrationForm: FC = () => {
         validValues.password.max.message(validValues.password.max.value)
       )
       .required(`• Пароль: ${validValues.requiredErrorMessage}`),
-    passwordConfirmation: yup
-      .string()
-      // .min(
-      //   validValues.passwordConfirmation.min.value,
-      //   validValues.passwordConfirmation.min.message(validValues.passwordConfirmation.min.value)
-      // )
-      // .max(
-      //   validValues.passwordConfirmation.max.value,
-      //   validValues.passwordConfirmation.max.message(validValues.passwordConfirmation.min.value)
-      // )
-      .required(`• Повторите пароль: ${validValues.requiredErrorMessage}`)
-      .oneOf([yup.ref("password")], validValues.passwordsMustMatchMessage),
   });
 
+  // TODO: ИЗУЧИТЬ useForm и yup
   const {
     register,
     reset,
@@ -75,62 +53,61 @@ const RegistrationForm: FC = () => {
 
   const { dirtyFields, touchedFields } = useFormState({ control });
 
+  // TODO: ИЗУЧИТЬ useNavigate
   const navigate = useNavigate();
+  // TODO: ИЗУЧИТЬ useAppDispatch
   const dispatch = useAppDispatch();
 
   const [doLogin, doLoginResult] = useLoginMutation();
   const [doGetMe, doGetMeResult] = useLazyGetMeQuery();
   const [doGetUserInfo, doGetUserInfoResult] = useLazyGetUserInfoQuery();
-  const [doRegister, doRegisterResult] = useRegisterMutation();
 
-  const onSubmit: SubmitHandler<FormType> = async (data) => {
+  // TODO: ИЗУЧИТЬ SubmitHandler<AuthorizationFormType>
+  const onSubmit: SubmitHandler<AuthorizationFormType> = async (data) => {
     const { email, password } = data;
 
-    const registerData = {
+    const loginData = {
       email: email,
       password: password,
     };
 
     // TODO: дорабатывать обработку получения негативных ответов сервера
+    // TODO: ИЗУЧИТЬ .unwrap()
     try {
-      const result = await doRegister(registerData)
+      const result = await doLogin(loginData)
         .unwrap()
-        .then(() => {
-          doLogin(registerData)
+        .then((data) => {
+          console.log("doLogin data");
+          console.log(data);
+
+          console.log("doLoginResult");
+          console.log(doLoginResult);
+
+          console.log("data.token");
+          console.log(data.token);
+
+          setTokenToLocalStorage(data.token);
+
+          doGetMe(undefined)
             .unwrap()
             .then((data) => {
-              console.log("doLogin data");
+              console.log("doGetMe data");
               console.log(data);
 
-              console.log("doLoginResult");
-              console.log(doLoginResult);
-
-              console.log("data.token");
-              console.log(data.token);
-
-              setTokenToLocalStorage(data.token);
-
-              doGetMe(undefined)
+              doGetUserInfo(data.id)
                 .unwrap()
                 .then((data) => {
-                  console.log("doGetMe data");
+                  console.log("doGetUserInfo data");
                   console.log(data);
 
-                  doGetUserInfo(data.id)
-                    .unwrap()
-                    .then((data) => {
-                      console.log("doGetUserInfo data");
-                      console.log(data);
-
-                      dispatch(login(data));
-                    })
-                    .catch((e) => console.log(e));
+                  dispatch(login(data));
                 })
                 .catch((e) => console.log(e));
             })
             .catch((e) => console.log(e));
 
-          toast.success("Вы зарегистрированы");
+          // TODO: ИЗУЧИТЬ toast
+          toast.success("Вы авторизированы");
           navigate("/diary");
 
           reset();
@@ -142,20 +119,19 @@ const RegistrationForm: FC = () => {
     }
   };
 
+  // TODO: ИЗУЧИТЬ useAppSelector
   const isAuth = useIsAuth();
-
-  // console.log("getValues(email)");
-  // console.log(getValues("email"));
 
   let isFilledRight =
     getValues("email") &&
     getValues("password") &&
-    getValues("passwordConfirmation") &&
     !errors?.email &&
-    !errors?.password &&
-    !errors?.passwordConfirmation
+    !errors?.password
       ? true
       : false;
+
+  console.log("getValues(email)");
+  console.log(getValues("email"));
 
   useEffect(() => {
     if (Object.keys(dirtyFields).length && !Object.keys(touchedFields).length) {
@@ -163,23 +139,24 @@ const RegistrationForm: FC = () => {
     }
   }, [dirtyFields, touchedFields]);
 
+  //--------------------------------------------------------
+
+  // TODO: ИЗУЧИТЬ получше кастомный IlluminatedInput
   return (
     <>
       {!isAuth ? (
         <section
           className=" 
         flex-grow 
+        
         flex flex-col gap-y-3 
+
         justify-center
+
         w-full max-w-md
-     
         "
         >
-          {/* <button className="small_btn btn_colored" onClick={() => navigate(-1)}>
-            <FaAngleLeft className="" />
-          </button> */}
-
-          <h2 className="">Зарегистрируйтесь в FoodDiary</h2>
+          <h2 className="">Войдите в аккаунт</h2>
 
           <form className="" onSubmit={handleSubmit(onSubmit)}>
             <IlluminatedInput
@@ -202,16 +179,6 @@ const RegistrationForm: FC = () => {
               isRequired={true}
             />
 
-            <IlluminatedInput
-              id="passwordConfirmation"
-              type="password"
-              placeholder="Повторите пароль"
-              register={{ ...register("passwordConfirmation") }}
-              // errorMessage={errors.passwordConfirmation?.message}
-              isError={errors.passwordConfirmation ? true : false}
-              isRequired={true}
-            />
-
             <div
               className={
                 Object.keys(errors).length > 0
@@ -219,59 +186,46 @@ const RegistrationForm: FC = () => {
                   : " hidden "
               }
             >
-              <p
-                className={errors.email ? "text-pink-500 truncate" : " hidden "}
-              >
+              <p className={errors.email ? "text-pink-500 " : " hidden "}>
                 {errors.email?.message}
               </p>
               <p className={errors.password ? "text-pink-500 " : " hidden "}>
                 {errors.password?.message}
               </p>
-              <p
-                className={
-                  errors.passwordConfirmation ? "text-pink-500 " : " hidden "
-                }
-              >
-                {errors.passwordConfirmation?.message}
-              </p>
             </div>
 
-            {/* <div
-              className=" mt-6 
-        flex flex-wrap w-full 
-        gap-x-4 gap-y-3
-        justify-stretch items-center"
-            > */}
-            <button
-              type="submit"
-              disabled={isFilledRight ? false : true}
-              className={
-                isFilledRight
-                  ? "btn btn_dark flex-grow"
-                  : "btn btn_disabled flex-grow "
-              }
-            >
-              Зарегистрироваться
-            </button>
-            {/* </div> */}
+            <div className="">
+              {/* <input type="submit" value="Войти" className="" /> */}
 
-            <p className="truncate">
-              Есть аккаунт?{" "}
-              {/* {error ? <div className={}>{error}</div> : null} */}
-              <Link
-                to="/login"
-                className="underline hover:text-light_near_black transition duration-1000 hover:duration-200"
+              <button
+                type="submit"
+                disabled={isFilledRight ? false : true}
+                className={
+                  isFilledRight
+                    ? "btn btn_dark flex-grow"
+                    : "btn btn_disabled flex-grow "
+                }
               >
-                Войдите
-              </Link>
-            </p>
+                Войти
+              </button>
+
+              <p className="truncate">
+                Нет аккаунта?{" "}
+                <Link
+                  to="/register"
+                  className="underline hover:text-light_near_black transition duration-1000 hover:duration-500"
+                >
+                  Зарегистрируйтесь
+                </Link>
+              </p>
+            </div>
           </form>
         </section>
       ) : (
-        <Navigate to="/" replace={true} />
+        <Navigate to="/diary" replace={true} />
       )}
     </>
   );
 };
 
-export default RegistrationForm;
+export default AuthorizationForm;

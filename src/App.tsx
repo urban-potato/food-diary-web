@@ -1,13 +1,13 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "./global/routes/routes";
 import { useAppDispatch } from "./global/store/hooks";
-import { useIsAuth } from "./modules/AuthorizationModule/index";
+import { useIsAuth } from "./modules/AuthorizationRegistrationModule/index";
 import { login } from "./modules/UserModule/index";
 import { useEffect, useRef } from "react";
 import { getTokenFromLocalStorage } from "./global/helpers/local_storage.helper";
 import { Player } from "@lordicon/react";
 import PRELOADER from "../public/system-regular-18-autorenew.json";
-import { useGetMeQuery } from "./modules/AuthorizationModule/api/auth.api";
+import { useGetMeQuery } from "./modules/AuthorizationRegistrationModule/api/auth.api";
 import { useGetUserInfoQuery } from "./modules/UserModule/api/user.api";
 
 function App() {
