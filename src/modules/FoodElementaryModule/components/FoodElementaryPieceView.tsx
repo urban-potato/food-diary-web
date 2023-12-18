@@ -75,7 +75,7 @@ const FoodElementaryPieceView = ({
         className="relative flex flex-wrap w-full 
       justify-center items-start 
       
-      px-6  pt-5 pb-6
+      px-6  py-7
      
       transition duration-1000 
 
@@ -97,22 +97,15 @@ const FoodElementaryPieceView = ({
         ) : (
           <div
             key={id}
-            className="flex flex-col flex-wrap w-full 
+            className="flex flex-col  w-full 
             
           "
           >
-            <div className=" -mt-5 flex flex-col flex-wrap ">
-              <div className=" text-xl font-bold mb-3">{name}</div>
-              <div>
-                <div className=" font-semibold mb-1 text-[17px]">
-                  Нутриенты на 100гр:
-                </div>
-                <div className=" flex flex-wrap gap-x-4 ">
-                  {foodCharacteristics}
-                </div>
+            <div className=" flex  w-full ">
+              <div className=" text-xl font-bold mb-3 text-ellipsis overflow-hidden ">
+                <p className="text-ellipsis overflow-hidden ">{name}</p>
               </div>
-            </div>
-            <div className="order-[-1] ml-auto gap-x-2 flex justify-center items-start ">
+              <div className=" -mt-2 ml-auto gap-x-2 flex justify-center items-start ">
               <span role="button" onClick={() => setIsEditMode(!isEditMode)}>
                 <span
                   onMouseEnter={() =>
@@ -143,6 +136,16 @@ const FoodElementaryPieceView = ({
                 </span>
               </span>
             </div>
+            </div>
+            <div className=" flex flex-col text-ellipsis overflow-hidden   w-full">
+              <div className=" font-semibold mb-1 text-[17px] text-ellipsis overflow-hidden">
+                Нутриенты на 100гр:
+              </div>
+              <div className=" flex flex-wrap gap-x-4 ">
+                {foodCharacteristics}
+              </div>
+            </div>
+            
           </div>
         )}
       </div>

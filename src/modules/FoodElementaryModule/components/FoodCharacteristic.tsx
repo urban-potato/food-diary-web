@@ -6,8 +6,8 @@ const FoodCharacteristic = ({
   value,
 }: IFoodCharacteristicProps) => {
   return (
-    <div>
-      {name}: {value}
+    <div className="flex gap-x-1 flex-wrap text-ellipsis overflow-hidden ">
+      <p className="text-ellipsis overflow-hidden  ">{name}:</p><p className="text-ellipsis overflow-hidden">{value}</p>
     </div>
   );
 };

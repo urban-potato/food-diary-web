@@ -122,13 +122,13 @@ const ProfileView = () => {
           "
               >
                 <div className="-mt-4 flex flex-wrap items-center gap-x-2 ">
-                  <p className="truncate font-bold text-lg">Почта: </p>
-                  <p className="truncate">{dataGetUserInfo?.email}</p>
+                  <p className="text-ellipsis overflow-hidden font-bold text-lg">Почта: </p>
+                  <p className="text-ellipsis overflow-hidden">{dataGetUserInfo?.email}</p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-x-2">
-                  <p className="truncate font-bold text-lg">Имя: </p>
-                  <p className="truncate">
+                  <p className="text-ellipsis overflow-hidden font-bold text-lg">Имя: </p>
+                  <p className="text-ellipsis overflow-hidden">
                     {dataGetUserInfo?.firstName
                       ? dataGetUserInfo?.firstName
                       : <p className="text-rose-700 font-bold">не указано</p>}
@@ -136,8 +136,8 @@ const ProfileView = () => {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-x-2 ">
-                  <p className="truncate font-bold text-lg">Фамилия: </p>
-                  <p className="truncate">
+                  <p className="text-ellipsis overflow-hidden font-bold text-lg">Фамилия: </p>
+                  <p className="text-ellipsis overflow-hidden">
                     {dataGetUserInfo?.lastName
                       ? dataGetUserInfo?.lastName
                       : <p className="text-rose-700 font-bold">не указано</p>}

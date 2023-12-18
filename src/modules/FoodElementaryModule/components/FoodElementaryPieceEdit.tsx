@@ -224,7 +224,7 @@ const FoodElementaryPieceEdit = ({
         className="   flex flex-col flex-wrap justify-center "
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="text-xl -mt-8">
+        <div className="text-xl -mt-6">
           <Input
             id="name"
             type="text"
@@ -301,7 +301,7 @@ const FoodElementaryPieceEdit = ({
         </div>
       </form>
 
-      <div className="order-[-1] ml-auto gap-x-2 flex justify-center items-start ">
+      <div className="order-[-1] -mt-2 ml-auto gap-x-2 flex justify-center items-start ">
         <span role="button" onClick={() => setIsEditMode(false)}>
           <span
             onMouseEnter={() => editIconPlayerRef.current?.playFromBeginning()}

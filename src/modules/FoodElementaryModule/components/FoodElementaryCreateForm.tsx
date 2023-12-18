@@ -19,7 +19,7 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
       )
       .max(
         validValues.name.max.value,
-        validValues.name.max.message(validValues.name.min.value)
+        validValues.name.max.message(validValues.name.max.value)
       )
       .required(validValues.requiredErrorMessage),
     proteinValue: yup

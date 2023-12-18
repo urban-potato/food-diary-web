@@ -34,7 +34,7 @@ const AuthorizationForm: FC = () => {
       )
       .max(
         validValues.password.max.value,
-        validValues.password.max.message(validValues.password.min.value)
+        validValues.password.max.message(validValues.password.max.value)
       )
       .required(`• Пароль: ${validValues.requiredErrorMessage}`),
   });

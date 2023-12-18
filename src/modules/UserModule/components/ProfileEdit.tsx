@@ -33,7 +33,7 @@ const ProfileEdit = ({ id, email, firstName, lastName, setIsEditMode }) => {
       )
       .max(
         validValues.firstName.max.value,
-        validValues.firstName.max.message(validValues.firstName.min.value)
+        validValues.firstName.max.message(validValues.firstName.max.value)
       )
       .required(`• Имя: ${validValues.requiredErrorMessage}`),
     lastName: yup
@@ -44,7 +44,7 @@ const ProfileEdit = ({ id, email, firstName, lastName, setIsEditMode }) => {
       )
       .max(
         validValues.lastName.max.value,
-        validValues.lastName.max.message(validValues.lastName.min.value)
+        validValues.lastName.max.message(validValues.lastName.max.value)
       )
       .required(`• Фамилия: ${validValues.requiredErrorMessage}`),
   });
