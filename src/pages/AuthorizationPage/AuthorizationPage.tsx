@@ -1,6 +1,7 @@
-import { AuthorizationForm } from "../../modules/AuthorizationRegistrationModule";
+import { FC } from "react";
+import { AuthorizationForm } from "../../modules/AuthorizationRegistrationForms";
 
-const AuthorizationPage = () => {
+const AuthorizationPage: FC = () => {
   return <AuthorizationForm />;
 };
 

@@ -1,9 +1,7 @@
+import { FC } from "react";
 
+const MobileMenu: FC = () => {
+  return <div>MobileMenu</div>;
+};
 
-const MobileMenu = () => {
-  return (
-    <div>MobileMenu</div>
-  )
-}
-
-export default MobileMenu
+export default MobileMenu;

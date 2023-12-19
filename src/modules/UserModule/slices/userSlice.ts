@@ -1,15 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../../../global/store/store.ts";
-import { IUser } from "../../AuthorizationRegistrationModule/types/types.ts";
-
-interface IUserState {
-  user: IUser | null;
-  isAuth: boolean;
-}
+import { IUser, IUserState } from "../types/types.ts";
 
 const initialState: IUserState = {
-  user: null,
+  userInfo: null,
   isAuth: false,
 };
 
@@ -18,11 +13,11 @@ const userSlice = createSlice({
   initialState: initialState,
   reducers: {
     login: (state, action: PayloadAction<IUser>) => {
-      state.user = action.payload;
+      state.userInfo = action.payload;
       state.isAuth = true;
     },
     logout: (state) => {
-      state.user = null;
+      state.userInfo = null;
       state.isAuth = false;
     },
   },

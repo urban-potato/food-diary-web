@@ -1,9 +1,9 @@
-export interface IFoodElementaryPostData {
+export interface FoodElementaryData {
   name: string;
-  proteinValue: number;
-  fatValue: number;
-  carbohydrateValue: number;
-  caloriesValue: number;
+  proteinValue?: number;
+  fatValue?: number;
+  carbohydrateValue?: number;
+  caloriesValue?: number;
 }
 
 export interface IFoodElementaryItem {
@@ -11,11 +11,14 @@ export interface IFoodElementaryItem {
   name: string;
   userId: string;
   isDefault: boolean;
-  characteristics: any;
+  characteristics: IFoodCharacteristic[];
 }
 
-export interface IFoodCharacteristicProps {
-  characteristicTypeId: string;
+export interface FoodElementaryCreateFormProps {
+  setShowCreateForm: Function;
+}
+
+export interface FoodCharacteristicProps {
   name: string;
   value: number;
 }
@@ -27,7 +30,15 @@ export interface IFoodCharacteristic {
   value: number;
 }
 
-export interface FoodElementaryPieceViewProps {
+export interface ILocalFoodCharacteristic {
+  foodCharacteristicId: string;
+  characteristicTypeId: string;
+  characteristicName: string;
+  value: number;
+  localId: number;
+}
+
+export interface FoodElementaryPieceProps {
   id: string;
   name: string;
   characteristics: any;

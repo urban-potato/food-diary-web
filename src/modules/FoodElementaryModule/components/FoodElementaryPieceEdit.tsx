@@ -5,29 +5,34 @@ import {
   useDeleteFoodElementaryMutation,
 } from "../api/foodElementary.api";
 import { validValues } from "../constants/constants";
-import { FoodElementaryPieceEditProps } from "../types/types";
+import {
+  FoodElementaryData,
+  FoodElementaryPieceEditProps,
+  IFoodCharacteristic,
+} from "../types/types";
 import { useForm, useFormState } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import IlluminatedInput from "../../../ui/IlluminatedInput.tsx";
+import { FC, useEffect, useRef } from "react";
+import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
+import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import { Player } from "@lordicon/react";
-import EDIT_ICON from "../../../../public/system-regular-63-settings-cog.json";
-import DELETE_ICON from "../../../../public/system-regular-39-trash.json";
-import { useEffect, useRef } from "react";
-import IlluminatedButton from "../../../ui/IlluminatedButton.tsx";
 
-const FoodElementaryPieceEdit = ({
+import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
+import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
+
+const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
   id,
   name,
   characteristics,
   setIsEditMode,
-}: FoodElementaryPieceEditProps) => {
+}) => {
   const [doDeleteFood, doDeleteFoodResult] = useDeleteFoodElementaryMutation();
 
   let deleteFood = () => {
     doDeleteFood(id);
   };
 
-  let validationSchemaObject = {
+  let validationSchemaObject: any = {
     name: yup
       .string()
       .min(
@@ -41,7 +46,7 @@ const FoodElementaryPieceEdit = ({
       .required(validValues.requiredErrorMessage),
   };
 
-  characteristics.forEach((item) => {
+  characteristics.forEach((item: IFoodCharacteristic) => {
     validationSchemaObject[`${item.foodCharacteristicId}`] = yup
       .number()
       .typeError(validValues.numberTypeErrorMessage)
@@ -65,11 +70,11 @@ const FoodElementaryPieceEdit = ({
   // console.log("validationSchema");
   // console.log(validationSchema);
 
-  let defaultValues = {
+  let defaultValues: any = {
     name: name,
   };
 
-  characteristics.forEach((item) => {
+  characteristics.forEach((item: IFoodCharacteristic) => {
     defaultValues[`${item.foodCharacteristicId}`] = item.value;
   });
 
@@ -97,36 +102,39 @@ const FoodElementaryPieceEdit = ({
     doChangeFoodCharacteristicValueResult,
   ] = useChangeFoodCharacteristicValueMutation();
 
-  const editFoodCharacteristicsInputs = characteristics.map((c) => {
-    return (
-      <div className="flex-grow-100 ">
-        <IlluminatedInput
-          key={`${id}_${c.foodCharacteristicId}`}
-          id={c.foodCharacteristicId}
-          type="number"
-          placeholder={c.characteristicName}
-          register={{ ...register(`${c.foodCharacteristicId}`) }}
-          // errorMessage={errors[`${c.foodCharacteristicId}`]?.message}
-          isError={errors[`${c.foodCharacteristicId}`] ? true : false}
-        />
-      </div>
-    );
-  });
+  const editFoodCharacteristicsInputs = characteristics.map(
+    (c: IFoodCharacteristic) => {
+      return (
+        <div className="flex-grow-100 ">
+          <InputIlluminated
+            key={`${id}_${c.foodCharacteristicId}`}
+            id={c.foodCharacteristicId}
+            type="number"
+            placeholder={c.characteristicName}
+            register={{ ...register(`${c.foodCharacteristicId}`) }}
+            // errorMessage={errors[`${c.foodCharacteristicId}`]?.message}
+            isError={errors[`${c.foodCharacteristicId}`] ? true : false}
+          />
+        </div>
+      );
+    }
+  );
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: FoodElementaryData) => {
     console.log("data");
     console.log(data);
 
     let submitFoodNameData = {
       name: data.name,
     };
-    let foodCharacteristicsToChange = {};
+    let foodCharacteristicsToChange: any = {};
 
     const dataKeys = Object.keys(data);
 
     dataKeys.forEach((key) => {
       if (key !== "name") {
-        foodCharacteristicsToChange[`${key}`] = data[`${key}`];
+        foodCharacteristicsToChange[`${key}`] =
+          data[`${key}` as keyof FoodElementaryData];
       }
     });
 
@@ -140,9 +148,6 @@ const FoodElementaryPieceEdit = ({
         data: submitFoodNameData,
       });
 
-      // console.log("foodCharacteristicsToChange");
-      // console.log(foodCharacteristicsToChange);
-
       foodCharacteristicsToChangeKeys.forEach((key) => {
         const resultChangeFoodCharacteristicValue =
           doChangeFoodCharacteristicValue({
@@ -155,7 +160,7 @@ const FoodElementaryPieceEdit = ({
 
       reset();
       setIsEditMode(false);
-    } catch (error) {
+    } catch (error: any) {
       console.log("error");
       console.log(error);
       alert(error?.data?.title);
@@ -166,47 +171,35 @@ const FoodElementaryPieceEdit = ({
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
 
-  const editFoodCharacteristicsErrors = characteristics.map((c) => {
-    return (
-      <p
-        key={`error_${id}_${c.foodCharacteristicId}`}
-        className={
-          errors[`${c.foodCharacteristicId}`] ? "text-pink-500 " : " hidden "
-        }
-      >
-        • {c.characteristicName}: {errors[`${c.foodCharacteristicId}`]?.message}
-      </p>
-    );
-  });
+  const editFoodCharacteristicsErrors = characteristics.map(
+    (c: IFoodCharacteristic) => {
+      return (
+        <p
+          key={`error_${id}_${c.foodCharacteristicId}`}
+          className={
+            errors[`${c.foodCharacteristicId}`] ? "text-pink-500 " : " hidden "
+          }
+        >
+          • {c.characteristicName}:{" "}
+          {`${errors[`${c.foodCharacteristicId}`]?.message}`}
+        </p>
+      );
+    }
+  );
 
-  // let isCharacteristicsFilledRight = characteristics.forEach((c) => {
-  //   let errorsKeys = Object.keys(errors);
-  //   if (errorsKeys.length > 0 && errorsKeys.includes(c.foodCharacteristicId)) {
-  //     return false;
-  //   }
-  //   return true;
-  // });
-  let isCharacteristicsFilledWrong = characteristics.some((c) => {
-    return (
-      Object.keys(errors).length &&
-      Object.keys(errors).includes(c.foodCharacteristicId)
-    );
-  });
+  let isCharacteristicsFilledWrong = characteristics.some(
+    (c: IFoodCharacteristic) => {
+      return (
+        Object.keys(errors).length &&
+        Object.keys(errors).includes(c.foodCharacteristicId)
+      );
+    }
+  );
 
   let isFilledRight =
     getValues("name") && !errors?.name && !isCharacteristicsFilledWrong
       ? true
       : false;
-
-  // console.log("isCharacteristicsFilledWrong");
-  // console.log(isCharacteristicsFilledWrong);
-  // console.log("isFilledRight");
-  // console.log(isFilledRight);
-
-  // console.log("dirtyFields");
-  // console.log(dirtyFields);
-  // console.log("touchedFields");
-  // console.log(touchedFields);
 
   useEffect(() => {
     if (Object.keys(dirtyFields).length && !Object.keys(touchedFields).length) {
@@ -224,15 +217,12 @@ const FoodElementaryPieceEdit = ({
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="text-xl -mt-6">
-          <IlluminatedInput
+          <InputIlluminated
             id="name"
             type="text"
             placeholder="Название блюда"
             register={{ ...register("name") }}
-            // errorMessage={errors.name?.message}
             isError={errors.name ? true : false}
-            // inset=" inset-0 "
-            // bgError = "#F8E4EB"
             isRequired={true}
           />
         </div>
@@ -241,7 +231,7 @@ const FoodElementaryPieceEdit = ({
           <div className=" font-semibold mb-1 text-[17px]">
             Нутриенты на 100гр:
           </div>
-          {/* <div className="flex flex-wrap gap-x-4 ">{foodCharacteristics}</div> */}
+
           <div
             className=" w-full 
           flex flex-wrap 
@@ -261,7 +251,7 @@ const FoodElementaryPieceEdit = ({
           }
         >
           <p className={errors.name ? "text-pink-500 " : " hidden "}>
-            {errors.name?.message}
+            {`${errors.name?.message}`}
           </p>
 
           {editFoodCharacteristicsErrors}
@@ -274,11 +264,10 @@ const FoodElementaryPieceEdit = ({
         justify-stretch items-center"
         >
           <span className=" flex-grow">
-            <IlluminatedButton
+            <ButtonIlluminated
               label="Сохранить"
               isDarkButton={true}
               isIlluminationFull={false}
-              // additionalStyles=" w-[280px] "
               isButton={true}
               type="submit"
               buttonPadding=" p-4 "
@@ -286,7 +275,7 @@ const FoodElementaryPieceEdit = ({
             />
           </span>
           <span className=" flex-grow">
-            <IlluminatedButton
+            <ButtonIlluminated
               label="Отменить"
               isDarkButton={false}
               isIlluminationFull={false}
@@ -294,7 +283,6 @@ const FoodElementaryPieceEdit = ({
                 setIsEditMode(false);
               }}
               buttonPadding=" p-4 "
-              // additionalStyles=" w-[280px] "
             />
           </span>
         </div>

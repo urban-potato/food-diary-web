@@ -1,29 +1,29 @@
 export const validValues = {
-    requiredErrorMessage: "Обязательное поле",
-    email: {
-        error: "• Почта: Введены некорректные данные",
-      },
-    firstName: {
-      min: {
-        value: 3,
-        message: (min: number) => `• Имя: Минимальная длина - ${min} символа`,
-      },
-      max: {
-        value: 256,
-        message: (max: number) => `• Имя: Максимальная длина - ${max} символов`,
-      },
-      error: "• Имя: Введены некорректные данные",
+  requiredErrorMessage: "Обязательное поле",
+  email: {
+    error: "• Почта: Введены некорректные данные",
+  },
+  firstName: {
+    min: {
+      value: 3,
+      message: (min: number) => `• Имя: Минимальная длина - ${min} символа`,
     },
-    lastName: {
-      min: {
-        value: 3,
-        message: (min: number) => `• Фамилия: Минимальная длина - ${min} символа`,
-      },
-      max: {
-        value: 256,
-        message: (max: number) => `• Фамилия: Максимальная длина - ${max} символов`,
-      },
-      error: "• Фамилия: Введены некорректные данные",
+    max: {
+      value: 256,
+      message: (max: number) => `• Имя: Максимальная длина - ${max} символов`,
     },
-  };
-  
+    error: "• Имя: Введены некорректные данные",
+  },
+  lastName: {
+    min: {
+      value: 3,
+      message: (min: number) => `• Фамилия: Минимальная длина - ${min} символа`,
+    },
+    max: {
+      value: 256,
+      message: (max: number) =>
+        `• Фамилия: Максимальная длина - ${max} символов`,
+    },
+    error: "• Фамилия: Введены некорректные данные",
+  },
+};

@@ -4,13 +4,13 @@ export default {
   theme: {
     extend: {
       inset: {
-        '01': '0.1px',
+        "01": "0.1px",
       },
       blur: {
-        xs: '2px',
+        xs: "2px",
       },
       scale: {
-        '101': '1.01',
+        101: "1.01",
       },
       animation: {
         tilt: "tilt 10s infinite linear",
@@ -44,7 +44,7 @@ export default {
       },
 
       backgroundImage: {
-        food_img: "url('/food_1.png')",
+        food_img: "url('/food.png')",
       },
 
       backgroundPosition: {
@@ -65,7 +65,6 @@ export default {
         very_light_gray: "#E7E7E9",
         // light_gray: "#565564",
         light_gray: "#474747",
-
 
         near_black: "#0d0b26",
         light_near_black: "#535264",

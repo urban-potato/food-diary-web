@@ -2,15 +2,19 @@ import * as yup from "yup";
 import { SubmitHandler, useForm, useFormState } from "react-hook-form";
 import { validValues } from "../constants/constants";
 import { FC, useEffect } from "react";
-import { IFoodElementaryPostData } from "../types/types";
+import {
+  FoodElementaryCreateFormProps,
+  FoodElementaryData,
+} from "../types/types";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useAppDispatch } from "../../../global/store/hooks";
 import { useCreateFoodElementaryMutation } from "../api/foodElementary.api";
-import IlluminatedInput from "../../../ui/IlluminatedInput.tsx";
-import IlluminatedButton from "../../../ui/IlluminatedButton.tsx";
+import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
+import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
 
-const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
-  const validationSchema = yup.object<IFoodElementaryPostData>().shape({
+const FoodElementaryCreateForm: FC<FoodElementaryCreateFormProps> = ({
+  setShowCreateForm,
+}) => {
+  const validationSchema = yup.object().shape({
     name: yup
       .string()
       .min(
@@ -83,7 +87,7 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
     getValues,
     control,
     trigger,
-  } = useForm({
+  } = useForm<FoodElementaryData>({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
     defaultValues: defaultValues,
@@ -91,12 +95,10 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
 
   const { dirtyFields, touchedFields } = useFormState({ control });
 
-  const dispatch = useAppDispatch();
-
   const [doCreateFoodElementary, doCreateFoodElementaryResult] =
     useCreateFoodElementaryMutation();
 
-  const onSubmit: SubmitHandler<IFoodElementaryPostData> = async (data) => {
+  const onSubmit: SubmitHandler<FoodElementaryData> = async (data) => {
     const { name, proteinValue, fatValue, carbohydrateValue, caloriesValue } =
       data;
 
@@ -115,7 +117,7 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
 
       reset();
       setShowCreateForm(false);
-    } catch (error) {
+    } catch (error: any) {
       console.log("error");
       console.log(error);
       alert(error?.data?.title);
@@ -194,7 +196,7 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="text-xl">
-            <IlluminatedInput
+            <InputIlluminated
               id="name"
               type="text"
               placeholder="Название блюда"
@@ -212,7 +214,7 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
 
             <div className="w-full  flex flex-wrap gap-x-4 justify-center items-stretch">
               <div className="flex-grow-100 ">
-                <IlluminatedInput
+                <InputIlluminated
                   id="proteinValue"
                   type="number"
                   placeholder="Белки"
@@ -223,7 +225,7 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
                 />
               </div>
               <div className="flex-grow-100 ">
-                <IlluminatedInput
+                <InputIlluminated
                   id="fatValue"
                   type="number"
                   placeholder="Жиры"
@@ -234,7 +236,7 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
                 />
               </div>
               <div className="flex-grow-100 ">
-                <IlluminatedInput
+                <InputIlluminated
                   id="carbohydrateValue"
                   type="number"
                   placeholder="Углеводы"
@@ -245,7 +247,7 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
                 />
               </div>
               <div className="flex-grow-100 ">
-                <IlluminatedInput
+                <InputIlluminated
                   id="caloriesValue"
                   type="number"
                   placeholder="Ккал"
@@ -291,7 +293,7 @@ const FoodElementaryCreateForm: FC = ({ setShowCreateForm }) => {
           </button> */}
 
           <div className="mt-7">
-            <IlluminatedButton
+            <ButtonIlluminated
               label="Сохранить"
               isDarkButton={true}
               isIlluminationFull={false}

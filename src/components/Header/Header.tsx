@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Link } from "react-router-dom";
-import { useIsAuth } from "../../modules/AuthorizationRegistrationModule/index";
+import { useIsAuth } from "../../modules/AuthorizationRegistrationForms";
 import { BiSolidFoodMenu } from "react-icons/bi";
 
 const Header: FC = () => {
@@ -8,13 +8,13 @@ const Header: FC = () => {
 
   return (
     // desktop nav
-    <nav className="nav_container ">
+    <nav className=" nav_container ">
       <Link
         to="/"
-        className="nav_item max-w-[150px] min-w-[150px] font-bold 
+        className=" nav_item max-w-[150px] min-w-[150px] font-bold 
         hover:text-light_near_black transition duration-1000 hover:duration-200 mr-5 "
       >
-        Food <BiSolidFoodMenu className=" w-[50px] h-[50px] text-pink-500" />{" "}
+        Food <BiSolidFoodMenu className=" w-[50px] h-[50px] text-pink-500 " />
         Diary
       </Link>
 
@@ -41,18 +41,16 @@ const Header: FC = () => {
 
       {!isAuth ? (
         <article
-          className="flex flex-wrap nav_gap flex-grow flex-shrink 
+          className=" flex flex-wrap nav_gap flex-grow flex-shrink 
    
-        justify-center 
-        items-center 
+                      justify-center 
+                      items-center 
 
-        ml-auto
+                      ml-auto
 
-        
-        min-w-[120px]
-        max-w-[270px]
-
-        "
+                      min-w-[120px]
+                      max-w-[270px]
+                    "
         >
           <Link
             to="/login"
@@ -63,7 +61,7 @@ const Header: FC = () => {
           </Link>
 
           <div
-            className="relative group 
+            className=" relative group 
           max-w-[250px] min-w-[120px]"
           >
             <div

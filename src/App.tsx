@@ -1,18 +1,21 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "./global/routes/routes";
 import { useAppDispatch } from "./global/store/hooks";
-import { useIsAuth } from "./modules/AuthorizationRegistrationModule/index";
-import { login } from "./modules/UserModule/index";
-import { useEffect, useRef } from "react";
+import {
+  useIsAuth,
+  useGetMeQuery,
+} from "./modules/AuthorizationRegistrationForms";
+import { login, useGetUserInfoQuery } from "./modules/UserModule";
+import { useEffect, useRef, useState } from "react";
 import { getTokenFromLocalStorage } from "./global/helpers/local_storage.helper";
 import { Player } from "@lordicon/react";
-import PRELOADER from "../public/system-regular-18-autorenew.json";
-import { useGetMeQuery } from "./modules/AuthorizationRegistrationModule/api/auth.api";
-import { useGetUserInfoQuery } from "./modules/UserModule/api/user.api";
+
+import PRELOADER from "./global/assets/system-regular-18-autorenew.json";
 
 function App() {
   const dispatch = useAppDispatch();
-  let isAuth = useIsAuth();
+  // let isAuth = useIsAuth();
+  let [isAuth, setIsAuth] = useState(useIsAuth());
 
   const {
     isLoading: isLoadingGetMeQuery,
@@ -30,28 +33,28 @@ function App() {
 
   const checkAuth = async () => {
     const token = getTokenFromLocalStorage();
-    if (token) {
-      dispatch(
-        login({
-          id: dataGetUserInfo?.id,
-          email: dataGetUserInfo?.email,
-          firstName: dataGetUserInfo?.firstName,
-          lastName: dataGetUserInfo?.lastName,
-        })
-      );
 
-      isAuth = useIsAuth();
+    let loginData = {
+      id: dataGetUserInfo?.id,
+      email: dataGetUserInfo?.email,
+      firstName: dataGetUserInfo?.firstName,
+      lastName: dataGetUserInfo?.lastName,
+    };
+
+    if (token) {
+      dispatch(login(loginData));
+      setIsAuth(useIsAuth());
     }
   };
 
   useEffect(() => {
     preloaderPlayerRef.current?.playFromBeginning();
     checkAuth();
-  }, [isAuth]);
+  }, [isAuth, dataGetMeQuery, dataGetUserInfo]);
 
   return (
     <>
-      {isLoadingGetMeQuery || isLoadingGetUserInfo ? (
+      {isLoadingGetMeQuery ? (
         <span className="flex justify-center items-center h-screen w-full">
           <Player
             ref={preloaderPlayerRef}

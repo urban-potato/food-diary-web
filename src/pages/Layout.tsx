@@ -7,7 +7,8 @@ const Layout: FC = () => {
   return (
     <section
       className=" min-h-screen h-full  flex flex-col 
-    text-near_black bg-near_white "
+                text-near_black bg-near_white 
+                "
     >
       <section className=" h-max ">
         <Header />
@@ -15,9 +16,10 @@ const Layout: FC = () => {
 
       <section
         className=" h-full flex-grow 
-      flex flex-col 
-      justify-center items-center 
-      py-5 px-5 "
+                    flex flex-col 
+                    justify-center items-center 
+                    py-5 px-5 
+                  "
       >
         <Outlet />
       </section>

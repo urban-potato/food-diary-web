@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../../pages/Layout";
-import ProtectedPage from "./ProtectedPage";
+import ProtectedPage from "./ProtectedPage/ProtectedPage.tsx";
 import ErrorPage from "../../pages/ErrorPage/ErrorPage";
 import Homepage from "../../pages/HomePage/HomePage";
 import ProfilePage from "../../pages/ProfilePage/ProfilePage";
 import DiaryPage from "../../pages/DiaryPage/DiaryPage";
-import FoodPage from "../../pages/FoodPage/FoodPage";
+import FoodPage from "../../pages/FoodPage/components/FoodPage/FoodPage.tsx";
 import AuthorizationPage from "../../pages/AuthorizationPage/AuthorizationPage";
 import RegistrationPage from "../../pages/RegistrationPage/RegistrationPage";
 
