@@ -12,6 +12,7 @@ import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.t
 import { Player } from "@lordicon/react";
 import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
 import PRELOADER from "../../../global/assets/system-regular-18-autorenew.json";
+import { useGetUserInfo } from "../hooks/hooks.ts";
 
 const UserProfile: FC = () => {
   const navigate = useNavigate();
@@ -24,17 +25,19 @@ const UserProfile: FC = () => {
     navigate("/");
   };
 
-  const {
-    isLoading: isLoadingGetMeQuery,
-    data: dataGetMeQuery,
-    error: errorGetMeQuery,
-  } = useGetMeQuery(undefined);
+  // const {
+  //   isLoading: isLoadingGetMeQuery,
+  //   data: dataGetMeQuery,
+  //   error: errorGetMeQuery,
+  // } = useGetMeQuery(undefined);
 
-  const {
-    isLoading: isLoadingGetUserInfo,
-    data: dataGetUserInfo,
-    error: errorGetUserInfo,
-  } = useGetUserInfoQuery(dataGetMeQuery?.id);
+  // const {
+  //   isLoading: isLoadingGetUserInfo,
+  //   data: dataGetUserInfo,
+  //   error: errorGetUserInfo,
+  // } = useGetUserInfoQuery(dataGetMeQuery?.id);
+
+  let userInfo = useGetUserInfo();
 
   const [isEditMode, setIsEditMode] = useState(false);
   const editIconPlayerRef = useRef<Player>(null);
@@ -44,14 +47,14 @@ const UserProfile: FC = () => {
 
   useEffect(() => {
     preloaderPlayerRef.current?.playFromBeginning();
-  }, [dataGetMeQuery, dataGetUserInfo]);
+  }, [userInfo]);
 
   return (
     <div
       className="flex justify-center items-center w-full 
     "
     >
-      {isLoadingGetMeQuery || isLoadingGetUserInfo ? (
+      {!userInfo ? (
         <span className="m-10">
           <Player
             ref={preloaderPlayerRef}
@@ -107,10 +110,10 @@ const UserProfile: FC = () => {
           >
             {isEditMode ? (
               <UserProfileEditForm
-                id={dataGetUserInfo?.id}
-                email={dataGetUserInfo?.email}
-                firstName={dataGetUserInfo?.firstName}
-                lastName={dataGetUserInfo?.lastName}
+                id={userInfo?.id}
+                email={userInfo?.email}
+                firstName={userInfo?.firstName ? userInfo?.firstName : ""}
+                lastName={userInfo?.lastName ? userInfo?.lastName : ""}
                 setIsEditMode={setIsEditMode}
               />
             ) : (
@@ -124,7 +127,7 @@ const UserProfile: FC = () => {
                     Почта:{" "}
                   </p>
                   <p className="text-ellipsis overflow-hidden">
-                    {dataGetUserInfo?.email}
+                    {userInfo?.email}
                   </p>
                 </div>
 
@@ -133,8 +136,8 @@ const UserProfile: FC = () => {
                     Имя:{" "}
                   </p>
                   <p className="text-ellipsis overflow-hidden">
-                    {dataGetUserInfo?.firstName ? (
-                      dataGetUserInfo?.firstName
+                    {userInfo?.firstName ? (
+                      userInfo?.firstName
                     ) : (
                       <p className="text-rose-700 font-bold">не указано</p>
                     )}
@@ -146,8 +149,8 @@ const UserProfile: FC = () => {
                     Фамилия:{" "}
                   </p>
                   <p className="text-ellipsis overflow-hidden">
-                    {dataGetUserInfo?.lastName ? (
-                      dataGetUserInfo?.lastName
+                    {userInfo?.lastName ? (
+                      userInfo?.lastName
                     ) : (
                       <p className="text-rose-700 font-bold">не указано</p>
                     )}
@@ -173,12 +176,6 @@ const UserProfile: FC = () => {
                     </span>
                   </span>
                 </div>
-                {/* <button
-              className="btn btn_dark"
-              onClick={(): void => handleExitAccount()}
-            >
-              Выйти
-            </button> */}
 
                 <div
                   className=" mt-4 
