@@ -44,6 +44,7 @@ function App() {
     if (token) {
       dispatch(login(loginData));
       setIsAuth(useIsAuth());
+      // window.location.reload();
     }
   };
 

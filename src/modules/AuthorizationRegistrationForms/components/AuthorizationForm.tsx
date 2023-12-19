@@ -107,6 +107,8 @@ const AuthorizationForm: FC = () => {
 
           // TODO: ИЗУЧИТЬ toast
           toast.success("Вы авторизированы");
+
+          window.location.reload();
           navigate("/diary");
 
           reset();

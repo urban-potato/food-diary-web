@@ -54,7 +54,7 @@ const UserProfile: FC = () => {
       className="flex justify-center items-center w-full 
     "
     >
-      {!userInfo ? (
+      {!userInfo?.email ? (
         <span className="m-10">
           <Player
             ref={preloaderPlayerRef}
