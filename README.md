@@ -19,3 +19,13 @@ The application has a responsive design and can be used from a PC, smartphone or
 ## Backend
 
 https://github.com/urban-potato/GymBackend
+
+## Interface preview
+
+### Main page
+
+![main page](https://github.com/urban-potato/food-diary-web/blob/main/main_page.png?raw=true)
+
+### Dishes page
+
+![dishes page](https://github.com/urban-potato/food-diary-web/blob/main/dishes_page.png?raw=true)
