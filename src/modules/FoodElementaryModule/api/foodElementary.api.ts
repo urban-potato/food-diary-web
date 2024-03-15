@@ -1,4 +1,5 @@
 import { api } from "../../../global/api/api";
+import { IFoodElementaryItem } from "../types/types";
 
 const foodElementaryApi = api.injectEndpoints({
   endpoints: (builder) => ({

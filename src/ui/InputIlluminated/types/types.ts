@@ -9,4 +9,6 @@ export interface InputIlluminatedProps {
   bg?: string;
   bgError?: string;
   isRequired?: boolean;
+  disableIllumination?: boolean;
+  additionalStyles?: string;
 }

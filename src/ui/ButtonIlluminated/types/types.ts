@@ -1,5 +1,10 @@
 export interface ButtonIIlluminatedProps {
-  label: string;
+  label:
+    | string
+    | React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLSpanElement>,
+        HTMLSpanElement
+      >;
   isDarkButton: boolean;
   isIlluminationFull?: boolean;
   inset?: string;

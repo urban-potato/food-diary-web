@@ -43,7 +43,7 @@ const buttonStyle = {
     " transition duration-1000 " +
     " hover:duration-500 ",
   disabled:
-    " relative " +
+    " relative cursor-default" +
     " flex-grow flex-shrink " +
     " flex justify-center items-center " +
     " rounded-full " +
@@ -100,11 +100,13 @@ const ButtonIlluminated: FC<ButtonIIlluminatedProps> = ({
         <span
           role="button"
           className={
-            isDarkButton
+            isDisabled
+              ? buttonStyle.disabled + buttonPadding + additionalStyles
+              : isDarkButton
               ? buttonStyle.dark + buttonPadding + additionalStyles
               : buttonStyle.light + buttonPadding + additionalStyles
           }
-          onClick={onClick}
+          onClick={isDisabled ? () => {} : onClick}
         >
           {label}
         </span>
