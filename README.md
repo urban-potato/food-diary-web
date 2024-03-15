@@ -24,8 +24,8 @@ https://github.com/urban-potato/GymBackend
 
 ### Main page
 
-![main page](https://github.com/urban-potato/food-diary-web/blob/main/main_page.png?raw=true)
+![main page](https://github.com/urban-potato/food-diary-web/blob/main/interface_screens/main_page.png?raw=true)
 
 ### Dishes page
 
-![dishes page](https://github.com/urban-potato/food-diary-web/blob/main/dishes_page.png?raw=true)
+![dishes page](https://github.com/urban-potato/food-diary-web/blob/main/interface_screens/dishes_page.png?raw=true)
