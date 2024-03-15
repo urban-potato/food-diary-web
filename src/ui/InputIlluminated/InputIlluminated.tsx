@@ -12,6 +12,8 @@ const InputIlluminated: FC<InputIlluminatedProps> = ({
   bg = "#FFFFFF",
   bgError = "#f8e8ee",
   isRequired = false,
+  disableIllumination = false,
+  additionalStyles = "",
 }) => {
   const illumination = {
     base:
@@ -37,8 +39,8 @@ const InputIlluminated: FC<InputIlluminatedProps> = ({
   };
 
   return (
-    <div className="">
-      <label htmlFor={id} className="">
+    <div className=" ">
+      <label htmlFor={id} className=" ">
         <h3 className="flex gap-x-1">
           {placeholder}
           <p className={isRequired ? "text-red" : "hidden"}>*</p>
@@ -46,11 +48,20 @@ const InputIlluminated: FC<InputIlluminatedProps> = ({
       </label>
 
       <div className=" relative group/input ">
-        <div
+        {/* <div
           className={
             errorMessage || isError
               ? illumination.error + inset
               : illumination.base + inset
+          }
+        ></div> */}
+        <div
+          className={
+            !disableIllumination
+              ? errorMessage || isError
+                ? illumination.error + inset
+                : illumination.base + inset
+              : "" 
           }
         ></div>
         <input
@@ -60,8 +71,8 @@ const InputIlluminated: FC<InputIlluminatedProps> = ({
           style={{ backgroundColor: errorMessage || isError ? bgError : bg }}
           className={
             errorMessage || isError
-              ? "relative text-sm border-0 "
-              : "relative text-sm "
+              ? "relative text-sm border-0 " + " " + additionalStyles
+              : "relative text-sm " + " " + additionalStyles
           }
           // onClick={(event) => {event.stopPropagation();}}
         />

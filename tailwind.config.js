@@ -49,9 +49,6 @@ export default {
 
       backgroundPosition: {
         bg_position: "right -20rem bottom -25rem",
-        // bg_position_lg: "right -20rem bottom -25rem",
-        // bg_position_md: "right -20rem bottom -25rem",
-        // bg_position_sm: "right -20rem bottom -25rem",
       },
 
       flexGrow: {
@@ -84,20 +81,8 @@ export default {
         near_white_dark: "#FFE0B2",
 
         red: "#FF7777CC",
-
-        // primary: "#1B1B23",
-        // secondary: "#FFFFFF",
-        // gray: "#FFFFFF80",
-        // gradient: "linear-gradient(90deg, #D2459D -13.66%, #4383FF 100%)",
-        // red: "#FF7777CC",
-        // blue: "#4383FF",
-        // gree: "#3ae374",
-        // modal: "#00000079",
       },
     },
-    // fontFamily: {
-    //   Merriweather: ["Merriweather", "sans-serif"],
-    // },
   },
   plugins: [],
 };
