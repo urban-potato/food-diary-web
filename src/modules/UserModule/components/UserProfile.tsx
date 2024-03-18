@@ -135,26 +135,27 @@ const UserProfile: FC = () => {
                   <p className="text-ellipsis overflow-hidden font-bold text-lg">
                     Имя:{" "}
                   </p>
-                  <p className="text-ellipsis overflow-hidden">
-                    {userInfo?.firstName ? (
-                      userInfo?.firstName
-                    ) : (
-                      <p className="text-rose-700 font-bold">не указано</p>
-                    )}
-                  </p>
+                  {userInfo?.firstName ? (
+                    <p className="text-ellipsis overflow-hidden">
+                      {userInfo?.firstName}
+                    </p>
+                  ) : (
+                    <p className="text-rose-700 font-bold">не указано</p>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap items-center gap-x-2 ">
                   <p className="text-ellipsis overflow-hidden font-bold text-lg">
                     Фамилия:{" "}
                   </p>
-                  <p className="text-ellipsis overflow-hidden">
-                    {userInfo?.lastName ? (
-                      userInfo?.lastName
-                    ) : (
-                      <p className="text-rose-700 font-bold">не указано</p>
-                    )}
-                  </p>
+
+                  {userInfo?.lastName ? (
+                    <p className="text-ellipsis overflow-hidden">
+                      {userInfo?.lastName}
+                    </p>
+                  ) : (
+                    <p className="text-rose-700 font-bold">не указано</p>
+                  )}
                 </div>
 
                 <div className="order-[-1] ml-auto gap-x-2 flex justify-center items-start ">
