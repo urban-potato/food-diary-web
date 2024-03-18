@@ -3,11 +3,8 @@ import { validValues } from "../constants/constants";
 import { SubmitHandler, useForm, useFormState } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../../global/store/hooks";
 import { useIsAuth } from "../hooks/hooks";
-import { useLoginMutation, useLazyGetMeQuery } from "../api/auth.api";
-import { useLazyGetUserInfoQuery, login } from "../../UserModule";
-import { toast } from "react-hot-toast";
+import { useLoginMutation } from "../api/auth.api";
 import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.helper";
 import { FC, useEffect } from "react";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
@@ -36,7 +33,6 @@ const AuthorizationForm: FC = () => {
       .required(`• Пароль: ${validValues.requiredErrorMessage}`),
   });
 
-  // TODO: ИЗУЧИТЬ useForm и yup
   const {
     register,
     reset,
@@ -52,16 +48,10 @@ const AuthorizationForm: FC = () => {
 
   const { dirtyFields, touchedFields } = useFormState({ control });
 
-  // TODO: ИЗУЧИТЬ useNavigate
   const navigate = useNavigate();
-  // TODO: ИЗУЧИТЬ useAppDispatch
-  const dispatch = useAppDispatch();
 
-  const [doLogin, doLoginResult] = useLoginMutation();
-  const [doGetMe, doGetMeResult] = useLazyGetMeQuery();
-  const [doGetUserInfo, doGetUserInfoResult] = useLazyGetUserInfoQuery();
+  const [doLogin] = useLoginMutation();
 
-  // TODO: ИЗУЧИТЬ SubmitHandler<AuthorizationFormType>
   const onSubmit: SubmitHandler<AuthorizationData> = async (data) => {
     const { email, password } = data;
 
@@ -70,57 +60,22 @@ const AuthorizationForm: FC = () => {
       password: password,
     };
 
-    // TODO: дорабатывать обработку получения негативных ответов сервера
-    // TODO: ИЗУЧИТЬ .unwrap()
-    try {
-      const result = await doLogin(loginData)
-        .unwrap()
-        .then((data) => {
-          // console.log("doLogin data");
-          // console.log(data);
+    await doLogin(loginData)
+      .unwrap()
+      .then((data) => {
+        console.log("doLogin data");
+        console.log(data);
 
-          // console.log("doLoginResult");
-          // console.log(doLoginResult);
+        setTokenToLocalStorage(data.token, data.expiresIn);
+      })
+      .catch((e) => console.log(e));
 
-          // console.log("data.token");
-          // console.log(data.token);
+    navigate("/diary");
+    window.location.reload();
 
-          setTokenToLocalStorage(data.token);
-
-          doGetMe(undefined)
-            .unwrap()
-            .then((data) => {
-              // console.log("doGetMe data");
-              // console.log(data);
-
-              doGetUserInfo(data.id)
-                .unwrap()
-                .then((data) => {
-                  // console.log("doGetUserInfo data");
-                  // console.log(data);
-
-                  dispatch(login(data));
-                })
-                .catch((e) => console.log(e));
-            })
-            .catch((e) => console.log(e));
-
-          // TODO: ИЗУЧИТЬ toast
-          toast.success("Вы авторизированы");
-
-          window.location.reload();
-          navigate("/diary");
-
-          reset();
-        });
-    } catch (error: any) {
-      console.log("error");
-      console.log(error);
-      alert(error?.data?.title);
-    }
+    reset();
   };
 
-  // TODO: ИЗУЧИТЬ useAppSelector
   const isAuth = useIsAuth();
 
   let isFilledRight =
@@ -131,32 +86,16 @@ const AuthorizationForm: FC = () => {
       ? true
       : false;
 
-  console.log("getValues(email)");
-  console.log(getValues("email"));
-
   useEffect(() => {
     if (Object.keys(dirtyFields).length && !Object.keys(touchedFields).length) {
       trigger();
     }
   }, [dirtyFields, touchedFields]);
 
-  //--------------------------------------------------------
-
-  // TODO: ИЗУЧИТЬ получше кастомный InputIlluminated
   return (
     <>
       {!isAuth ? (
-        <section
-          className=" 
-        flex-grow 
-        
-        flex flex-col gap-y-3 
-
-        justify-center
-
-        w-full max-w-md
-        "
-        >
+        <section className="flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md">
           <h2 className="">Войдите в аккаунт</h2>
 
           <form className="" onSubmit={handleSubmit(onSubmit)}>
@@ -165,7 +104,6 @@ const AuthorizationForm: FC = () => {
               type="email"
               placeholder="Почта"
               register={{ ...register("email") }}
-              // errorMessage={errors.email?.message}
               isError={errors.email ? true : false}
               isRequired={true}
             />
@@ -175,7 +113,6 @@ const AuthorizationForm: FC = () => {
               type="password"
               placeholder="Пароль"
               register={{ ...register("password") }}
-              // errorMessage={errors.password?.message}
               isError={errors.password ? true : false}
               isRequired={true}
             />
@@ -196,8 +133,6 @@ const AuthorizationForm: FC = () => {
             </div>
 
             <div className="">
-              {/* <input type="submit" value="Войти" className="" /> */}
-
               <button
                 type="submit"
                 disabled={isFilledRight ? false : true}

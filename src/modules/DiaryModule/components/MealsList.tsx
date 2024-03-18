@@ -1,15 +1,23 @@
 import Preloader from "../../../components/Preloader/Preloader";
-import {} from "../api/meals.api";
+import {
+  useGetCourseMealDayByDateQuery,
+  useLazyGetCourseMealDayByDateQuery,
+} from "../api/meals.api";
+import { getFormattedDateTime } from "../helpers/helpers";
 
 const MealsList = () => {
-  // const {
-  //   isLoading: isLoadingGetAllCourseMealDaysByDate,
-  //   data: dataGetAllCourseMealDaysByDate,
-  //   error: errorGetAllCourseMealDaysByDate,
-  // } = useGetAllCourseMealDaysByDateQuery(undefined);
+  // const [
+  //   doLazyGetCourseMealDayByDate,
+  //   { isLoading: isLoadingLazyGetCourseMealDayByDate },
+  // ] = useLazyGetCourseMealDayByDateQuery();
 
-  // const [doLazyGetCourseMealDay, doLazyGetCourseMealDayResult] =
-  //   useLazyGetCourseMealDayQuery();
+  const [date, time] = getFormattedDateTime();
+
+  const { isLoading: isLoadingCourseMealDay, data: dataCourseMealDay } =
+    useGetCourseMealDayByDateQuery(date);
+
+  const mealDay = dataCourseMealDay;
+  console.log("mealDay", mealDay);
 
   const mealsItems = [];
 
@@ -25,7 +33,7 @@ const MealsList = () => {
 
       {mealsItems}
 
-      {true ? (
+      {isLoadingCourseMealDay ? (
         <span className="m-10">
           <Preloader />
         </span>

@@ -1,37 +1,31 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "./global/routes/routes";
 import { useAppDispatch } from "./global/store/hooks";
-import {
-  useIsAuth,
-  useGetMeQuery,
-} from "./modules/AuthorizationRegistrationForms";
-import { login, useGetUserInfoQuery } from "./modules/UserModule";
-import { useEffect, useRef, useState } from "react";
+import { useGetMeQuery } from "./modules/AuthorizationRegistrationForms";
+import { login, logout, useGetUserInfoQuery } from "./modules/UserModule";
+import { useEffect, useRef } from "react";
 import { getTokenFromLocalStorage } from "./global/helpers/local_storage.helper";
 import { Player } from "@lordicon/react";
 
 import PRELOADER from "./global/assets/system-regular-18-autorenew.json";
 
 function App() {
+  const preloaderPlayerRef = useRef<Player>(null);
   const dispatch = useAppDispatch();
-  // let isAuth = useIsAuth();
-  let [isAuth, setIsAuth] = useState(useIsAuth());
 
   const {
     isLoading: isLoadingGetMeQuery,
     data: dataGetMeQuery,
-    error: errorGetMeQuery,
+    isSuccess: isSuccessGetMeQuery,
   } = useGetMeQuery(undefined);
 
   const {
     isLoading: isLoadingGetUserInfo,
     data: dataGetUserInfo,
-    error: errorGetUserInfo,
-  } = useGetUserInfoQuery(dataGetMeQuery?.id);
+    isSuccess: isSuccessGetUserInfo,
+  } = useGetUserInfoQuery(dataGetMeQuery?.id, { skip: !isSuccessGetMeQuery });
 
-  const preloaderPlayerRef = useRef<Player>(null);
-
-  const checkAuth = async () => {
+  const loginLocally = () => {
     const token = getTokenFromLocalStorage();
 
     let loginData = {
@@ -41,21 +35,27 @@ function App() {
       lastName: dataGetUserInfo?.lastName,
     };
 
-    if (token) {
+    if (token && isSuccessGetUserInfo) {
+      console.log("isSuccessGetUserInfo");
+      console.log("loginData", loginData);
+      console.log("token", token);
+
       dispatch(login(loginData));
-      setIsAuth(useIsAuth());
-      // window.location.reload();
+    }
+
+    if (!token) {
+      dispatch(logout());
     }
   };
 
   useEffect(() => {
     preloaderPlayerRef.current?.playFromBeginning();
-    checkAuth();
-  }, [isAuth, dataGetMeQuery, dataGetUserInfo]);
+    loginLocally();
+  }, [dataGetMeQuery, dataGetUserInfo]);
 
   return (
     <>
-      {isLoadingGetMeQuery ? (
+      {isLoadingGetMeQuery || isLoadingGetUserInfo ? (
         <span className="flex justify-center items-center h-screen w-full">
           <Player
             ref={preloaderPlayerRef}
