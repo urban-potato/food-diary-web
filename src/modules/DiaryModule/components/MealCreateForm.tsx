@@ -29,6 +29,7 @@ import React from "react";
 import {
   useChangeCourseMealAddFoodElementaryMutation,
   useCreateCourseMealDayMutation,
+  useLazyGetCourseMealDayByDateQuery,
   useLazyGetCourseMealDayQuery,
 } from "../api/meals.api";
 import { NoticeProps, StylesConfig, components } from "react-select";
@@ -50,6 +51,8 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
     useLazyGetCourseMealDayQuery();
   const [doAddFoodElementary, doAddFoodElementaryResult] =
     useChangeCourseMealAddFoodElementaryMutation();
+  const [doLazyGetCourseMealDayByDate, doLazyGetCourseMealDayByDateResult] =
+    useLazyGetCourseMealDayByDateQuery();
 
   const {
     isLoading: isLoadingGetAllFoodElementary,
@@ -157,12 +160,26 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
       courseMealDate: date,
     };
 
-    await doCreateCourseMealDay(courseMealDayData)
+    let courseMealDayId: string | null = null;
+
+    await doLazyGetCourseMealDayByDate(date)
       .unwrap()
-      .then((courseMealDayId) => {
+      .then((response) => {
+        if (response.items.length === 1) {
+          courseMealDayId = response.items[0].id;
+        } else {
+          doCreateCourseMealDay(courseMealDayData)
+            .unwrap()
+            .then((responseCourseMealDayId) => {
+              courseMealDayId = responseCourseMealDayId;
+            })
+            .catch((e) => console.log(e));
+        }
+
         doLazyGetCourseMealDay(courseMealDayId)
           .unwrap()
           .then((courseMealDayData: ICourseMealDay) => {
+            console.log("courseMealDayId", courseMealDayId);
             const courseMealId = courseMealDayData?.courseMeals?.find(
               (meal: ICourseMeal) => meal.mealTypeId == mealType
             )?.id;

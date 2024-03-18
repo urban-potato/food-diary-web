@@ -18,14 +18,28 @@ const mealsApi = api.injectEndpoints({
       }),
     }),
 
-    // createCourseMeal: builder.mutation({
-    //   query: (data) => ({
-    //     body: data,
-    //     url: "/api/coursemeal",
-    //     method: "POST",
+    getCourseMealDayByDate: builder.query({
+      query: (date) => ({
+        url: `/api/coursemealday?CourseMealDayDate=${date}`,
+        credentials: "same-origin",
+      }),
+    }),
+
+    // getAllCourseMealDays: builder.query({
+    //   query: () => ({
+    //     url: `/api/coursemealday`,
     //     credentials: "same-origin",
     //   }),
     // }),
+
+    createCourseMeal: builder.mutation({
+      query: (data) => ({
+        body: data,
+        url: "/api/coursemeal",
+        method: "POST",
+        credentials: "same-origin",
+      }),
+    }),
 
     changeCourseMealAddFoodElementary: builder.mutation({
       query: ({ id, data }) => ({
@@ -40,8 +54,12 @@ const mealsApi = api.injectEndpoints({
 
 export const {
   useCreateCourseMealDayMutation,
-  // useCreateCourseMealMutation,
+  useCreateCourseMealMutation,
   useGetCourseMealDayQuery,
   useLazyGetCourseMealDayQuery,
+  useGetCourseMealDayByDateQuery,
+  useLazyGetCourseMealDayByDateQuery,
+  // useGetAllCourseMealDaysQuery,
+  // useLazyGetAllCourseMealDaysQuery,
   useChangeCourseMealAddFoodElementaryMutation,
 } = mealsApi;
