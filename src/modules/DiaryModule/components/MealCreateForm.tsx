@@ -1,5 +1,4 @@
-import * as yup from "yup";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import {
   ICourseMeal,
   ICourseMealDay,
@@ -8,16 +7,14 @@ import {
 } from "../types/types";
 import {
   BREAKFAST_DEFAULT_ID,
-  DINNER_DEFAULT_ID,
-  LUNCH_DEFAULT_ID,
-  validValues,
+  selectStyles,
+  validationSchema,
 } from "../constants/constants";
 import {
   Controller,
   SubmitHandler,
   useFieldArray,
   useForm,
-  useFormState,
 } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
@@ -25,18 +22,19 @@ import { useGetAllFoodElementaryQuery } from "../../FoodElementaryModule";
 import type { IFoodElementaryItem } from "../../FoodElementaryModule";
 import AsyncSelect from "react-select/async";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
-import React from "react";
 import {
   useChangeCourseMealAddFoodElementaryMutation,
   useCreateCourseMealDayMutation,
+  useCreateCourseMealMutation,
   useLazyGetCourseMealDayByDateQuery,
   useLazyGetCourseMealDayQuery,
 } from "../api/meals.api";
-import { NoticeProps, StylesConfig, components } from "react-select";
 import { Player } from "@lordicon/react";
 
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import MealTypeOptions from "./MealTypeOptions";
+import { getFormattedDateTime } from "../helpers/helpers";
+import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
 
 const MealCreateForm: FC<MealCreateFormProps> = () => {
   const deleteIconPlayerRef = useRef<Player>(null);
@@ -45,14 +43,11 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
   const [selectedMealType, setSelectedMealType] =
     useState(BREAKFAST_DEFAULT_ID);
 
-  const [doCreateCourseMealDay, doCreateCourseMealDayResult] =
-    useCreateCourseMealDayMutation();
-  const [doLazyGetCourseMealDay, doLazyGetCourseMealDayResult] =
-    useLazyGetCourseMealDayQuery();
-  const [doAddFoodElementary, doAddFoodElementaryResult] =
-    useChangeCourseMealAddFoodElementaryMutation();
-  const [doLazyGetCourseMealDayByDate, doLazyGetCourseMealDayByDateResult] =
-    useLazyGetCourseMealDayByDateQuery();
+  const [doCreateCourseMealDay] = useCreateCourseMealDayMutation();
+  const [doAddFoodElementary] = useChangeCourseMealAddFoodElementaryMutation();
+  const [doLazyGetCourseMealDayByDate] = useLazyGetCourseMealDayByDateQuery();
+  const [doLazyGetCourseMealDay] = useLazyGetCourseMealDayQuery();
+  const [doCreateCourseMeal] = useCreateCourseMealMutation();
 
   const {
     isLoading: isLoadingGetAllFoodElementary,
@@ -72,35 +67,6 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
 
     callback(filteredOptions);
   };
-
-  const validationSchema = yup.object({
-    foodElementaryList: yup
-      .array()
-      .of(
-        yup.object({
-          foodElementaryId: yup.object({
-            label: yup.string(),
-            value: yup
-              .string()
-              .required("• Блюдо: " + validValues.requiredErrorMessage),
-          }),
-          // .required("• Блюдо: " + validValues.requiredErrorMessage),
-
-          weight: yup
-            .number()
-            .required("• Вес: " + validValues.requiredErrorMessage)
-            .typeError("• Вес: " + validValues.numberTypeErrorMessage)
-            .min(
-              validValues.weightValue.min.value,
-              validValues.weightValue.min.message(
-                validValues.weightValue.min.value
-              )
-            )
-            .integer(),
-        })
-      )
-      .required(),
-  });
 
   let defaultValues = {
     foodElementaryList: [
@@ -130,79 +96,88 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
   });
 
   const onSubmit: SubmitHandler<MealData> = async (data) => {
-    const formatNumber = (number: number) => {
-      let numberStr = "";
-
-      if (number < 10) {
-        numberStr = "0" + number;
-      } else {
-        numberStr = number.toString();
-      }
-
-      return numberStr;
-    };
-
-    const nowDate = new Date();
-
-    let month = formatNumber(nowDate.getMonth());
-    let day = formatNumber(nowDate.getDate());
-
-    const date = `${nowDate.getFullYear()}-${month}-${day}`;
+    const [date, time] = getFormattedDateTime();
     const mealType = selectedMealType;
     const foodElementaryList = data?.foodElementaryList?.map((item) => {
       return {
         foodElementaryId: item?.foodElementaryId?.value,
-        weight: item.weight,
+        weight: item?.weight,
       };
     });
 
-    const courseMealDayData = {
-      courseMealDate: date,
-    };
-
     let courseMealDayId: string | null = null;
+    let courseMealId: string | null = null;
 
     await doLazyGetCourseMealDayByDate(date)
       .unwrap()
       .then((response) => {
         if (response.items.length === 1) {
           courseMealDayId = response.items[0].id;
-        } else {
-          doCreateCourseMealDay(courseMealDayData)
-            .unwrap()
-            .then((responseCourseMealDayId) => {
-              courseMealDayId = responseCourseMealDayId;
-            })
-            .catch((e) => console.log(e));
         }
-
-        doLazyGetCourseMealDay(courseMealDayId)
-          .unwrap()
-          .then((courseMealDayData: ICourseMealDay) => {
-            console.log("courseMealDayId", courseMealDayId);
-            const courseMealId = courseMealDayData?.courseMeals?.find(
-              (meal: ICourseMeal) => meal.mealTypeId == mealType
-            )?.id;
-
-            for (const foodElementary of foodElementaryList) {
-              const foolElementaryData = {
-                foodElementaryId: foodElementary.foodElementaryId,
-                weight: foodElementary.weight,
-              };
-
-              const addFoodElementaryData = {
-                id: courseMealId,
-                data: foolElementaryData,
-              };
-
-              doAddFoodElementary(addFoodElementaryData).catch((e) =>
-                console.log(e)
-              );
-            }
-          })
-          .catch((e) => console.log(e));
       })
       .catch((e) => console.log(e));
+
+    if (courseMealDayId === null) {
+      const courseMealDayData = {
+        courseMealDate: date,
+      };
+
+      await doCreateCourseMealDay(courseMealDayData)
+        .unwrap()
+        .then((responseCourseMealDayId) => {
+          courseMealDayId = responseCourseMealDayId;
+        })
+        .catch((e) => console.log(e));
+    }
+
+    await doLazyGetCourseMealDay(courseMealDayId)
+      .unwrap()
+      .then((courseMealDayData: ICourseMealDay) => {
+        const courseMeal: ICourseMeal | undefined =
+          courseMealDayData?.courseMeals?.find(
+            (meal: ICourseMeal) => meal.mealTypeId == mealType
+          );
+
+        if (courseMeal) {
+          const courseMealConsumedElementariesLength =
+            courseMeal.consumedElementaries.length;
+
+          if (courseMealConsumedElementariesLength === 0) {
+            courseMealId = courseMeal.id;
+          }
+        } else {
+          console.log("courseMeal not found");
+        }
+      })
+      .catch((e) => console.log(e));
+
+    if (courseMealId === null) {
+      const createCourseMealData = {
+        mealTypeId: mealType,
+        courseMealDayId: courseMealDayId,
+        courseMealTime: time,
+      };
+      await doCreateCourseMeal(createCourseMealData)
+        .unwrap()
+        .then((responseCourseMealId) => {
+          courseMealId = responseCourseMealId;
+        })
+        .catch((e) => console.log(e));
+    }
+
+    for (const foodElementary of foodElementaryList) {
+      const foolElementaryData = {
+        foodElementaryId: foodElementary.foodElementaryId,
+        weight: foodElementary.weight,
+      };
+
+      const addFoodElementaryData = {
+        id: courseMealId,
+        data: foolElementaryData,
+      };
+
+      doAddFoodElementary(addFoodElementaryData).catch((e) => console.log(e));
+    }
 
     reset();
 
@@ -212,31 +187,6 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
         weight: 0,
       });
     }
-  };
-
-  const NoOptionsMessage = (props: NoticeProps) => {
-    return (
-      <components.NoOptionsMessage {...props}>
-        <span className="">Ничего не нашлось</span>
-      </components.NoOptionsMessage>
-    );
-  };
-
-  const selectStyles: StylesConfig = {
-    control: (styles) => ({
-      ...styles,
-      backgroundColor: "white",
-      borderRadius: "12px",
-      border: 0,
-      boxShadow: "none",
-    }),
-    noOptionsMessage: (base) => ({
-      ...base,
-    }),
-    option: (base, state) => ({
-      ...base,
-      backgroundColor: state.isSelected ? "#C2BAFF" : "white",
-    }),
   };
 
   const handleOptionChange = () => {
@@ -319,31 +269,29 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
                       />
                     </div>
 
-                    {
-                      <div className="max-w-[60px] flex flex-col justify-center items-center">
-                        <h3 className="text-lg my-3"> </h3>
-                        <ButtonIlluminated
-                          label={
-                            <span>
-                              <Player
-                                ref={deleteIconPlayerRef}
-                                icon={DELETE_ICON}
-                                size={ICON_SIZE}
-                                colorize="#f8f7f4"
-                              />
-                            </span>
-                          }
-                          isDarkButton={true}
-                          isIlluminationFull={false}
-                          onClick={() => {
-                            remove(index);
-                          }}
-                          buttonPadding=" p-[14px] "
-                          additionalStyles=" "
-                          isDisabled={fields.length > 1 ? false : true}
-                        />
-                      </div>
-                    }
+                    <div className="max-w-[60px] flex flex-col justify-center items-center">
+                      <h3 className="text-lg my-3"> </h3>
+                      <ButtonIlluminated
+                        label={
+                          <span>
+                            <Player
+                              ref={deleteIconPlayerRef}
+                              icon={DELETE_ICON}
+                              size={ICON_SIZE}
+                              colorize="#f8f7f4"
+                            />
+                          </span>
+                        }
+                        isDarkButton={true}
+                        isIlluminationFull={false}
+                        onClick={() => {
+                          remove(index);
+                        }}
+                        buttonPadding=" p-[14px] "
+                        additionalStyles=" "
+                        isDisabled={fields.length > 1 ? false : true}
+                      />
+                    </div>
                   </div>
 
                   {errors.foodElementaryList && (
@@ -368,18 +316,6 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
                             ?.value?.message
                         }
                       </p>
-                      {/* <p
-                        className={
-                          errors.foodElementaryList[index]?.foodElementaryId
-                            ? "text-pink-500 "
-                            : " hidden "
-                        }
-                      >
-                        {
-                          errors.foodElementaryList[index]?.foodElementaryId
-                            ?.value?.message
-                        }
-                      </p> */}
                       <p
                         className={
                           errors.foodElementaryList[index]?.weight
