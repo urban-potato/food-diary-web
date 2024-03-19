@@ -29,7 +29,9 @@ const MealsList = () => {
     
     "
     >
-      <div className="text-2xl font-bold  ">Заголовок:</div>
+      <div className="text-2xl font-bold  ">
+        {mealDay?.items[0]?.courseMealDate}
+      </div>
 
       {mealsItems}
 

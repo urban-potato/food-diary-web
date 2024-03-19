@@ -36,9 +36,9 @@ function App() {
     };
 
     if (token && isSuccessGetUserInfo) {
-      console.log("isSuccessGetUserInfo");
-      console.log("loginData", loginData);
-      console.log("token", token);
+      // console.log("isSuccessGetUserInfo");
+      // console.log("loginData", loginData);
+      // console.log("token", token);
 
       dispatch(login(loginData));
     }

@@ -15,8 +15,8 @@ export const getTokenFromLocalStorage = (): string => {
   const data: ILocalStorageTokenData = JSON.parse(dataStr);
   const now = new Date();
 
-  console.log("now.getTime()", now.getTime());
-  console.log("data.expiry", data.expiry);
+  // console.log("now.getTime()", now.getTime());
+  // console.log("data.expiry", data.expiry);
 
   if (now.getTime() > data.expiry) {
     console.log("TOKEN REMOVED --- getTokenFromLocalStorage");
@@ -38,7 +38,7 @@ export const setTokenToLocalStorage = (
     expiry: now.getTime() + expiresIn * 1000,
   };
 
-  console.log("item", item);
+  // console.log("item", item);
 
   localStorage.setItem(key, JSON.stringify(item));
 };

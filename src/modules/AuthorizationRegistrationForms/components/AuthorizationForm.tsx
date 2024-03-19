@@ -63,8 +63,8 @@ const AuthorizationForm: FC = () => {
     await doLogin(loginData)
       .unwrap()
       .then((data) => {
-        console.log("doLogin data");
-        console.log(data);
+        // console.log("doLogin data");
+        // console.log(data);
 
         setTokenToLocalStorage(data.token, data.expiresIn);
       })
