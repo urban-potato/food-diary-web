@@ -16,7 +16,7 @@ const FoodElementaryPiece: FC<FoodElementaryPieceProps> = ({
   let foodCharacteristics = characteristics.map((c: IFoodCharacteristic) => {
     return (
       <FoodCharacteristic
-        key={c.foodCharacteristicId}
+        key={`${c.foodCharacteristicId}_foodCharacteristics`}
         name={c.characteristicName}
         value={c.value}
       />
@@ -25,7 +25,7 @@ const FoodElementaryPiece: FC<FoodElementaryPieceProps> = ({
 
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const [doDeleteFood, doDeleteFoodResult] = useDeleteFoodElementaryMutation();
+  const [doDeleteFood] = useDeleteFoodElementaryMutation();
 
   let deleteFood = () => {
     doDeleteFood(id);
@@ -36,49 +36,9 @@ const FoodElementaryPiece: FC<FoodElementaryPieceProps> = ({
   const ICON_SIZE = 28;
 
   return (
-    <div
-      className="group/foodPiece relative 
-    
-    w-full max-w-5xl 
-   
-    my-3 
-    "
-    >
-      <div
-        className="absolute inset-0 
-      
-      rounded-xl 
-
-      bg-gradient-to-r from-pink-500 to-violet-500 
-      opacity-25 
-
-      transition duration-1000 
-
-      group-hover/foodPiece:opacity-40 
-      group-hover/foodPiece:duration-500 
-      group-hover/foodPiece:scale-101
-
-      group-focus-within/foodPiece:opacity-40 
-      group-focus-within/foodPiece:duration-500 
-      group-focus-within/foodPiece:scale-101
-      
-      "
-      ></div>
-      <div
-        className="relative flex flex-wrap w-full 
-      justify-center items-start 
-      
-      pl-7 pr-6  py-7
-     
-      transition duration-1000 
-
-      group-hover/foodPiece:duration-500 
-      group-hover/foodPiece:scale-101
-
-      group-focus-within/foodPiece:duration-500 
-      group-focus-within/foodPiece:scale-101
-      "
-      >
+    <div className="group relative w-full max-w-5xl my-3">
+      <div className="box_style"></div>
+      <div className="box_content_transition flex flex-wrap w-full justify-center items-start pl-7 pr-6 py-7">
         {isEditMode ? (
           <FoodElementaryPieceEdit
             key={`edit_${id}`}
@@ -88,17 +48,12 @@ const FoodElementaryPiece: FC<FoodElementaryPieceProps> = ({
             setIsEditMode={setIsEditMode}
           />
         ) : (
-          <div
-            key={id}
-            className="flex flex-col  w-full 
-            
-          "
-          >
-            <div className=" flex  w-full ">
-              <div className=" text-xl font-bold mb-3 text-ellipsis overflow-hidden ">
-                <p className="text-ellipsis overflow-hidden ">{name}</p>
+          <div key={`not_edit_${id}`} className="flex flex-col  w-full">
+            <div className="flex w-full">
+              <div className="text-xl font-bold mb-3 text-ellipsis overflow-hidden">
+                <p className="text-ellipsis overflow-hidden">{name}</p>
               </div>
-              <div className=" -mt-2 ml-auto gap-x-2 flex justify-center items-start ">
+              <div className="-mt-2 ml-auto gap-x-2 flex justify-center items-start">
                 <span role="button" onClick={() => setIsEditMode(!isEditMode)}>
                   <span
                     onMouseEnter={() =>
@@ -130,11 +85,11 @@ const FoodElementaryPiece: FC<FoodElementaryPieceProps> = ({
                 </span>
               </div>
             </div>
-            <div className=" flex flex-col text-ellipsis overflow-hidden   w-full">
-              <div className=" font-semibold mb-1 text-[17px] text-ellipsis overflow-hidden">
+            <div className="flex flex-col text-ellipsis overflow-hidden w-full">
+              <div className="font-semibold mb-1 text-[17px] text-ellipsis overflow-hidden">
                 Нутриенты на 100гр:
               </div>
-              <div className=" flex flex-wrap gap-x-4 ">
+              <div className="flex flex-wrap gap-x-4">
                 {foodCharacteristics}
               </div>
             </div>

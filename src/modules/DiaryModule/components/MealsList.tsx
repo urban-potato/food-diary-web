@@ -19,21 +19,17 @@ const MealsList = () => {
   const mealDay = dataCourseMealDay;
   console.log("mealDay", mealDay);
 
-  const mealsItems = [];
+  const courseMeals = mealDay?.courseMeals;
+  
+  const courseMealsMapped = [];
 
   return (
-    <div
-      className="w-full max-w-full
-    flex flex-col justify-center items-center
-    mt-3
-    
-    "
-    >
+    <div className="w-full max-w-full flex flex-col justify-center items-center mt-3">
       <div className="text-2xl font-bold  ">
         {mealDay?.items[0]?.courseMealDate}
       </div>
 
-      {mealsItems}
+      {/* {mealsItems} */}
 
       {isLoadingCourseMealDay ? (
         <span className="m-10">

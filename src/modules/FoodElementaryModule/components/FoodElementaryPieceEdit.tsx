@@ -26,7 +26,7 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
   characteristics,
   setIsEditMode,
 }) => {
-  const [doDeleteFood, doDeleteFoodResult] = useDeleteFoodElementaryMutation();
+  const [doDeleteFood] = useDeleteFoodElementaryMutation();
 
   let deleteFood = () => {
     doDeleteFood(id);
@@ -94,25 +94,23 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
 
   const { dirtyFields, touchedFields } = useFormState({ control });
 
-  const [doChangeFoodElementaryName, doChangeFoodElementaryNameResult] =
-    useChangeFoodElementaryNameMutation();
+  const [doChangeFoodElementaryName] = useChangeFoodElementaryNameMutation();
 
-  const [
-    doChangeFoodCharacteristicValue,
-    doChangeFoodCharacteristicValueResult,
-  ] = useChangeFoodCharacteristicValueMutation();
+  const [doChangeFoodCharacteristicValue] =
+    useChangeFoodCharacteristicValueMutation();
 
   const editFoodCharacteristicsInputs = characteristics.map(
     (c: IFoodCharacteristic) => {
       return (
-        <div className="flex-grow-100 ">
+        <div
+          className="flex-grow-100 "
+          key={`${id}_${c.foodCharacteristicId}_editFoodCharacteristicsInputs`}
+        >
           <InputIlluminated
-            key={`${id}_${c.foodCharacteristicId}`}
             id={c.foodCharacteristicId}
             type="number"
             placeholder={c.characteristicName}
             register={{ ...register(`${c.foodCharacteristicId}`) }}
-            // errorMessage={errors[`${c.foodCharacteristicId}`]?.message}
             isError={errors[`${c.foodCharacteristicId}`] ? true : false}
           />
         </div>
@@ -121,8 +119,8 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
   );
 
   const onSubmit = async (data: FoodElementaryData) => {
-    console.log("data");
-    console.log(data);
+    // console.log("data");
+    // console.log(data);
 
     let submitFoodNameData = {
       name: data.name,
@@ -143,19 +141,18 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
     );
 
     try {
-      const resultChangeFoodName = doChangeFoodElementaryName({
+      doChangeFoodElementaryName({
         id: id,
         data: submitFoodNameData,
       });
 
       foodCharacteristicsToChangeKeys.forEach((key) => {
-        const resultChangeFoodCharacteristicValue =
-          doChangeFoodCharacteristicValue({
-            id: key,
-            data: {
-              value: foodCharacteristicsToChange[`${key}`],
-            },
-          });
+        doChangeFoodCharacteristicValue({
+          id: key,
+          data: {
+            value: foodCharacteristicsToChange[`${key}`],
+          },
+        });
       });
 
       reset();
@@ -175,7 +172,7 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
     (c: IFoodCharacteristic) => {
       return (
         <p
-          key={`error_${id}_${c.foodCharacteristicId}`}
+          key={`${id}_${c.foodCharacteristicId}_editFoodCharacteristicsErrors`}
           className={
             errors[`${c.foodCharacteristicId}`] ? "text-pink-500 " : " hidden "
           }
@@ -208,12 +205,9 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
   }, [dirtyFields, touchedFields]);
 
   return (
-    <div
-      className="flex flex-col  w-full pb-3
-    "
-    >
+    <div className="flex flex-col w-full pb-3">
       <form
-        className="   flex flex-col flex-wrap justify-center "
+        className="flex flex-col flex-wrap justify-center"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="text-xl -mt-6">
@@ -228,17 +222,11 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
         </div>
 
         <div className="mt-4 flex flex-col">
-          <div className=" font-semibold mb-1 text-[17px]">
+          <div className="font-semibold mb-1 text-[17px]">
             Нутриенты на 100гр:
           </div>
 
-          <div
-            className=" w-full 
-          flex flex-wrap 
-          gap-x-4 
-
-          justify-stretch items-stretch"
-          >
+          <div className="w-full flex flex-wrap gap-x-4 justify-stretch items-stretch">
             {editFoodCharacteristicsInputs}
           </div>
         </div>
@@ -246,11 +234,11 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
         <div
           className={
             Object.keys(errors).length > 0
-              ? "  flex flex-col mt-5 px-5 gap-y-2 justify-center "
-              : " hidden "
+              ? "flex flex-col mt-5 px-5 gap-y-2 justify-center"
+              : "hidden"
           }
         >
-          <p className={errors.name ? "text-pink-500 " : " hidden "}>
+          <p className={errors.name ? "text-pink-500" : "hidden"}>
             {`${errors.name?.message}`}
           </p>
 
@@ -258,12 +246,12 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
         </div>
 
         <div
-          className=" mt-6 
+          className="mt-6 
         flex flex-wrap w-full 
         gap-x-4 gap-y-3
         justify-stretch items-center"
         >
-          <span className=" flex-grow">
+          <span className="flex-grow">
             <ButtonIlluminated
               label="Сохранить"
               isDarkButton={true}
@@ -274,7 +262,7 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
               isDisabled={isFilledRight ? false : true}
             />
           </span>
-          <span className=" flex-grow">
+          <span className="flex-grow">
             <ButtonIlluminated
               label="Отменить"
               isDarkButton={false}
@@ -288,7 +276,7 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
         </div>
       </form>
 
-      <div className="order-[-1] -mt-2 ml-auto gap-x-2 flex justify-center items-start ">
+      <div className="order-[-1] -mt-2 ml-auto gap-x-2 flex justify-center items-start">
         <span role="button" onClick={() => setIsEditMode(false)}>
           <span
             onMouseEnter={() => editIconPlayerRef.current?.playFromBeginning()}

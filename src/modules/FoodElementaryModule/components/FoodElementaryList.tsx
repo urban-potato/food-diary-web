@@ -1,7 +1,11 @@
 import { FC, useEffect, useRef } from "react";
 import { useGetAllFoodElementaryQuery } from "../api/foodElementary.api";
 import FoodElementaryPiece from "./FoodElementaryPiece.tsx";
-import { IFoodCharacteristic, IFoodElementaryItem, ILocalFoodCharacteristic } from "../types/types";
+import {
+  IFoodCharacteristic,
+  IFoodElementaryItem,
+  ILocalFoodCharacteristic,
+} from "../types/types";
 import { Player } from "@lordicon/react";
 
 import PRELOADER from "../../../global/assets/system-regular-18-autorenew.json";
@@ -56,7 +60,10 @@ const FoodElementaryList: FC = () => {
         }
       );
 
-      function compare(a: ILocalFoodCharacteristic, b: ILocalFoodCharacteristic) {
+      function compare(
+        a: ILocalFoodCharacteristic,
+        b: ILocalFoodCharacteristic
+      ) {
         if (a.localId < b.localId) {
           return -1;
         }
@@ -70,7 +77,7 @@ const FoodElementaryList: FC = () => {
 
       parsedItem.characteristics = preparedCharacteristics;
 
-      parsedItem.key = parsedItem.id;
+      parsedItem.key = `${parsedItem.id}_foodItems`;
 
       return parsedItem;
     }
@@ -84,7 +91,7 @@ const FoodElementaryList: FC = () => {
   let foodItemsSorted = foodItems?.map((item: IFoodElementaryItem) => {
     return (
       <FoodElementaryPiece
-        key={item.id}
+        key={`${item.id}_foodItemsSorted`}
         id={item.id}
         name={item.name}
         characteristics={item.characteristics}
