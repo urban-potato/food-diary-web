@@ -24,27 +24,29 @@ export interface ICourseMealDay {
   userId: string;
   courseMealDate: string;
   courseMeals: ICourseMeal[];
-  characteristicsSum: ICharacteristicsSum[];
+  characteristicsSum: IConsumedCharacteristic[];
 }
 
 export interface ICourseMeal {
   id: string;
   userId: string;
-  consumedElementaries: {
-    id: string;
-    foodElementary: IFoodElementaryItem;
-    elementaryInMealWeight: number;
-  }[];
+  consumedElementaries: IConsumedElementary[];
   consumedRecipes: {
     id: string;
     foodRecipe: IFoodRecipe;
     recipeInMealWeight: number;
   }[];
-  characteristicsSum: ICharacteristicsSum[];
+  characteristicsSum: IConsumedCharacteristic[];
   creationTime: string;
   mealTypeId: string;
   mealTypeName: string;
   courseMealDayId: string;
+}
+
+export interface IConsumedElementary {
+  id: string;
+  foodElementary: IFoodElementaryItem;
+  elementaryInMealWeight: number;
 }
 
 export interface IFoodRecipe {
@@ -56,11 +58,11 @@ export interface IFoodRecipe {
     foodElementary: IFoodElementaryItem;
     elementaryWeight: number;
   }[];
-  characteristicsSum: ICharacteristicsSum[];
+  characteristicsSum: IConsumedCharacteristic[];
 }
 
-export interface ICharacteristicsSum {
-  foodCharacteristicType: IFoodCharacteristicType[];
+export interface IConsumedCharacteristic {
+  foodCharacteristicType: IFoodCharacteristicType;
   characteristicSumValue: number;
 }
 
@@ -69,4 +71,27 @@ export interface IFoodCharacteristicType {
   name: string;
   userId: string;
   isDefault: boolean;
+}
+
+export interface IConsumedCharacteristicWithLocalId
+  extends IConsumedCharacteristic {
+  localId: number;
+}
+
+export interface MealProps {
+  id: string;
+  creationTime: string;
+  mealTypeName: string;
+  consumedElementaries: IConsumedElementary[];
+  characteristicsSum: IConsumedCharacteristic[];
+}
+
+export interface ConsumedCharacteristicProps {
+  name: string;
+  value: number;
+}
+
+export interface ConsumedElementaryProps {
+  foodElementaryName: string;
+  elementaryInMealWeight: number;
 }

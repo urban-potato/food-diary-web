@@ -128,6 +128,10 @@
     @apply mb-9 mt-9 ml-5 mr-5;
   }
 
+  .outer_box_style {
+    @apply relative rounded-xl shadow-lg;
+  }
+
   .box_style {
     @apply absolute inset-0 
       

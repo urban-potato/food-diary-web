@@ -2,15 +2,6 @@ import { api } from "../../../global/api/api";
 
 const mealsApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    createCourseMealDay: builder.mutation({
-      query: (data) => ({
-        body: data,
-        url: "/api/coursemealday",
-        method: "POST",
-        credentials: "same-origin",
-      }),
-    }),
-
     getCourseMealDay: builder.query({
       query: (id) => ({
         url: `/api/coursemealday/${id}`,
@@ -23,6 +14,49 @@ const mealsApi = api.injectEndpoints({
         url: `/api/coursemealday?CourseMealDayDate=${date}`,
         credentials: "same-origin",
       }),
+
+      providesTags: () => [
+        {
+          type: "Diary",
+        },
+      ],
+    }),
+
+    createCourseMealDay: builder.mutation({
+      query: (data) => ({
+        body: data,
+        url: "/api/coursemealday",
+        method: "POST",
+        credentials: "same-origin",
+      }),
+    }),
+
+    deleteConsumedElementary: builder.mutation({
+      query: ({ courseMealId, foodElementaryId }) => ({
+        url: `/api/coursemeal/${courseMealId}/consumedelementaries/${foodElementaryId}`,
+        method: "DELETE",
+        credentials: "same-origin",
+      }),
+
+      invalidatesTags: () => [
+        {
+          type: "Diary",
+        },
+      ],
+    }),
+
+    deleteCourseMeal: builder.mutation({
+      query: (id) => ({
+        url: `/api/coursemeal/${id}`,
+        method: "DELETE",
+        credentials: "same-origin",
+      }),
+
+      invalidatesTags: () => [
+        {
+          type: "Diary",
+        },
+      ],
     }),
 
     // getAllCourseMealDays: builder.query({
@@ -39,6 +73,12 @@ const mealsApi = api.injectEndpoints({
         method: "POST",
         credentials: "same-origin",
       }),
+
+      invalidatesTags: () => [
+        {
+          type: "Diary",
+        },
+      ],
     }),
 
     changeCourseMealAddFoodElementary: builder.mutation({
@@ -48,6 +88,12 @@ const mealsApi = api.injectEndpoints({
         method: "PUT",
         credentials: "same-origin",
       }),
+
+      invalidatesTags: () => [
+        {
+          type: "Diary",
+        },
+      ],
     }),
   }),
 });
@@ -62,4 +108,6 @@ export const {
   // useGetAllCourseMealDaysQuery,
   // useLazyGetAllCourseMealDaysQuery,
   useChangeCourseMealAddFoodElementaryMutation,
+  useDeleteConsumedElementaryMutation,
+  useDeleteCourseMealMutation
 } = mealsApi;

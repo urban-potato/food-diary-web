@@ -130,40 +130,40 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
         .catch((e) => console.log(e));
     }
 
-    await doLazyGetCourseMealDay(courseMealDayId)
+    // await doLazyGetCourseMealDay(courseMealDayId)
+    //   .unwrap()
+    //   .then((courseMealDayData: ICourseMealDay) => {
+    //     const courseMeal: ICourseMeal | undefined =
+    //       courseMealDayData?.courseMeals?.find(
+    //         (meal: ICourseMeal) => meal.mealTypeId == mealType
+    //       );
+
+    //     if (courseMeal) {
+    //       const courseMealConsumedElementariesLength =
+    //         courseMeal.consumedElementaries.length;
+
+    //       if (courseMealConsumedElementariesLength === 0) {
+    //         courseMealId = courseMeal.id;
+    //       }
+    //     } else {
+    //       console.log("courseMeal not found");
+    //     }
+    //   })
+    //   .catch((e) => console.log(e));
+
+    // if (courseMealId === null) {
+    const createCourseMealData = {
+      mealTypeId: mealType,
+      courseMealDayId: courseMealDayId,
+      courseMealTime: time,
+    };
+    await doCreateCourseMeal(createCourseMealData)
       .unwrap()
-      .then((courseMealDayData: ICourseMealDay) => {
-        const courseMeal: ICourseMeal | undefined =
-          courseMealDayData?.courseMeals?.find(
-            (meal: ICourseMeal) => meal.mealTypeId == mealType
-          );
-
-        if (courseMeal) {
-          const courseMealConsumedElementariesLength =
-            courseMeal.consumedElementaries.length;
-
-          if (courseMealConsumedElementariesLength === 0) {
-            courseMealId = courseMeal.id;
-          }
-        } else {
-          console.log("courseMeal not found");
-        }
+      .then((responseCourseMealId) => {
+        courseMealId = responseCourseMealId;
       })
       .catch((e) => console.log(e));
-
-    if (courseMealId === null) {
-      const createCourseMealData = {
-        mealTypeId: mealType,
-        courseMealDayId: courseMealDayId,
-        courseMealTime: time,
-      };
-      await doCreateCourseMeal(createCourseMealData)
-        .unwrap()
-        .then((responseCourseMealId) => {
-          courseMealId = responseCourseMealId;
-        })
-        .catch((e) => console.log(e));
-    }
+    // }
 
     for (const foodElementary of foodElementaryList) {
       const foolElementaryData = {

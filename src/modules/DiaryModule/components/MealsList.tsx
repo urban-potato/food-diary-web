@@ -1,41 +1,54 @@
 import Preloader from "../../../components/Preloader/Preloader";
-import {
-  useGetCourseMealDayByDateQuery,
-  useLazyGetCourseMealDayByDateQuery,
-} from "../api/meals.api";
+import { useGetCourseMealDayByDateQuery } from "../api/meals.api";
 import { getFormattedDateTime } from "../helpers/helpers";
+import { ICourseMeal } from "../types/types";
+import Meal from "./Meal";
 
 const MealsList = () => {
-  // const [
-  //   doLazyGetCourseMealDayByDate,
-  //   { isLoading: isLoadingLazyGetCourseMealDayByDate },
-  // ] = useLazyGetCourseMealDayByDateQuery();
-
   const [date, time] = getFormattedDateTime();
 
   const { isLoading: isLoadingCourseMealDay, data: dataCourseMealDay } =
     useGetCourseMealDayByDateQuery(date);
 
-  const mealDay = dataCourseMealDay;
+  const mealDay = dataCourseMealDay?.items[0]?.courseMeals
+    ?.slice()
+    .sort(function (a: ICourseMeal, b: ICourseMeal) {
+      return a.creationTime.localeCompare(b.creationTime);
+    });
   console.log("mealDay", mealDay);
 
-  const courseMeals = mealDay?.courseMeals;
-  
-  const courseMealsMapped = [];
+  const courseMeals = mealDay?.map((meal: ICourseMeal) => {
+    if (meal.consumedElementaries.length > 0) {
+      return (
+        <Meal
+          key={`courseMeals_${meal.id}`}
+          id={meal.id}
+          creationTime={meal.creationTime}
+          mealTypeName={meal.mealTypeName}
+          consumedElementaries={meal.consumedElementaries}
+          characteristicsSum={meal.characteristicsSum}
+        />
+      );
+    }
+  });
 
   return (
     <div className="w-full max-w-full flex flex-col justify-center items-center mt-3">
       <div className="text-2xl font-bold  ">
-        {mealDay?.items[0]?.courseMealDate}
+        {dataCourseMealDay?.items[0]?.courseMealDate
+          ? dataCourseMealDay?.items[0]?.courseMealDate
+          : date}
       </div>
-
-      {/* {mealsItems} */}
 
       {isLoadingCourseMealDay ? (
         <span className="m-10">
           <Preloader />
         </span>
-      ) : null}
+      ) : (
+        <div className="w-full flex flex-col justify-center items-center">
+          {courseMeals}
+        </div>
+      )}
     </div>
   );
 };
