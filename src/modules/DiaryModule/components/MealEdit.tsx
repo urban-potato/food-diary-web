@@ -230,7 +230,7 @@ const MealEdit: FC<MealEditProps> = ({
 
   return (
     <form
-      className="box_content_transition flex flex-col flex-wrap justify-center w-full px-7 pt-5 pb-8"
+      className="flex flex-col flex-wrap justify-center w-full px-7 pt-5 pb-8"
       onSubmit={handleSubmit(onSubmit)}
     >
       <MealTypeOptions
