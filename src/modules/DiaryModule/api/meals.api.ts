@@ -7,6 +7,12 @@ const mealsApi = api.injectEndpoints({
         url: `/api/coursemealday/${id}`,
         credentials: "same-origin",
       }),
+
+      // providesTags: () => [
+      //   {
+      //     type: "Diary",
+      //   },
+      // ],
     }),
 
     getCourseMealDayByDate: builder.query({
@@ -29,6 +35,12 @@ const mealsApi = api.injectEndpoints({
         method: "POST",
         credentials: "same-origin",
       }),
+
+      // invalidatesTags: () => [
+      //   {
+      //     type: "Diary",
+      //   },
+      // ],
     }),
 
     deleteConsumedElementary: builder.mutation({
@@ -38,11 +50,11 @@ const mealsApi = api.injectEndpoints({
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "Diary",
-        },
-      ],
+      // invalidatesTags: () => [
+      //   {
+      //     type: "Diary",
+      //   },
+      // ],
     }),
 
     deleteCourseMeal: builder.mutation({
@@ -74,11 +86,11 @@ const mealsApi = api.injectEndpoints({
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "Diary",
-        },
-      ],
+      // invalidatesTags: () => [
+      //   {
+      //     type: "Diary",
+      //   },
+      // ],
     }),
 
     changeCourseMealAddFoodElementary: builder.mutation({
@@ -109,5 +121,5 @@ export const {
   // useLazyGetAllCourseMealDaysQuery,
   useChangeCourseMealAddFoodElementaryMutation,
   useDeleteConsumedElementaryMutation,
-  useDeleteCourseMealMutation
+  useDeleteCourseMealMutation,
 } = mealsApi;

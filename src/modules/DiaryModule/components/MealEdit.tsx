@@ -1,9 +1,5 @@
-
-
 const MealEdit = () => {
-  return (
-    <div>MealEdit</div>
-  )
-}
+  return <div>MealEdit</div>;
+};
 
-export default MealEdit
+export default MealEdit;

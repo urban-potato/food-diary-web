@@ -10,27 +10,34 @@ const MealsList = () => {
   const { isLoading: isLoadingCourseMealDay, data: dataCourseMealDay } =
     useGetCourseMealDayByDateQuery(date);
 
-  const mealDay = dataCourseMealDay?.items[0]?.courseMeals
+  // const mealDay = dataCourseMealDay?.items[0]?.courseMeals
+  //   ?.slice()
+  //   .sort(function (a: ICourseMeal, b: ICourseMeal) {
+  //     return a.creationTime.localeCompare(b.creationTime);
+  //   });
+  // console.log("mealDay", mealDay);
+
+  const courseMeals = dataCourseMealDay?.items[0]?.courseMeals
     ?.slice()
     .sort(function (a: ICourseMeal, b: ICourseMeal) {
       return a.creationTime.localeCompare(b.creationTime);
+    })
+    ?.map((meal: ICourseMeal) => {
+      if (meal.consumedElementaries.length > 0) {
+        return (
+          <Meal
+            key={`courseMeals_${meal.id}`}
+            id={meal.id}
+            creationTime={meal.creationTime}
+            mealTypeName={meal.mealTypeName}
+            consumedElementaries={meal.consumedElementaries}
+            characteristicsSum={meal.characteristicsSum}
+          />
+        );
+      }
     });
-  console.log("mealDay", mealDay);
 
-  const courseMeals = mealDay?.map((meal: ICourseMeal) => {
-    if (meal.consumedElementaries.length > 0) {
-      return (
-        <Meal
-          key={`courseMeals_${meal.id}`}
-          id={meal.id}
-          creationTime={meal.creationTime}
-          mealTypeName={meal.mealTypeName}
-          consumedElementaries={meal.consumedElementaries}
-          characteristicsSum={meal.characteristicsSum}
-        />
-      );
-    }
-  });
+  console.log("courseMeals", courseMeals);
 
   return (
     <div className="w-full max-w-full flex flex-col justify-center items-center mt-3">

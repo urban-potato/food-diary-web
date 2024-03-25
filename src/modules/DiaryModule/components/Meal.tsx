@@ -108,7 +108,7 @@ const Meal: FC<MealProps> = ({
           </div>
 
           {isEditMode ? (
-            <MealEdit key={`edit_course_meal_${id}`} />
+            <MealEdit />
           ) : (
             <div className="mt-4">
               <div className="flex flex-col gap-3 max-w-max ">
