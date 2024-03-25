@@ -14,6 +14,23 @@ export interface MealData {
   }[];
 }
 
+export interface EditMealData {
+  foodElementaryList: {
+    foodElementaryId?: {
+      label?: string | undefined;
+      value: string;
+    };
+    weight: number;
+  }[];
+  originalFoodElementaryList: {
+    foodElementaryId: {
+      label: string;
+      value: string;
+    };
+    weight: number;
+  }[];
+}
+
 export interface MealTypeOptionsProps {
   selectedMealType: string;
   setSelectedMealType: React.Dispatch<React.SetStateAction<string>>;
@@ -78,14 +95,6 @@ export interface IConsumedCharacteristicWithLocalId
   localId: number;
 }
 
-export interface MealProps {
-  id: string;
-  creationTime: string;
-  mealTypeName: string;
-  consumedElementaries: IConsumedElementary[];
-  characteristicsSum: IConsumedCharacteristic[];
-}
-
 export interface ConsumedCharacteristicProps {
   name: string;
   value: number;
@@ -94,4 +103,11 @@ export interface ConsumedCharacteristicProps {
 export interface ConsumedElementaryProps {
   foodElementaryName: string;
   elementaryInMealWeight: number;
+}
+
+export interface MealEditProps {
+  courseMealId: string;
+  originalMealTypeId: string;
+  consumedElementaries: IConsumedElementary[];
+  setIsEditMode: Function;
 }

@@ -7,12 +7,6 @@ const mealsApi = api.injectEndpoints({
         url: `/api/coursemealday/${id}`,
         credentials: "same-origin",
       }),
-
-      // providesTags: () => [
-      //   {
-      //     type: "Diary",
-      //   },
-      // ],
     }),
 
     getCourseMealDayByDate: builder.query({
@@ -28,6 +22,13 @@ const mealsApi = api.injectEndpoints({
       ],
     }),
 
+    // getAllCourseMealDays: builder.query({
+    //   query: () => ({
+    //     url: `/api/coursemealday`,
+    //     credentials: "same-origin",
+    //   }),
+    // }),
+
     createCourseMealDay: builder.mutation({
       query: (data) => ({
         body: data,
@@ -35,26 +36,6 @@ const mealsApi = api.injectEndpoints({
         method: "POST",
         credentials: "same-origin",
       }),
-
-      // invalidatesTags: () => [
-      //   {
-      //     type: "Diary",
-      //   },
-      // ],
-    }),
-
-    deleteConsumedElementary: builder.mutation({
-      query: ({ courseMealId, foodElementaryId }) => ({
-        url: `/api/coursemeal/${courseMealId}/consumedelementaries/${foodElementaryId}`,
-        method: "DELETE",
-        credentials: "same-origin",
-      }),
-
-      // invalidatesTags: () => [
-      //   {
-      //     type: "Diary",
-      //   },
-      // ],
     }),
 
     deleteCourseMeal: builder.mutation({
@@ -71,13 +52,6 @@ const mealsApi = api.injectEndpoints({
       ],
     }),
 
-    // getAllCourseMealDays: builder.query({
-    //   query: () => ({
-    //     url: `/api/coursemealday`,
-    //     credentials: "same-origin",
-    //   }),
-    // }),
-
     createCourseMeal: builder.mutation({
       query: (data) => ({
         body: data,
@@ -85,15 +59,53 @@ const mealsApi = api.injectEndpoints({
         method: "POST",
         credentials: "same-origin",
       }),
-
-      // invalidatesTags: () => [
-      //   {
-      //     type: "Diary",
-      //   },
-      // ],
     }),
 
-    changeCourseMealAddFoodElementary: builder.mutation({
+    deleteConsumedElementary: builder.mutation({
+      query: ({ courseMealId, foodElementaryId }) => ({
+        url: `/api/coursemeal/${courseMealId}/consumedelementaries/${foodElementaryId}`,
+        method: "DELETE",
+        credentials: "same-origin",
+      }),
+
+      invalidatesTags: () => [
+        {
+          type: "Diary",
+        },
+      ],
+    }),
+
+    changeConsumedElementaryWeight: builder.mutation({
+      query: ({ courseMealId, foodElementaryId, data }) => ({
+        body: data,
+        url: `/api/coursemeal/${courseMealId}/consumedelementaries/${foodElementaryId}`,
+        method: "PUT",
+        credentials: "same-origin",
+      }),
+
+      invalidatesTags: () => [
+        {
+          type: "Diary",
+        },
+      ],
+    }),
+
+    changeMealType: builder.mutation({
+      query: ({ courseMealId, data }) => ({
+        body: data,
+        url: `/api/coursemeal/${courseMealId}`,
+        method: "PUT",
+        credentials: "same-origin",
+      }),
+
+      invalidatesTags: () => [
+        {
+          type: "Diary",
+        },
+      ],
+    }),
+
+    addConsumedElementary: builder.mutation({
       query: ({ id, data }) => ({
         body: data,
         url: `/api/coursemeal/${id}/addfoodelementary`,
@@ -117,9 +129,9 @@ export const {
   useLazyGetCourseMealDayQuery,
   useGetCourseMealDayByDateQuery,
   useLazyGetCourseMealDayByDateQuery,
-  // useGetAllCourseMealDaysQuery,
-  // useLazyGetAllCourseMealDaysQuery,
-  useChangeCourseMealAddFoodElementaryMutation,
+  useAddConsumedElementaryMutation,
   useDeleteConsumedElementaryMutation,
   useDeleteCourseMealMutation,
+  useChangeConsumedElementaryWeightMutation,
+  useChangeMealTypeMutation,
 } = mealsApi;

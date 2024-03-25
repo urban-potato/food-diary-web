@@ -48,6 +48,61 @@ export const validationSchema = yup.object({
     .required(),
 });
 
+export const editValidationSchema = yup.object({
+  foodElementaryList: yup
+    .array()
+    .of(
+      yup.object({
+        foodElementaryId: yup.object({
+          label: yup.string(),
+          value: yup
+            .string()
+            .required("• Блюдо: " + validValues.requiredErrorMessage),
+        }),
+        // .required("• Блюдо: " + validValues.requiredErrorMessage),
+
+        weight: yup
+          .number()
+          .required("• Вес: " + validValues.requiredErrorMessage)
+          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
+          .min(
+            validValues.weightValue.min.value,
+            validValues.weightValue.min.message(
+              validValues.weightValue.min.value
+            )
+          )
+          .integer(),
+      })
+    )
+    .required(),
+  originalFoodElementaryList: yup
+    .array()
+    .of(
+      yup.object({
+        foodElementaryId: yup.object({
+          label: yup.string(),
+          value: yup
+            .string()
+            .required("• Блюдо: " + validValues.requiredErrorMessage),
+        }),
+        // .required("• Блюдо: " + validValues.requiredErrorMessage),
+
+        weight: yup
+          .number()
+          .required("• Вес: " + validValues.requiredErrorMessage)
+          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
+          .min(
+            validValues.weightValue.min.value,
+            validValues.weightValue.min.message(
+              validValues.weightValue.min.value
+            )
+          )
+          .integer(),
+      })
+    )
+    .required(),
+});
+
 export const selectStyles: StylesConfig = {
   control: (styles) => ({
     ...styles,

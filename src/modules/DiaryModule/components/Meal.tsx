@@ -4,7 +4,7 @@ import ConsumedElementary from "./ConsumedElementary";
 import type {
   IConsumedCharacteristic,
   IConsumedElementary,
-  MealProps,
+  ICourseMeal,
 } from "../types/types";
 
 import { Player } from "@lordicon/react";
@@ -15,12 +15,14 @@ import ConsumedCharacteristic from "./ConsumedCharacteristic";
 import { sortConsumedCharacteristics } from "../helpers/helpers";
 import { useDeleteCourseMealMutation } from "../api/meals.api";
 
-const Meal: FC<MealProps> = ({
+const Meal: FC<ICourseMeal> = ({
   id,
   creationTime,
+  mealTypeId,
   mealTypeName,
   consumedElementaries,
   characteristicsSum,
+  ...rest
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -108,7 +110,12 @@ const Meal: FC<MealProps> = ({
           </div>
 
           {isEditMode ? (
-            <MealEdit />
+            <MealEdit
+              courseMealId={id}
+              originalMealTypeId={mealTypeId}
+              consumedElementaries={consumedElementaries}
+              setIsEditMode={setIsEditMode}
+            />
           ) : (
             <div className="mt-4">
               <div className="flex flex-col gap-3 max-w-max ">

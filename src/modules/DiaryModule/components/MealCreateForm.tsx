@@ -23,7 +23,7 @@ import type { IFoodElementaryItem } from "../../FoodElementaryModule";
 import AsyncSelect from "react-select/async";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
 import {
-  useChangeCourseMealAddFoodElementaryMutation,
+  useAddConsumedElementaryMutation,
   useCreateCourseMealDayMutation,
   useCreateCourseMealMutation,
   useLazyGetCourseMealDayByDateQuery,
@@ -44,7 +44,7 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
     useState(BREAKFAST_DEFAULT_ID);
 
   const [doCreateCourseMealDay] = useCreateCourseMealDayMutation();
-  const [doAddFoodElementary] = useChangeCourseMealAddFoodElementaryMutation();
+  const [doAddConsumedElementary] = useAddConsumedElementaryMutation();
   const [doLazyGetCourseMealDayByDate] = useLazyGetCourseMealDayByDateQuery();
   const [doLazyGetCourseMealDay] = useLazyGetCourseMealDayQuery();
   const [doCreateCourseMeal] = useCreateCourseMealMutation();
@@ -176,7 +176,7 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
         data: foolElementaryData,
       };
 
-      doAddFoodElementary(addFoodElementaryData).catch((e) => console.log(e));
+      doAddConsumedElementary(addFoodElementaryData).catch((e) => console.log(e));
     }
 
     reset();
