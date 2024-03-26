@@ -33,9 +33,13 @@ const MealsList = () => {
         <span className="m-10">
           <Preloader />
         </span>
-      ) : (
+      ) : courseMeals ? (
         <div className="w-full flex flex-col justify-center items-center">
           {courseMeals}
+        </div>
+      ) : (
+        <div className="w-full  flex flex-col justify-center items-center mt-10 text-xl">
+          Записей нет
         </div>
       )}
     </div>
