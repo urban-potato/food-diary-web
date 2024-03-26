@@ -2,8 +2,8 @@ import { FC, useRef, useState } from "react";
 import {
   ICourseMeal,
   ICourseMealDay,
-  MealCreateFormProps,
   MealData,
+  TCalendarValue,
 } from "../types/types";
 import {
   BREAKFAST_DEFAULT_ID,
@@ -36,7 +36,12 @@ import MealTypeOptions from "./MealTypeOptions";
 import { getFormattedDateTime } from "../helpers/helpers";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
 
-const MealCreateForm: FC<MealCreateFormProps> = () => {
+type TProps = {
+  setShowCreateForm: Function;
+  date: string;
+};
+
+const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
 
@@ -96,7 +101,7 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
   });
 
   const onSubmit: SubmitHandler<MealData> = async (data) => {
-    const [date, time] = getFormattedDateTime();
+    const [todayDate, time] = getFormattedDateTime();
     const mealType = selectedMealType;
     const foodElementaryList = data?.foodElementaryList?.map((item) => {
       return {
@@ -176,7 +181,9 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
         data: foolElementaryData,
       };
 
-      doAddConsumedElementary(addFoodElementaryData).catch((e) => console.log(e));
+      doAddConsumedElementary(addFoodElementaryData).catch((e) =>
+        console.log(e)
+      );
     }
 
     reset();
@@ -187,6 +194,8 @@ const MealCreateForm: FC<MealCreateFormProps> = () => {
         weight: 0,
       });
     }
+
+    setShowCreateForm(false);
   };
 
   const handleOptionChange = () => {

@@ -13,7 +13,7 @@ const MealTypeOptions: FC<MealTypeOptionsProps> = ({
 }) => {
   return (
     <div className="h-full w-full flex flex-wrap justify-center items-center py-3 gap-x-5 gap-y-2">
-      <span className="w-full max-w-[280px]">
+      <span className="w-full sm:w-[30%]">
         <ButtonIlluminated
           label={"Завтрак"}
           isDarkButton={selectedMealType == BREAKFAST_DEFAULT_ID ? true : false}
@@ -24,7 +24,7 @@ const MealTypeOptions: FC<MealTypeOptionsProps> = ({
           buttonPadding=" p-[14px] "
         />
       </span>
-      <span className="w-full max-w-[280px]">
+      <span className="w-full sm:w-[30%]">
         <ButtonIlluminated
           label={"Обед"}
           isDarkButton={selectedMealType == LUNCH_DEFAULT_ID ? true : false}
@@ -35,7 +35,7 @@ const MealTypeOptions: FC<MealTypeOptionsProps> = ({
           buttonPadding=" p-[14px] "
         />
       </span>
-      <span className="w-full max-w-[280px]">
+      <span className="w-full sm:w-[30%]">
         <ButtonIlluminated
           label={"Ужин"}
           isDarkButton={selectedMealType == DINNER_DEFAULT_ID ? true : false}

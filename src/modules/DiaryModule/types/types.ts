@@ -1,9 +1,5 @@
 import { IFoodElementaryItem } from "../../FoodElementaryModule";
 
-export interface MealCreateFormProps {
-  setShowCreateForm: Function;
-}
-
 export interface MealData {
   foodElementaryList: {
     foodElementaryId?: {
@@ -111,3 +107,5 @@ export interface MealEditProps {
   consumedElementaries: IConsumedElementary[];
   setIsEditMode: Function;
 }
+
+export type TCalendarValue = Date;

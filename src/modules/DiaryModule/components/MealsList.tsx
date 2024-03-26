@@ -1,12 +1,14 @@
+import { FC } from "react";
 import Preloader from "../../../components/Preloader/Preloader";
 import { useGetCourseMealDayByDateQuery } from "../api/meals.api";
-import { getFormattedDateTime } from "../helpers/helpers";
-import { ICourseMeal } from "../types/types";
+import type { ICourseMeal } from "../types/types";
 import Meal from "./Meal";
 
-const MealsList = () => {
-  const [date, time] = getFormattedDateTime();
+type TProps = {
+  date: string;
+};
 
+const MealsList: FC<TProps> = ({ date }) => {
   const { isLoading: isLoadingCourseMealDay, data: dataCourseMealDay } =
     useGetCourseMealDayByDateQuery(date);
 
