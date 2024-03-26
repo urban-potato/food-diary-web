@@ -118,7 +118,7 @@ const Meal: FC<ICourseMeal> = ({
             />
           ) : (
             <div className="mt-4">
-              <div className="flex flex-col gap-3 max-w-max ">
+              <div className="flex flex-col gap-3 max-w-max">
                 {mappedConsumedElementaries}
               </div>
               <div className="mt-5 flex flex-wrap gap-x-2 gap-y-3">
