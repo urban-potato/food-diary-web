@@ -2,7 +2,7 @@ import { FC } from "react";
 import Preloader from "../../../components/Preloader/Preloader";
 import { useGetCourseMealDayByDateQuery } from "../api/meals.api";
 import type { ICourseMeal } from "../types/types";
-import Meal from "./Meal";
+import MealTile from "./MealTile";
 
 type TProps = {
   date: string;
@@ -12,14 +12,14 @@ const MealsList: FC<TProps> = ({ date }) => {
   const { isLoading: isLoadingCourseMealDay, data: dataCourseMealDay } =
     useGetCourseMealDayByDateQuery(date);
 
-  const courseMeals = dataCourseMealDay?.items[0]?.courseMeals
+  const mealElementaries = dataCourseMealDay?.items[0]?.courseMeals
     ?.slice()
     .sort(function (a: ICourseMeal, b: ICourseMeal) {
       return a.creationTime.localeCompare(b.creationTime);
     })
     ?.map((meal: ICourseMeal) => {
       if (meal.consumedElementaries.length > 0) {
-        return <Meal key={`courseMeals_${meal.id}`} {...meal} />;
+        return <MealTile key={`courseMeals_${meal.id}`} {...meal} />;
       }
     });
 
@@ -35,13 +35,13 @@ const MealsList: FC<TProps> = ({ date }) => {
         <span className="m-10">
           <Preloader />
         </span>
-      ) : courseMeals ? (
-        <div className="w-full flex flex-col justify-center items-center">
-          {courseMeals}
-        </div>
-      ) : (
+      ) : mealElementaries == null || mealElementaries.length == 0 ? (
         <div className="w-full  flex flex-col justify-center items-center mt-10 text-xl">
           Записей нет
+        </div>
+      ) : (
+        <div className="w-full flex flex-col justify-center items-center">
+          {mealElementaries}
         </div>
       )}
     </div>
