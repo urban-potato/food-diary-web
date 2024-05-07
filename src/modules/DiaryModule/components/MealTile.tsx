@@ -5,9 +5,8 @@ import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import { useDeleteCourseMealMutation } from "../api/meals.api";
 import type { ICourseMeal } from "../types/types";
 import MealEditForm from "./MealEditForm";
-import MealElementaries from "./MealElementaries";
 import MealCharacteristicsSum from "./MealCharacteristicsSum";
-import MealRecipes from "./MealRecipes";
+import ConsumedDishes from "./ConsumedDishes";
 
 const MealTile: FC<ICourseMeal> = ({
   id,
@@ -85,10 +84,10 @@ const MealTile: FC<ICourseMeal> = ({
           ) : (
             <div className="mt-4 flex flex-col gap-y-5">
               {consumedElementaries.length > 0 ? (
-                <MealElementaries consumedElementaries={consumedElementaries} />
+                <ConsumedDishes consumedDishes={consumedElementaries} />
               ) : null}
               {consumedRecipes.length > 0 ? (
-                <MealRecipes consumedRecipes={consumedRecipes} />
+                <ConsumedDishes consumedDishes={consumedRecipes} />
               ) : null}
               <MealCharacteristicsSum characteristicsSum={characteristicsSum} />
             </div>
