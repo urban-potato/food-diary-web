@@ -1,26 +1,37 @@
 import { FC } from "react";
-import { IConsumedElementary } from "../types/types";
+import { IConsumedElementary, IIngredient } from "../types/types";
 import ConsumedElementaryTile from "./ConsumedElementaryTile";
+import ShortUniqueId from "short-unique-id";
 
 type TProps = {
-  consumedElementaries: IConsumedElementary[];
+  consumedElementaries: IConsumedElementary[] | IIngredient[];
 };
 
 const MealElementaries: FC<TProps> = ({ consumedElementaries }) => {
+  const uid = new ShortUniqueId({ length: 32 });
+
   const mappedConsumedElementaries = consumedElementaries.map(
-    (elementary: IConsumedElementary) => {
+    (elementary: IConsumedElementary | IIngredient) => {
+      let elementaryInMealWeight;
+
+      if ("elementaryInMealWeight" in elementary) {
+        elementaryInMealWeight = elementary.elementaryInMealWeight;
+      } else {
+        elementaryInMealWeight = elementary.elementaryWeight;
+      }
+
       return (
         <ConsumedElementaryTile
-          key={`mappedConsumedElementaries_${elementary.id}`}
+          key={uid.rnd()}
           foodElementaryName={elementary.foodElementary.name}
-          elementaryInMealWeight={elementary.elementaryInMealWeight}
+          elementaryInMealWeight={elementaryInMealWeight}
         />
       );
     }
   );
 
   return (
-    <div className=" flex flex-col gap-3 max-w-max">
+    <div className="flex flex-col gap-3 max-w-max">
       {mappedConsumedElementaries}
     </div>
   );

@@ -23,11 +23,7 @@ const MealCharacteristicsSum: FC<TProps> = ({ characteristicsSum }) => {
     }
   );
 
-  return (
-    <div className="mt-5 flex flex-wrap gap-x-2 gap-y-3">
-      {mappedCharacteristicsSum}
-    </div>
-  );
+  return <div className="flex flex-wrap gap-3">{mappedCharacteristicsSum}</div>;
 };
 
 export default MealCharacteristicsSum;

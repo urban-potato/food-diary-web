@@ -7,6 +7,7 @@ import type { ICourseMeal } from "../types/types";
 import MealEditForm from "./MealEditForm";
 import MealElementaries from "./MealElementaries";
 import MealCharacteristicsSum from "./MealCharacteristicsSum";
+import MealRecipes from "./MealRecipes";
 
 const MealTile: FC<ICourseMeal> = ({
   id,
@@ -29,7 +30,7 @@ const MealTile: FC<ICourseMeal> = ({
   const ICON_SIZE = 28;
 
   return (
-    <div className="w-full max-w-5xl mt-5 ">
+    <div className="w-full max-w-5xl mt-5">
       <div className="outer_box_style group w-full max-w-5xl">
         <div className="box_style "></div>
         <div className="box_content_transition flex flex-col flex-wrap w-full justify-center items-start pl-7 pr-6 py-7 gap-4">
@@ -82,8 +83,13 @@ const MealTile: FC<ICourseMeal> = ({
               setIsEditMode={setIsEditMode}
             />
           ) : (
-            <div className="mt-4">
-              <MealElementaries consumedElementaries={consumedElementaries} />
+            <div className="mt-4 flex flex-col gap-y-5">
+              {consumedElementaries.length > 0 ? (
+                <MealElementaries consumedElementaries={consumedElementaries} />
+              ) : null}
+              {consumedRecipes.length > 0 ? (
+                <MealRecipes consumedRecipes={consumedRecipes} />
+              ) : null}
               <MealCharacteristicsSum characteristicsSum={characteristicsSum} />
             </div>
           )}

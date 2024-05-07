@@ -12,13 +12,16 @@ const MealsList: FC<TProps> = ({ date }) => {
   const { isLoading: isLoadingCourseMealDay, data: dataCourseMealDay } =
     useGetCourseMealDayByDateQuery(date);
 
-  const mealElementaries = dataCourseMealDay?.items[0]?.courseMeals
+  const mealTiles = dataCourseMealDay?.items[0]?.courseMeals
     ?.slice()
     .sort(function (a: ICourseMeal, b: ICourseMeal) {
       return a.creationTime.localeCompare(b.creationTime);
     })
     ?.map((meal: ICourseMeal) => {
-      if (meal.consumedElementaries.length > 0) {
+      if (
+        meal.consumedElementaries.length > 0 ||
+        meal.consumedRecipes.length > 0
+      ) {
         return <MealTile key={`courseMeals_${meal.id}`} {...meal} />;
       }
     });
@@ -35,13 +38,13 @@ const MealsList: FC<TProps> = ({ date }) => {
         <span className="m-10">
           <Preloader />
         </span>
-      ) : mealElementaries == null || mealElementaries.length == 0 ? (
+      ) : mealTiles == null || mealTiles.length == 0 ? (
         <div className="w-full  flex flex-col justify-center items-center mt-10 text-xl">
           Записей нет
         </div>
       ) : (
         <div className="w-full flex flex-col justify-center items-center">
-          {mealElementaries}
+          {mealTiles}
         </div>
       )}
     </div>
