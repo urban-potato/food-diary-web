@@ -5,9 +5,13 @@ import {
   DINNER_DEFAULT_ID,
   LUNCH_DEFAULT_ID,
 } from "../constants/constants";
-import { MealTypeOptionsProps } from "../types/types";
 
-const MealTypeOptions: FC<MealTypeOptionsProps> = ({
+type TProps = {
+  selectedMealType: string;
+  setSelectedMealType: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const MealTypeOptions: FC<TProps> = ({
   selectedMealType,
   setSelectedMealType,
 }) => {

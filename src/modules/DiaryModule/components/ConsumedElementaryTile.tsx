@@ -1,7 +1,11 @@
 import { FC } from "react";
-import { ConsumedElementaryProps } from "../types/types";
 
-const ConsumedElementary: FC<ConsumedElementaryProps> = ({
+type TProps = {
+  foodElementaryName: string;
+  elementaryInMealWeight: number;
+};
+
+const ConsumedElementaryTile: FC<TProps> = ({
   foodElementaryName,
   elementaryInMealWeight,
 }) => {
@@ -15,4 +19,4 @@ const ConsumedElementary: FC<ConsumedElementaryProps> = ({
   );
 };
 
-export default ConsumedElementary;
+export default ConsumedElementaryTile;

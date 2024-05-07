@@ -4,7 +4,7 @@ import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.jso
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import { useDeleteCourseMealMutation } from "../api/meals.api";
 import type { ICourseMeal } from "../types/types";
-import MealEdit from "./MealEdit";
+import MealEditForm from "./MealEditForm";
 import MealElementaries from "./MealElementaries";
 import MealCharacteristicsSum from "./MealCharacteristicsSum";
 
@@ -14,6 +14,7 @@ const MealTile: FC<ICourseMeal> = ({
   mealTypeId,
   mealTypeName,
   consumedElementaries,
+  consumedRecipes,
   characteristicsSum,
   ...rest
 }) => {
@@ -74,7 +75,7 @@ const MealTile: FC<ICourseMeal> = ({
           </div>
 
           {isEditMode ? (
-            <MealEdit
+            <MealEditForm
               courseMealId={id}
               originalMealTypeId={mealTypeId}
               consumedElementaries={consumedElementaries}

@@ -1,10 +1,11 @@
 import { FC } from "react";
-import { ConsumedCharacteristicProps } from "../types/types";
 
-const ConsumedCharacteristic: FC<ConsumedCharacteristicProps> = ({
-  name,
-  value,
-}) => {
+type TProps = {
+  name: string;
+  value: number;
+};
+
+const ConsumedCharacteristicTile: FC<TProps> = ({ name, value }) => {
   return (
     <div className="gap-4 flex w-full bg-near_white shadow-md rounded-xl p-3 max-w-max justify-between">
       <p>{name}:</p>
@@ -16,4 +17,4 @@ const ConsumedCharacteristic: FC<ConsumedCharacteristicProps> = ({
   );
 };
 
-export default ConsumedCharacteristic;
+export default ConsumedCharacteristicTile;

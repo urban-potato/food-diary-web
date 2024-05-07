@@ -17,11 +17,7 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import {
-  EditMealData,
-  IConsumedElementary,
-  MealEditProps,
-} from "../types/types";
+import { IConsumedElementary } from "../types/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AsyncSelect from "react-select/async";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
@@ -31,7 +27,31 @@ import { Player } from "@lordicon/react";
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import Select from "react-select";
 
-const MealEdit: FC<MealEditProps> = ({
+type TProps = {
+  courseMealId: string;
+  originalMealTypeId: string;
+  consumedElementaries: IConsumedElementary[];
+  setIsEditMode: Function;
+};
+
+type TMealEditFormData = {
+  foodElementaryList: {
+    foodElementaryId?: {
+      label?: string | undefined;
+      value: string;
+    };
+    weight: number;
+  }[];
+  originalFoodElementaryList: {
+    foodElementaryId: {
+      label: string;
+      value: string;
+    };
+    weight: number;
+  }[];
+};
+
+const MealEditForm: FC<TProps> = ({
   courseMealId,
   originalMealTypeId,
   consumedElementaries,
@@ -77,7 +97,7 @@ const MealEdit: FC<MealEditProps> = ({
     getValues,
     control,
     trigger,
-  } = useForm<EditMealData>({
+  } = useForm<TMealEditFormData>({
     resolver: yupResolver(editValidationSchema),
     mode: "onChange",
   });
@@ -110,7 +130,7 @@ const MealEdit: FC<MealEditProps> = ({
     originalRemove(itemIndex);
   };
 
-  const onSubmit: SubmitHandler<EditMealData> = async (data) => {
+  const onSubmit: SubmitHandler<TMealEditFormData> = async (data) => {
     const mealType = selectedMealType;
     const newElementaryList = data?.foodElementaryList?.map((item) => {
       return {
@@ -507,4 +527,4 @@ const MealEdit: FC<MealEditProps> = ({
   );
 };
 
-export default MealEdit;
+export default MealEditForm;

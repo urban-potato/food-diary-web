@@ -1,10 +1,5 @@
 import { FC, useRef, useState } from "react";
-import {
-  ICourseMeal,
-  ICourseMealDay,
-  MealData,
-  TCalendarValue,
-} from "../types/types";
+import { ICourseMeal, ICourseMealDay, TCalendarValue } from "../types/types";
 import {
   BREAKFAST_DEFAULT_ID,
   selectStyles,
@@ -39,6 +34,16 @@ import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMess
 type TProps = {
   setShowCreateForm: Function;
   date: string;
+};
+
+type TMealCreateFormData = {
+  foodElementaryList: {
+    foodElementaryId?: {
+      label?: string | undefined;
+      value: string;
+    };
+    weight: number;
+  }[];
 };
 
 const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
@@ -89,7 +94,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     getValues,
     control,
     trigger,
-  } = useForm<MealData>({
+  } = useForm<TMealCreateFormData>({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
     defaultValues: defaultValues,
@@ -100,7 +105,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     control,
   });
 
-  const onSubmit: SubmitHandler<MealData> = async (data) => {
+  const onSubmit: SubmitHandler<TMealCreateFormData> = async (data) => {
     const [todayDate, time] = getFormattedDateTime();
     const mealType = selectedMealType;
     const foodElementaryList = data?.foodElementaryList?.map((item) => {
