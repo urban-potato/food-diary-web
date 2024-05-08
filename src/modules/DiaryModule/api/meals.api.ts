@@ -163,6 +163,19 @@ const mealsApi = api.injectEndpoints({
         },
       ],
     }),
+
+    getAllFoodRecipe: builder.query({
+      query: () => ({
+        url: "/api/foodrecipe",
+        credentials: "same-origin",
+      }),
+
+      providesTags: () => [
+        {
+          type: "FoodList",
+        },
+      ],
+    }),
   }),
 });
 
@@ -181,4 +194,5 @@ export const {
   useAddConsumedRecipeMutation,
   useChangeConsumedRecipeWeightMutation,
   useDeleteConsumedRecipeMutation,
+  useGetAllFoodRecipeQuery,
 } = mealsApi;

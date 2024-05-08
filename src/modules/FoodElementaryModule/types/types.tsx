@@ -6,7 +6,7 @@ export interface FoodElementaryData {
   caloriesValue?: number;
 }
 
-export interface IFoodElementaryItem {
+export interface IFoodElementary {
   id: string;
   name: string;
   userId: string;

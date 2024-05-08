@@ -16,7 +16,6 @@ const MealTile: FC<ICourseMeal> = ({
   consumedElementaries,
   consumedRecipes,
   characteristicsSum,
-  ...rest
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [doDeleteCourseMeal] = useDeleteCourseMealMutation();

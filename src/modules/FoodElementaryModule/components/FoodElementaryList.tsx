@@ -3,7 +3,7 @@ import { useGetAllFoodElementaryQuery } from "../api/foodElementary.api";
 import FoodElementaryPiece from "./FoodElementaryPiece.tsx";
 import {
   IFoodCharacteristic,
-  IFoodElementaryItem,
+  IFoodElementary,
   ILocalFoodCharacteristic,
 } from "../types/types";
 import { Player } from "@lordicon/react";
@@ -28,7 +28,7 @@ const FoodElementaryList: FC = () => {
   // console.log(dataGetAllFoodElementary);
 
   let foodItems = dataGetAllFoodElementary?.items.map(
-    (item: IFoodElementaryItem) => {
+    (item: IFoodElementary) => {
       let parsedItem = JSON.parse(JSON.stringify(item));
 
       let parsedCharacteristics = JSON.parse(
@@ -83,12 +83,12 @@ const FoodElementaryList: FC = () => {
     }
   );
 
-  foodItems?.sort((a: IFoodElementaryItem, b: IFoodElementaryItem) =>
+  foodItems?.sort((a: IFoodElementary, b: IFoodElementary) =>
     a.name.localeCompare(b.name)
   );
   // foodItems?.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 
-  let foodItemsSorted = foodItems?.map((item: IFoodElementaryItem) => {
+  let foodItemsSorted = foodItems?.map((item: IFoodElementary) => {
     return (
       <FoodElementaryPiece
         key={`${item.id}_foodItemsSorted`}

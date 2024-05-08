@@ -1,4 +1,4 @@
-import { IFoodElementaryItem } from "../../FoodElementaryModule";
+import { IFoodElementary } from "../../FoodElementaryModule";
 
 export interface ICourseMealDay {
   id: string;
@@ -22,7 +22,7 @@ export interface ICourseMeal {
 
 export interface IConsumedElementary {
   id: string;
-  foodElementary: IFoodElementaryItem;
+  foodElementary: IFoodElementary;
   elementaryInMealWeight: number;
 }
 
@@ -42,7 +42,7 @@ export interface IFoodRecipe {
 }
 
 export interface IIngredient {
-  foodElementary: IFoodElementaryItem;
+  foodElementary: IFoodElementary;
   elementaryWeight: number;
 }
 

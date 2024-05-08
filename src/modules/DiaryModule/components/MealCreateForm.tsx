@@ -14,7 +14,7 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
 import { useGetAllFoodElementaryQuery } from "../../FoodElementaryModule";
-import type { IFoodElementaryItem } from "../../FoodElementaryModule";
+import type { IFoodElementary } from "../../FoodElementaryModule";
 import AsyncSelect from "react-select/async";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
 import {
@@ -66,8 +66,8 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
   } = useGetAllFoodElementaryQuery(undefined);
 
   const loadOptions = (searchValue: string, callback: any) => {
-    const filteredData: IFoodElementaryItem[] =
-      dataGetAllFoodElementary?.items.filter((item: IFoodElementaryItem) =>
+    const filteredData: IFoodElementary[] =
+      dataGetAllFoodElementary?.items.filter((item: IFoodElementary) =>
         item.name.toLowerCase().includes(searchValue.toLowerCase())
       );
 

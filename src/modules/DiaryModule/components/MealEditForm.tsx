@@ -9,9 +9,10 @@ import {
   useAddConsumedRecipeMutation,
   useChangeConsumedRecipeWeightMutation,
   useDeleteConsumedRecipeMutation,
+  useGetAllFoodRecipeQuery,
 } from "../api/meals.api";
 import {
-  IFoodElementaryItem,
+  IFoodElementary,
   useGetAllFoodElementaryQuery,
 } from "../../FoodElementaryModule";
 import {
@@ -20,7 +21,11 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import { IConsumedElementary, IConsumedRecipe } from "../types/types";
+import {
+  IConsumedElementary,
+  IConsumedRecipe,
+  IFoodRecipe,
+} from "../types/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AsyncSelect from "react-select/async";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
@@ -39,23 +44,17 @@ type TProps = {
 };
 
 type TMealEditFormData = {
-  foodElementaryList: {
-    foodElementaryId?: {
+  addFoodList: {
+    foodInfo?: {
       label?: string | undefined;
       value: string;
+      isElementary: boolean;
     };
     weight: number;
   }[];
   originalFoodElementaryList: {
     foodElementaryId: {
       label: string;
-      value: string;
-    };
-    weight: number;
-  }[];
-  foodRecipeList: {
-    foodRecipeId?: {
-      label?: string | undefined;
       value: string;
     };
     weight: number;
@@ -107,15 +106,35 @@ const MealEditForm: FC<TProps> = ({
     error: errorGetAllFoodElementary,
   } = useGetAllFoodElementaryQuery(undefined);
 
+  // Add new Food Recipe
+  const {
+    isLoading: isLoadingGetAllFoodRecipe,
+    data: dataGetAllFoodRecipe,
+    error: errorGetAllFoodRecipe,
+  } = useGetAllFoodRecipeQuery(undefined);
+
   const loadOptions = (searchValue: string, callback: any) => {
-    const filteredData: IFoodElementaryItem[] =
-      dataGetAllFoodElementary?.items.filter((item: IFoodElementaryItem) =>
+    const filteredElementaryData: IFoodElementary[] =
+      dataGetAllFoodElementary?.items.filter((item: IFoodElementary) =>
         item.name.toLowerCase().includes(searchValue.toLowerCase())
       );
 
-    const filteredOptions = filteredData.map((item) => {
-      return { value: item.id, label: item.name };
+    const filteredElementaryOptions = filteredElementaryData.map((item) => {
+      return { value: item.id, label: item.name, isElementary: true };
     });
+
+    const filteredReipeData: IFoodRecipe[] = dataGetAllFoodRecipe?.items.filter(
+      (item: IFoodRecipe) =>
+        item.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
+
+    const filteredRecipeOptions = filteredReipeData.map((item) => {
+      return { value: item.id, label: item.name, isElementary: false };
+    });
+
+    const filteredOptions = filteredElementaryOptions.concat(
+      filteredRecipeOptions
+    );
 
     callback(filteredOptions);
   };
@@ -144,11 +163,11 @@ const MealEditForm: FC<TProps> = ({
   });
 
   const {
-    fields: newElementaryFields,
-    append: newElementaryAppend,
-    remove: newElementaryRemove,
+    fields: addFoodFields,
+    append: addFoodAppend,
+    remove: addFoodRemove,
   } = useFieldArray({
-    name: "foodElementaryList",
+    name: "addFoodList",
     control,
   });
 
@@ -171,15 +190,6 @@ const MealEditForm: FC<TProps> = ({
     control,
   });
 
-  const {
-    fields: newRecipeFields,
-    append: newRecipeAppend,
-    remove: newRecipeRemove,
-  } = useFieldArray({
-    name: "foodRecipeList",
-    control,
-  });
-
   const handleRemoveOriginalRecipe = (itemIndex: number) => {
     originalRecipesToRemoveIdsRef.current.push(
       getValues(`originalFoodRecipeList.${itemIndex}.foodRecipeId.value`)
@@ -190,12 +200,17 @@ const MealEditForm: FC<TProps> = ({
 
   const onSubmit: SubmitHandler<TMealEditFormData> = async (data) => {
     // Elementaries Data
-    const newElementaryList = data?.foodElementaryList?.map((item) => {
-      return {
-        foodElementaryId: item?.foodElementaryId?.value,
-        weight: item?.weight,
-      };
-    });
+    console.log("addFoodList");
+    console.log(data?.addFoodList);
+
+    const addElementaryList = data?.addFoodList
+      ?.filter((item) => item.foodInfo?.isElementary === true)
+      .map((item) => {
+        return {
+          foodElementaryId: item?.foodInfo?.value,
+          weight: item?.weight,
+        };
+      });
 
     const originalElementaryList = data?.originalFoodElementaryList?.map(
       (item) => {
@@ -209,6 +224,15 @@ const MealEditForm: FC<TProps> = ({
     const elementariesIdsToDelete = originalElementariesToRemoveIdsRef.current;
 
     // Recipes Data
+    const addRecipeList = data?.addFoodList
+      ?.filter((item) => item.foodInfo?.isElementary === false)
+      .map((item) => {
+        return {
+          foodRecipeId: item?.foodInfo?.value,
+          weight: item?.weight,
+        };
+      });
+
     const originalRecipeList = data?.originalFoodRecipeList?.map((item) => {
       return {
         foodRecipeId: item?.foodRecipeId?.value,
@@ -261,7 +285,7 @@ const MealEditForm: FC<TProps> = ({
     }
 
     // Add New Consumed Elementaries
-    for (const foodElementary of newElementaryList) {
+    for (const foodElementary of addElementaryList) {
       const addFoodElementaryData = {
         id: courseMealId,
         data: {
@@ -273,6 +297,19 @@ const MealEditForm: FC<TProps> = ({
       doAddConsumedElementary(addFoodElementaryData).catch((e) =>
         console.log(e)
       );
+    }
+
+    // Add New Consumed Recipes
+    for (const foodRecipe of addRecipeList) {
+      const addFoodRecipeData = {
+        id: courseMealId,
+        data: {
+          foodRecipeId: foodRecipe.foodRecipeId,
+          weight: foodRecipe.weight,
+        },
+      };
+
+      doAddConsumedRecipe(addFoodRecipeData).catch((e) => console.log(e));
     }
 
     // Delete Consumed Elementaries
@@ -310,22 +347,25 @@ const MealEditForm: FC<TProps> = ({
 
   // TODO: CHANGE
   let checkIfFilledRight = () => {
-    let emptyMeals = getValues("foodElementaryList")?.find(
-      (item) => item.foodElementaryId === undefined
+    let emptyMeals = getValues("addFoodList")?.find(
+      (item) => item.foodInfo === undefined
     );
 
-    const isBothElementaryListsEmply =
-      !getValues("foodElementaryList")?.length &&
-      !getValues("originalFoodElementaryList")?.length;
+    const isAllFoodListsEmply =
+      !getValues("addFoodList")?.length &&
+      !getValues("originalFoodElementaryList")?.length &&
+      !getValues("originalFoodRecipeList")?.length;
 
-    let newWeightErrors = errors?.foodElementaryList;
-    let originalWeightErrors = errors?.originalFoodElementaryList;
+    let addFoodWeightErrors = errors?.addFoodList;
+    let originalElementariesWeightErrors = errors?.originalFoodElementaryList;
+    let originalRecipesWeightErrors = errors?.originalFoodRecipeList;
 
     let result =
       !emptyMeals &&
-      !newWeightErrors &&
-      !originalWeightErrors &&
-      !isBothElementaryListsEmply
+      !addFoodWeightErrors &&
+      !originalElementariesWeightErrors &&
+      !originalRecipesWeightErrors &&
+      !isAllFoodListsEmply
         ? true
         : false;
 
@@ -584,7 +624,7 @@ const MealEditForm: FC<TProps> = ({
           );
         })}
 
-        {newElementaryFields.map((field, index) => {
+        {addFoodFields.map((field, index) => {
           return (
             <div key={field.id} className="form-control flex flex-col">
               <div className="gap-x-3 flex mb-1">
@@ -595,9 +635,7 @@ const MealEditForm: FC<TProps> = ({
                   </span>
                   <Controller
                     key={index}
-                    name={
-                      `foodElementaryList.${index}.foodElementaryId` as const
-                    }
+                    name={`addFoodList.${index}.foodInfo` as const}
                     control={control}
                     render={({ field }) => (
                       <AsyncSelect
@@ -616,15 +654,13 @@ const MealEditForm: FC<TProps> = ({
 
                 <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
                   <InputIlluminated
-                    id={`foodElementaryList.${index}.weight`}
+                    id={`addFoodList.${index}.weight`}
                     type="number"
                     placeholder="Вес (г)"
                     disableIllumination={true}
                     additionalStyles=" h-[67px] border-0 "
                     register={{
-                      ...register(
-                        `foodElementaryList.${index}.weight` as const
-                      ),
+                      ...register(`addFoodList.${index}.weight` as const),
                     }}
                     isRequired={true}
                   />
@@ -646,7 +682,7 @@ const MealEditForm: FC<TProps> = ({
                     isDarkButton={true}
                     isIlluminationFull={false}
                     onClick={() => {
-                      newElementaryRemove(index);
+                      addFoodRemove(index);
                     }}
                     buttonPadding=" p-[14px] "
                     additionalStyles=" "
@@ -654,35 +690,31 @@ const MealEditForm: FC<TProps> = ({
                 </div>
               </div>
 
-              {errors.foodElementaryList && (
+              {errors.addFoodList && (
                 <div
                   className={
-                    Object.keys(errors).length > 0 &&
-                    errors.foodElementaryList[index]
+                    Object.keys(errors).length > 0 && errors.addFoodList[index]
                       ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
                       : "hidden"
                   }
                 >
                   <p
                     className={
-                      errors.foodElementaryList[index]?.foodElementaryId?.value
+                      errors.addFoodList[index]?.foodInfo?.value
                         ? "text-pink-500 "
                         : " hidden "
                     }
                   >
-                    {
-                      errors.foodElementaryList[index]?.foodElementaryId?.value
-                        ?.message
-                    }
+                    {errors.addFoodList[index]?.foodInfo?.value?.message}
                   </p>
                   <p
                     className={
-                      errors.foodElementaryList[index]?.weight
+                      errors.addFoodList[index]?.weight
                         ? "text-pink-500 "
                         : " hidden "
                     }
                   >
-                    {errors.foodElementaryList[index]?.weight?.message}
+                    {errors.addFoodList[index]?.weight?.message}
                   </p>
                 </div>
               )}
@@ -696,7 +728,7 @@ const MealEditForm: FC<TProps> = ({
             isDarkButton={true}
             isIlluminationFull={false}
             onClick={() => {
-              newElementaryAppend({
+              addFoodAppend({
                 weight: 0,
               });
             }}
