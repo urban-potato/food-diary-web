@@ -101,6 +101,58 @@ export const editValidationSchema = yup.object({
       })
     )
     .required(),
+  foodRecipeList: yup
+    .array()
+    .of(
+      yup.object({
+        foodRecipeId: yup.object({
+          label: yup.string(),
+          value: yup
+            .string()
+            .required("• Блюдо: " + validValues.requiredErrorMessage),
+        }),
+        // .required("• Блюдо: " + validValues.requiredErrorMessage),
+
+        weight: yup
+          .number()
+          .required("• Вес: " + validValues.requiredErrorMessage)
+          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
+          .min(
+            validValues.weightValue.min.value,
+            validValues.weightValue.min.message(
+              validValues.weightValue.min.value
+            )
+          )
+          .integer(),
+      })
+    )
+    .required(),
+  originalFoodRecipeList: yup
+    .array()
+    .of(
+      yup.object({
+        foodRecipeId: yup.object({
+          label: yup.string(),
+          value: yup
+            .string()
+            .required("• Блюдо: " + validValues.requiredErrorMessage),
+        }),
+        // .required("• Блюдо: " + validValues.requiredErrorMessage),
+
+        weight: yup
+          .number()
+          .required("• Вес: " + validValues.requiredErrorMessage)
+          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
+          .min(
+            validValues.weightValue.min.value,
+            validValues.weightValue.min.message(
+              validValues.weightValue.min.value
+            )
+          )
+          .integer(),
+      })
+    )
+    .required(),
 });
 
 export const selectStyles: StylesConfig = {

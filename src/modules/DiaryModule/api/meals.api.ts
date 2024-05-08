@@ -61,35 +61,6 @@ const mealsApi = api.injectEndpoints({
       }),
     }),
 
-    deleteConsumedElementary: builder.mutation({
-      query: ({ courseMealId, foodElementaryId }) => ({
-        url: `/api/coursemeal/${courseMealId}/consumedelementaries/${foodElementaryId}`,
-        method: "DELETE",
-        credentials: "same-origin",
-      }),
-
-      invalidatesTags: () => [
-        {
-          type: "Diary",
-        },
-      ],
-    }),
-
-    changeConsumedElementaryWeight: builder.mutation({
-      query: ({ courseMealId, foodElementaryId, data }) => ({
-        body: data,
-        url: `/api/coursemeal/${courseMealId}/consumedelementaries/${foodElementaryId}`,
-        method: "PUT",
-        credentials: "same-origin",
-      }),
-
-      invalidatesTags: () => [
-        {
-          type: "Diary",
-        },
-      ],
-    }),
-
     changeMealType: builder.mutation({
       query: ({ courseMealId, data }) => ({
         body: data,
@@ -119,6 +90,79 @@ const mealsApi = api.injectEndpoints({
         },
       ],
     }),
+
+    addConsumedRecipe: builder.mutation({
+      query: ({ id, data }) => ({
+        body: data,
+        url: `/api/coursemeal/${id}/addrecipe`,
+        method: "PUT",
+        credentials: "same-origin",
+      }),
+
+      invalidatesTags: () => [
+        {
+          type: "Diary",
+        },
+      ],
+    }),
+
+    changeConsumedElementaryWeight: builder.mutation({
+      query: ({ courseMealId, foodElementaryId, data }) => ({
+        body: data,
+        url: `/api/coursemeal/${courseMealId}/consumedelementaries/${foodElementaryId}`,
+        method: "PUT",
+        credentials: "same-origin",
+      }),
+
+      invalidatesTags: () => [
+        {
+          type: "Diary",
+        },
+      ],
+    }),
+
+    changeConsumedRecipeWeight: builder.mutation({
+      query: ({ courseMealId, foodRecipeId, data }) => ({
+        body: data,
+        url: `/api/coursemeal/${courseMealId}/consumedrecipes/${foodRecipeId}`,
+        method: "PUT",
+        credentials: "same-origin",
+      }),
+
+      invalidatesTags: () => [
+        {
+          type: "Diary",
+        },
+      ],
+    }),
+
+    deleteConsumedElementary: builder.mutation({
+      query: ({ courseMealId, foodElementaryId }) => ({
+        url: `/api/coursemeal/${courseMealId}/consumedelementaries/${foodElementaryId}`,
+        method: "DELETE",
+        credentials: "same-origin",
+      }),
+
+      invalidatesTags: () => [
+        {
+          type: "Diary",
+        },
+      ],
+    }),
+
+    deleteConsumedRecipe: builder.mutation({
+      query: ({ courseMealId, foodRecipeId }) => ({
+        url: `/api/coursemeal/${courseMealId}/consumedrecipes/${foodRecipeId}`,
+        method: "DELETE",
+        credentials: "same-origin",
+      }),
+
+      invalidatesTags: () => [
+        {
+          type: "Diary",
+        },
+      ],
+    }),
   }),
 });
 
@@ -129,9 +173,12 @@ export const {
   useLazyGetCourseMealDayQuery,
   useGetCourseMealDayByDateQuery,
   useLazyGetCourseMealDayByDateQuery,
-  useAddConsumedElementaryMutation,
-  useDeleteConsumedElementaryMutation,
   useDeleteCourseMealMutation,
-  useChangeConsumedElementaryWeightMutation,
   useChangeMealTypeMutation,
+  useAddConsumedElementaryMutation,
+  useChangeConsumedElementaryWeightMutation,
+  useDeleteConsumedElementaryMutation,
+  useAddConsumedRecipeMutation,
+  useChangeConsumedRecipeWeightMutation,
+  useDeleteConsumedRecipeMutation,
 } = mealsApi;

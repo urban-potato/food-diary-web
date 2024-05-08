@@ -79,6 +79,7 @@ const MealTile: FC<ICourseMeal> = ({
               courseMealId={id}
               originalMealTypeId={mealTypeId}
               consumedElementaries={consumedElementaries}
+              consumedRecipes={consumedRecipes}
               setIsEditMode={setIsEditMode}
             />
           ) : (
