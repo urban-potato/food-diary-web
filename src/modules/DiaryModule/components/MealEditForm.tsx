@@ -82,12 +82,13 @@ const MealEditForm: FC<TProps> = ({
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
 
-  const [selectedMealTypeId, setSelectedMealTypeId] = useState(originalMealTypeId);
+  const [selectedMealTypeId, setSelectedMealTypeId] =
+    useState(originalMealTypeId);
 
   // Elementaries to delete
-  const originalElementariesToRemoveIdsRef = useRef(new Array());
+  const originalElementariesToRemoveIdsRef = useRef<Array<String>>(new Array());
   // Recipes to delete
-  const originalRecipesToRemoveIdsRef = useRef(new Array());
+  const originalRecipesToRemoveIdsRef = useRef<Array<String>>(new Array());
 
   const [doChangeMealType] = useChangeMealTypeMutation();
 
@@ -229,47 +230,9 @@ const MealEditForm: FC<TProps> = ({
   };
 
   const onSubmit: SubmitHandler<TMealEditFormData> = async (data) => {
-    // Elementaries Data
-    const originalElementaryList = data?.originalFoodElementaryList?.map(
-      (item) => {
-        return {
-          foodElementaryId: item?.foodElementaryId?.value,
-          weight: item?.weight,
-        };
-      }
-    );
-
-    const addElementaryList = data?.addFoodList
-      ?.filter((item) => item.foodInfo?.isElementary === true)
-      .map((item) => {
-        return {
-          foodElementaryId: item?.foodInfo?.value,
-          weight: item?.weight,
-        };
-      });
-
+    // Delete Consumed Elementaries
     const elementariesIdsToDelete = originalElementariesToRemoveIdsRef.current;
 
-    // Recipes Data
-    const addRecipeList = data?.addFoodList
-      ?.filter((item) => item.foodInfo?.isElementary === false)
-      .map((item) => {
-        return {
-          foodRecipeId: item?.foodInfo?.value,
-          weight: item?.weight,
-        };
-      });
-
-    const originalRecipeList = data?.originalFoodRecipeList?.map((item) => {
-      return {
-        foodRecipeId: item?.foodRecipeId?.value,
-        weight: item?.weight,
-      };
-    });
-
-    const recipesIdsToDelete = originalRecipesToRemoveIdsRef.current;
-
-    // Delete Consumed Elementaries
     for (const elementaryToDeleteId of elementariesIdsToDelete) {
       const deleteConsumedElementaryData = {
         courseMealId: courseMealId,
@@ -279,9 +242,13 @@ const MealEditForm: FC<TProps> = ({
       doDeleteConsumedElementary(deleteConsumedElementaryData).catch((e) =>
         console.log(e)
       );
+
+      console.log("Delete Consumed Elementaries");
     }
 
     // Delete Consumed Recipes
+    const recipesIdsToDelete = originalRecipesToRemoveIdsRef.current;
+
     for (const recipeToDeleteId of recipesIdsToDelete) {
       const deleteConsumedRecipeData = {
         courseMealId: courseMealId,
@@ -291,51 +258,113 @@ const MealEditForm: FC<TProps> = ({
       doDeleteConsumedRecipe(deleteConsumedRecipeData).catch((e) =>
         console.log(e)
       );
+
+      console.log("Delete Consumed Recipes");
     }
 
     // Change Meal Type
-    const mealType = selectedMealTypeId;
-
-    const changeMealTypeData = {
-      courseMealId: courseMealId,
-      data: {
-        mealTypeId: mealType,
-      },
-    };
-
-    doChangeMealType(changeMealTypeData).catch((e) => console.log(e));
-
-    // Change Consumed Elementaries Weight
-    for (const originalElementary of originalElementaryList) {
-      const changeConsumedElementaryWeightData = {
+    if (selectedMealTypeId != originalMealTypeId) {
+      const changeMealTypeData = {
         courseMealId: courseMealId,
-        foodElementaryId: originalElementary.foodElementaryId,
         data: {
-          weight: originalElementary.weight,
+          mealTypeId: selectedMealTypeId,
         },
       };
 
-      doChangeConsumedElementaryWeight(
-        changeConsumedElementaryWeightData
-      ).catch((e) => console.log(e));
+      doChangeMealType(changeMealTypeData).catch((e) => console.log(e));
+
+      console.log("Change Meal Type");
+    }
+
+    // Change Consumed Elementaries Weight
+    const originalElementaryList = data?.originalFoodElementaryList?.map(
+      (item) => {
+        return {
+          foodElementaryId: item?.foodElementaryId?.value,
+          weight: item?.weight,
+        };
+      }
+    );
+
+    for (const originalElementary of originalElementaryList) {
+      const consumedElementariesWithoutDeleted = consumedElementaries.filter(
+        (item) => !elementariesIdsToDelete.includes(item.foodElementary.id)
+      );
+
+      const consumedElementaryToChange =
+        consumedElementariesWithoutDeleted.find(
+          (item) =>
+            item.foodElementary.id == originalElementary.foodElementaryId
+        );
+
+      if (
+        consumedElementaryToChange != undefined &&
+        consumedElementaryToChange.elementaryInMealWeight !=
+          originalElementary.weight
+      ) {
+        const changeConsumedElementaryWeightData = {
+          courseMealId: courseMealId,
+          foodElementaryId: originalElementary.foodElementaryId,
+          data: {
+            weight: originalElementary.weight,
+          },
+        };
+
+        doChangeConsumedElementaryWeight(
+          changeConsumedElementaryWeightData
+        ).catch((e) => console.log(e));
+
+        console.log("Change Consumed Elementaries Weight");
+      }
     }
 
     // Change Consumed Recipes Weight
-    for (const originalRecipe of originalRecipeList) {
-      const changeConsumedRecipeWeightData = {
-        courseMealId: courseMealId,
-        foodRecipeId: originalRecipe.foodRecipeId,
-        data: {
-          weight: originalRecipe.weight,
-        },
+    const originalRecipeList = data?.originalFoodRecipeList?.map((item) => {
+      return {
+        foodRecipeId: item?.foodRecipeId?.value,
+        weight: item?.weight,
       };
+    });
 
-      doChangeConsumedRecipeWeight(changeConsumedRecipeWeightData).catch((e) =>
-        console.log(e)
+    for (const originalRecipe of originalRecipeList) {
+      const consumedRecipesWithoutDeleted = consumedRecipes.filter(
+        (item) => !recipesIdsToDelete.includes(item.foodRecipe.id)
       );
+
+      const consumedRecipeToChange = consumedRecipesWithoutDeleted.find(
+        (item) => item.foodRecipe.id == originalRecipe.foodRecipeId
+      );
+
+      if (
+        consumedRecipeToChange != undefined &&
+        consumedRecipeToChange.recipeInMealWeight != originalRecipe.weight
+      ) {
+        const changeConsumedRecipeWeightData = {
+          courseMealId: courseMealId,
+          foodRecipeId: originalRecipe.foodRecipeId,
+          data: {
+            weight: originalRecipe.weight,
+          },
+        };
+
+        doChangeConsumedRecipeWeight(changeConsumedRecipeWeightData).catch(
+          (e) => console.log(e)
+        );
+
+        console.log("Change Consumed Recipes Weight");
+      }
     }
 
     // Add New Consumed Elementaries
+    const addElementaryList = data?.addFoodList
+      ?.filter((item) => item.foodInfo?.isElementary === true)
+      .map((item) => {
+        return {
+          foodElementaryId: item?.foodInfo?.value,
+          weight: item?.weight,
+        };
+      });
+
     for (const foodElementary of addElementaryList) {
       const addFoodElementaryData = {
         id: courseMealId,
@@ -348,9 +377,20 @@ const MealEditForm: FC<TProps> = ({
       doAddConsumedElementary(addFoodElementaryData).catch((e) =>
         console.log(e)
       );
+
+      console.log("Add New Consumed Elementaries");
     }
 
     // Add New Consumed Recipes
+    const addRecipeList = data?.addFoodList
+      ?.filter((item) => item.foodInfo?.isElementary === false)
+      .map((item) => {
+        return {
+          foodRecipeId: item?.foodInfo?.value,
+          weight: item?.weight,
+        };
+      });
+
     for (const foodRecipe of addRecipeList) {
       const addFoodRecipeData = {
         id: courseMealId,
@@ -361,6 +401,8 @@ const MealEditForm: FC<TProps> = ({
       };
 
       doAddConsumedRecipe(addFoodRecipeData).catch((e) => console.log(e));
+
+      console.log("Add New Consumed Recipes");
     }
 
     reset();
@@ -379,8 +421,6 @@ const MealEditForm: FC<TProps> = ({
   };
 
   const handleOnChange = (newElement: TSelectElement, addFoodIndex: number) => {
-    console.log("newValue", newElement);
-
     if (
       addFoodIndex > -1 &&
       addFoodIndex < newFoodForbiddenToAddIdsRef.current.length
@@ -462,8 +502,8 @@ const MealEditForm: FC<TProps> = ({
       onSubmit={handleSubmit(onSubmit)}
     >
       <MealTypeOptions
-        selectedMealType={selectedMealTypeId}
-        setSelectedMealType={setSelectedMealTypeId}
+        selectedMealTypeId={selectedMealTypeId}
+        setSelectedMealTypeId={setSelectedMealTypeId}
       />
 
       <div className="flex flex-col">

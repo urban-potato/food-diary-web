@@ -230,8 +230,8 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
           onSubmit={handleSubmit(onSubmit)}
         >
           <MealTypeOptions
-            selectedMealType={selectedMealType}
-            setSelectedMealType={setSelectedMealType}
+            selectedMealTypeId={selectedMealType}
+            setSelectedMealTypeId={setSelectedMealType}
           />
 
           <div className="flex flex-col">

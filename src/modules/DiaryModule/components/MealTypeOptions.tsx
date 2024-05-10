@@ -7,46 +7,48 @@ import {
 } from "../constants/constants";
 
 type TProps = {
-  selectedMealType: string;
-  setSelectedMealType: React.Dispatch<React.SetStateAction<string>>;
+  selectedMealTypeId: string;
+  setSelectedMealTypeId: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const MealTypeOptions: FC<TProps> = ({
-  selectedMealType,
-  setSelectedMealType,
+  selectedMealTypeId,
+  setSelectedMealTypeId,
 }) => {
   return (
     <div className="h-full w-full flex flex-wrap justify-center items-center py-3 gap-x-5 gap-y-2">
       <span className="w-full sm:w-[30%]">
         <ButtonIlluminated
           label={"Завтрак"}
-          isDarkButton={selectedMealType == BREAKFAST_DEFAULT_ID ? true : false}
-          isIlluminationFull={
-            selectedMealType == BREAKFAST_DEFAULT_ID ? true : false
+          isDarkButton={
+            selectedMealTypeId == BREAKFAST_DEFAULT_ID ? true : false
           }
-          onClick={() => setSelectedMealType(BREAKFAST_DEFAULT_ID)}
+          isIlluminationFull={
+            selectedMealTypeId == BREAKFAST_DEFAULT_ID ? true : false
+          }
+          onClick={() => setSelectedMealTypeId(BREAKFAST_DEFAULT_ID)}
           buttonPadding=" p-[14px] "
         />
       </span>
       <span className="w-full sm:w-[30%]">
         <ButtonIlluminated
           label={"Обед"}
-          isDarkButton={selectedMealType == LUNCH_DEFAULT_ID ? true : false}
+          isDarkButton={selectedMealTypeId == LUNCH_DEFAULT_ID ? true : false}
           isIlluminationFull={
-            selectedMealType == LUNCH_DEFAULT_ID ? true : false
+            selectedMealTypeId == LUNCH_DEFAULT_ID ? true : false
           }
-          onClick={() => setSelectedMealType(LUNCH_DEFAULT_ID)}
+          onClick={() => setSelectedMealTypeId(LUNCH_DEFAULT_ID)}
           buttonPadding=" p-[14px] "
         />
       </span>
       <span className="w-full sm:w-[30%]">
         <ButtonIlluminated
           label={"Ужин"}
-          isDarkButton={selectedMealType == DINNER_DEFAULT_ID ? true : false}
+          isDarkButton={selectedMealTypeId == DINNER_DEFAULT_ID ? true : false}
           isIlluminationFull={
-            selectedMealType == DINNER_DEFAULT_ID ? true : false
+            selectedMealTypeId == DINNER_DEFAULT_ID ? true : false
           }
-          onClick={() => setSelectedMealType(DINNER_DEFAULT_ID)}
+          onClick={() => setSelectedMealTypeId(DINNER_DEFAULT_ID)}
           buttonPadding=" p-[14px] "
         />
       </span>
