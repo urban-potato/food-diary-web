@@ -9,6 +9,7 @@ export const validValues = {
   requiredErrorMessage: "Обязательное поле",
   numberTypeErrorMessage: "Требуется ввести число",
   numberMustBePositiveErrorMessage: "Число должно быть положительным",
+  alreadyInMealErrorMessage: "• Блюдо: Уже присутствует в этой записи",
   weightValue: {
     min: {
       value: 0,

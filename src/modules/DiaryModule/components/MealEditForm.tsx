@@ -75,10 +75,14 @@ const MealEditForm: FC<TProps> = ({
   consumedRecipes,
   setIsEditMode,
 }) => {
+  // const [foodToAddIds, setFoodToAddIds] = useState([]);
+  const foodForbiddenToAddIdsRef = useRef(new Array());
+  const newFoodForbiddenToAddIdsRef = useRef(new Array());
+
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
 
-  const [selectedMealType, setSelectedMealType] = useState(originalMealTypeId);
+  const [selectedMealTypeId, setSelectedMealTypeId] = useState(originalMealTypeId);
 
   // Elementaries to delete
   const originalElementariesToRemoveIdsRef = useRef(new Array());
@@ -132,9 +136,13 @@ const MealEditForm: FC<TProps> = ({
       return { value: item.id, label: item.name, isElementary: false };
     });
 
-    const filteredOptions = filteredElementaryOptions.concat(
-      filteredRecipeOptions
-    );
+    const filteredOptions = filteredElementaryOptions
+      .concat(filteredRecipeOptions)
+      .filter(
+        (item) =>
+          !foodForbiddenToAddIdsRef.current.includes(item.value) &&
+          !newFoodForbiddenToAddIdsRef.current.includes(item.value)
+      );
 
     callback(filteredOptions);
   };
@@ -172,11 +180,21 @@ const MealEditForm: FC<TProps> = ({
   });
 
   const handleRemoveOriginalElementary = (itemIndex: number) => {
-    originalElementariesToRemoveIdsRef.current.push(
-      getValues(
-        `originalFoodElementaryList.${itemIndex}.foodElementaryId.value`
-      )
+    const elementaryId = getValues(
+      `originalFoodElementaryList.${itemIndex}.foodElementaryId.value`
     );
+
+    originalElementariesToRemoveIdsRef.current.push(elementaryId);
+
+    const indexInFoodForbiddenToAddIdsRef =
+      foodForbiddenToAddIdsRef.current.indexOf(elementaryId);
+
+    if (indexInFoodForbiddenToAddIdsRef > -1) {
+      foodForbiddenToAddIdsRef.current.splice(
+        indexInFoodForbiddenToAddIdsRef,
+        1
+      );
+    }
 
     originalElementaryRemove(itemIndex);
   };
@@ -191,17 +209,35 @@ const MealEditForm: FC<TProps> = ({
   });
 
   const handleRemoveOriginalRecipe = (itemIndex: number) => {
-    originalRecipesToRemoveIdsRef.current.push(
-      getValues(`originalFoodRecipeList.${itemIndex}.foodRecipeId.value`)
+    const recipeId = getValues(
+      `originalFoodRecipeList.${itemIndex}.foodRecipeId.value`
     );
+
+    originalRecipesToRemoveIdsRef.current.push(recipeId);
+
+    const indexInFoodForbiddenToAddIdsRef =
+      foodForbiddenToAddIdsRef.current.indexOf(recipeId);
+
+    if (indexInFoodForbiddenToAddIdsRef > -1) {
+      foodForbiddenToAddIdsRef.current.splice(
+        indexInFoodForbiddenToAddIdsRef,
+        1
+      );
+    }
 
     originalRecipeRemove(itemIndex);
   };
 
   const onSubmit: SubmitHandler<TMealEditFormData> = async (data) => {
     // Elementaries Data
-    console.log("addFoodList");
-    console.log(data?.addFoodList);
+    const originalElementaryList = data?.originalFoodElementaryList?.map(
+      (item) => {
+        return {
+          foodElementaryId: item?.foodElementaryId?.value,
+          weight: item?.weight,
+        };
+      }
+    );
 
     const addElementaryList = data?.addFoodList
       ?.filter((item) => item.foodInfo?.isElementary === true)
@@ -211,15 +247,6 @@ const MealEditForm: FC<TProps> = ({
           weight: item?.weight,
         };
       });
-
-    const originalElementaryList = data?.originalFoodElementaryList?.map(
-      (item) => {
-        return {
-          foodElementaryId: item?.foodElementaryId?.value,
-          weight: item?.weight,
-        };
-      }
-    );
 
     const elementariesIdsToDelete = originalElementariesToRemoveIdsRef.current;
 
@@ -242,8 +269,32 @@ const MealEditForm: FC<TProps> = ({
 
     const recipesIdsToDelete = originalRecipesToRemoveIdsRef.current;
 
+    // Delete Consumed Elementaries
+    for (const elementaryToDeleteId of elementariesIdsToDelete) {
+      const deleteConsumedElementaryData = {
+        courseMealId: courseMealId,
+        foodElementaryId: elementaryToDeleteId,
+      };
+
+      doDeleteConsumedElementary(deleteConsumedElementaryData).catch((e) =>
+        console.log(e)
+      );
+    }
+
+    // Delete Consumed Recipes
+    for (const recipeToDeleteId of recipesIdsToDelete) {
+      const deleteConsumedRecipeData = {
+        courseMealId: courseMealId,
+        foodRecipeId: recipeToDeleteId,
+      };
+
+      doDeleteConsumedRecipe(deleteConsumedRecipeData).catch((e) =>
+        console.log(e)
+      );
+    }
+
     // Change Meal Type
-    const mealType = selectedMealType;
+    const mealType = selectedMealTypeId;
 
     const changeMealTypeData = {
       courseMealId: courseMealId,
@@ -312,30 +363,6 @@ const MealEditForm: FC<TProps> = ({
       doAddConsumedRecipe(addFoodRecipeData).catch((e) => console.log(e));
     }
 
-    // Delete Consumed Elementaries
-    for (const elementaryToDeleteId of elementariesIdsToDelete) {
-      const deleteConsumedElementaryData = {
-        courseMealId: courseMealId,
-        foodElementaryId: elementaryToDeleteId,
-      };
-
-      doDeleteConsumedElementary(deleteConsumedElementaryData).catch((e) =>
-        console.log(e)
-      );
-    }
-
-    // Delete Consumed Recipes
-    for (const recipeToDeleteId of recipesIdsToDelete) {
-      const deleteConsumedRecipeData = {
-        courseMealId: courseMealId,
-        foodRecipeId: recipeToDeleteId,
-      };
-
-      doDeleteConsumedRecipe(deleteConsumedRecipeData).catch((e) =>
-        console.log(e)
-      );
-    }
-
     reset();
 
     setIsEditMode(false);
@@ -343,6 +370,27 @@ const MealEditForm: FC<TProps> = ({
 
   const handleOptionChange = () => {
     trigger();
+  };
+
+  type TSelectElement = {
+    label: string;
+    value: string;
+    isElementary: boolean;
+  };
+
+  const handleOnChange = (newElement: TSelectElement, addFoodIndex: number) => {
+    console.log("newValue", newElement);
+
+    if (
+      addFoodIndex > -1 &&
+      addFoodIndex < newFoodForbiddenToAddIdsRef.current.length
+    ) {
+      newFoodForbiddenToAddIdsRef.current.splice(
+        addFoodIndex,
+        1,
+        newElement.value
+      );
+    }
   };
 
   // TODO: CHANGE
@@ -387,6 +435,9 @@ const MealEditForm: FC<TProps> = ({
 
     originalElementaries.forEach((originalElementary) => {
       originalElementaryAppend(originalElementary);
+      foodForbiddenToAddIdsRef.current.push(
+        originalElementary.foodElementaryId.value
+      );
     });
 
     const originalRecipes = consumedRecipes.map((recipe: IConsumedRecipe) => {
@@ -401,6 +452,7 @@ const MealEditForm: FC<TProps> = ({
 
     originalRecipes.forEach((originalRecipe) => {
       originalRecipeAppend(originalRecipe);
+      foodForbiddenToAddIdsRef.current.push(originalRecipe.foodRecipeId.value);
     });
   }, []);
 
@@ -410,16 +462,19 @@ const MealEditForm: FC<TProps> = ({
       onSubmit={handleSubmit(onSubmit)}
     >
       <MealTypeOptions
-        selectedMealType={selectedMealType}
-        setSelectedMealType={setSelectedMealType}
+        selectedMealType={selectedMealTypeId}
+        setSelectedMealType={setSelectedMealTypeId}
       />
 
       <div className="flex flex-col">
         <h3 className="text-xl my-3">Блюда:</h3>
 
-        {originalElementaryFields.map((field, index) => {
+        {originalElementaryFields.map((select, index) => {
           return (
-            <div key={field.id} className="form-control flex flex-col">
+            <div
+              key={`div_originalElementaryFields_${select.id}_${index}`}
+              className="form-control flex flex-col"
+            >
               <div className="gap-x-3 flex mb-1">
                 <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
                   <span className="flex gap-x-1">
@@ -427,7 +482,7 @@ const MealEditForm: FC<TProps> = ({
                     <p className="text-red">*</p>
                   </span>
                   <Controller
-                    key={index}
+                    key={`controller_originalElementaryFields_${select.id}_${index}`}
                     name={
                       `originalFoodElementaryList.${index}.foodElementaryId` as const
                     }
@@ -435,7 +490,7 @@ const MealEditForm: FC<TProps> = ({
                     render={({ field }) => (
                       <Select
                         {...field}
-                        key={index}
+                        key={`select_originalElementaryFields_${select.id}_${index}`}
                         className="relative text-sm rounded-xl  "
                         styles={selectStyles}
                         isDisabled={true}
@@ -521,9 +576,12 @@ const MealEditForm: FC<TProps> = ({
           );
         })}
 
-        {originalRecipeFields.map((field, index) => {
+        {originalRecipeFields.map((select, index) => {
           return (
-            <div key={field.id} className="form-control flex flex-col">
+            <div
+              key={`div_originalRecipeFields_${select.id}_${index}`}
+              className="form-control flex flex-col"
+            >
               <div className="gap-x-3 flex mb-1">
                 <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
                   <span className="flex gap-x-1">
@@ -531,7 +589,7 @@ const MealEditForm: FC<TProps> = ({
                     <p className="text-red">*</p>
                   </span>
                   <Controller
-                    key={index}
+                    key={`controller_originalRecipeFields_${select.id}_${index}`}
                     name={
                       `originalFoodRecipeList.${index}.foodRecipeId` as const
                     }
@@ -539,7 +597,7 @@ const MealEditForm: FC<TProps> = ({
                     render={({ field }) => (
                       <Select
                         {...field}
-                        key={index}
+                        key={`select_originalRecipeFields_${select.id}_${index}`}
                         className="relative text-sm rounded-xl  "
                         styles={selectStyles}
                         isDisabled={true}
@@ -624,9 +682,12 @@ const MealEditForm: FC<TProps> = ({
           );
         })}
 
-        {addFoodFields.map((field, index) => {
+        {addFoodFields.map((select, index) => {
           return (
-            <div key={field.id} className="form-control flex flex-col">
+            <div
+              key={`div_addFoodList_${select.id}_${index}`}
+              className="form-control flex flex-col"
+            >
               <div className="gap-x-3 flex mb-1">
                 <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
                   <span className="flex gap-x-1">
@@ -634,19 +695,23 @@ const MealEditForm: FC<TProps> = ({
                     <p className="text-red">*</p>
                   </span>
                   <Controller
-                    key={index}
+                    key={`controller_addFoodList_${select.id}_${index}`}
                     name={`addFoodList.${index}.foodInfo` as const}
                     control={control}
                     render={({ field }) => (
                       <AsyncSelect
                         {...field}
-                        key={index}
+                        key={`AsyncSelect_addFoodList_${select.id}_${index}`}
                         className="relative text-sm rounded-xl  "
                         components={{ NoOptionsMessage }}
                         styles={selectStyles}
                         placeholder="Введите название блюда"
                         loadOptions={loadOptions}
                         onInputChange={handleOptionChange}
+                        onChange={(newValue) => {
+                          handleOnChange(newValue as TSelectElement, index);
+                          field.onChange(newValue);
+                        }}
                       />
                     )}
                   />
@@ -682,6 +747,13 @@ const MealEditForm: FC<TProps> = ({
                     isDarkButton={true}
                     isIlluminationFull={false}
                     onClick={() => {
+                      if (
+                        index > -1 &&
+                        index < newFoodForbiddenToAddIdsRef.current.length
+                      ) {
+                        newFoodForbiddenToAddIdsRef.current.splice(index, 1);
+                      }
+
                       addFoodRemove(index);
                     }}
                     buttonPadding=" p-[14px] "
@@ -728,6 +800,7 @@ const MealEditForm: FC<TProps> = ({
             isDarkButton={true}
             isIlluminationFull={false}
             onClick={() => {
+              newFoodForbiddenToAddIdsRef.current.push("");
               addFoodAppend({
                 weight: 0,
               });
