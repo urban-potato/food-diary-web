@@ -20,16 +20,17 @@ export const validValues = {
   },
 };
 
-export const validationSchema = yup.object({
-  foodElementaryList: yup
+export const createValidationSchema = yup.object({
+  addFoodList: yup
     .array()
     .of(
       yup.object({
-        foodElementaryId: yup.object({
+        foodInfo: yup.object({
           label: yup.string(),
           value: yup
             .string()
             .required("• Блюдо: " + validValues.requiredErrorMessage),
+          isElementary: yup.boolean(),
         }),
         // .required("• Блюдо: " + validValues.requiredErrorMessage),
 
@@ -77,6 +78,7 @@ export const editValidationSchema = yup.object({
       })
     )
     .required(),
+
   originalFoodElementaryList: yup
     .array()
     .of(
@@ -103,6 +105,7 @@ export const editValidationSchema = yup.object({
       })
     )
     .required(),
+
   originalFoodRecipeList: yup
     .array()
     .of(
