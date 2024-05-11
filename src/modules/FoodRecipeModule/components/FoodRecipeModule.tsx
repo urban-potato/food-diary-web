@@ -1,19 +1,14 @@
 import { FC, useState } from "react";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
 import FoodRecipeCreateForm from "./FoodRecipeCreateForm";
-import FoodRecipeList from "./FoodRecipeList";
+import FoodRecipesList from "./FoodRecipesList";
 
 const FoodRecipeModule: FC = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   return (
-    <section
-      className=" h-full w-full 
-                  flex flex-col 
-                  justify-center items-center 
-                  py-3 "
-    >
-      <span className=" my-3 w-full max-w-[280px] ">
+    <section className="h-full w-full flex flex-col justify-center items-center py-3">
+      <span className="my-3 w-full max-w-[280px]">
         <ButtonIlluminated
           label={showCreateForm ? "Скрыть" : "Создать блюдо"}
           isDarkButton={showCreateForm}
@@ -29,7 +24,7 @@ const FoodRecipeModule: FC = () => {
         <FoodRecipeCreateForm setShowCreateForm={setShowCreateForm} />
       ) : null}
 
-      <FoodRecipeList />
+      <FoodRecipesList />
     </section>
   );
 };

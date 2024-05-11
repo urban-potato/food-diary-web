@@ -6,10 +6,7 @@ import {
   useAddElementaryMutation,
   useCreateFoodRecipeMutation,
 } from "../api/foodRecipe.api";
-import {
-  IFoodElementary,
-  useGetAllFoodElementaryQuery,
-} from "../../FoodElementaryModule";
+import { useGetAllFoodElementaryQuery } from "../../FoodElementaryModule";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Controller,
@@ -25,6 +22,7 @@ import AsyncSelect from "react-select/async";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
+import { IFoodElementary } from "../../../global/types/types";
 
 type TProps = {
   setShowCreateForm: Function;
