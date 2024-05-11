@@ -1,53 +1,41 @@
-import { FC, useRef, useState } from "react";
+import { FC, useRef } from "react";
+import { Player } from "@lordicon/react";
+
+import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import {
-  ICourseMeal,
-  ICourseMealDay,
-  IFoodRecipe,
-  TCalendarValue,
-} from "../types/types";
+  useAddElementaryMutation,
+  useCreateFoodRecipeMutation,
+} from "../api/foodRecipe.api";
 import {
-  BREAKFAST_DEFAULT_ID,
-  selectStyles,
-  createValidationSchema,
-} from "../constants/constants";
+  IFoodElementary,
+  useGetAllFoodElementaryQuery,
+} from "../../FoodElementaryModule";
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Controller,
   SubmitHandler,
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
-import { useGetAllFoodElementaryQuery } from "../../FoodElementaryModule";
-import type { IFoodElementary } from "../../FoodElementaryModule";
-import AsyncSelect from "react-select/async";
-import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
 import {
-  useAddConsumedElementaryMutation,
-  useAddConsumedRecipeMutation,
-  useCreateCourseMealDayMutation,
-  useCreateCourseMealMutation,
-  useLazyGetCourseMealDayByDateQuery,
-} from "../api/meals.api";
-import { Player } from "@lordicon/react";
-
-import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
-import MealTypeOptions from "./MealTypeOptions";
-import { getFormattedDateTime } from "../helpers/helpers";
+  createFoodRecipeValidationSchema,
+  selectStyles,
+} from "../constants/constants";
+import AsyncSelect from "react-select/async";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
-import { useGetAllFoodRecipeQuery } from "../../FoodRecipeModule/api/foodRecipe.api";
+import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
+import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
 
 type TProps = {
   setShowCreateForm: Function;
-  date: string;
 };
 
-type TMealCreateFormData = {
+type TFoodRecipeCreateFormData = {
+  foodRecipeName: string;
   addFoodList: {
     foodInfo?: {
       label?: string | undefined;
       value: string;
-      isElementary: boolean;
     };
     weight: number;
   }[];
@@ -56,24 +44,16 @@ type TMealCreateFormData = {
 type TSelectElement = {
   label: string;
   value: string;
-  isElementary: boolean;
 };
 
-const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
+const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
   const newFoodForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
 
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
 
-  const [selectedMealTypeId, setSelectedMealTypeId] =
-    useState(BREAKFAST_DEFAULT_ID);
-
-  const [doLazyGetCourseMealDayByDate] = useLazyGetCourseMealDayByDateQuery();
-  const [doCreateCourseMealDay] = useCreateCourseMealDayMutation();
-  const [doCreateCourseMeal] = useCreateCourseMealMutation();
-
-  const [doAddConsumedElementary] = useAddConsumedElementaryMutation();
-  const [doAddConsumedRecipe] = useAddConsumedRecipeMutation();
+  const [doCreateFoodRecipe] = useCreateFoodRecipeMutation();
+  const [doAddElementary] = useAddElementaryMutation();
 
   // Food Elementaries for Async Select
   const {
@@ -82,13 +62,6 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     error: errorGetAllFoodElementary,
   } = useGetAllFoodElementaryQuery(undefined);
 
-  // Food Recipes for Async Select
-  const {
-    isLoading: isLoadingGetAllFoodRecipe,
-    data: dataGetAllFoodRecipe,
-    error: errorGetAllFoodRecipe,
-  } = useGetAllFoodRecipeQuery(undefined);
-
   const loadOptions = (searchValue: string, callback: any) => {
     const filteredElementaryData: IFoodElementary[] =
       dataGetAllFoodElementary?.items.filter((item: IFoodElementary) =>
@@ -96,23 +69,12 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
       );
 
     const filteredElementaryOptions = filteredElementaryData.map((item) => {
-      return { value: item.id, label: item.name, isElementary: true };
+      return { value: item.id, label: item.name };
     });
 
-    const filteredReipeData: IFoodRecipe[] = dataGetAllFoodRecipe?.items.filter(
-      (item: IFoodRecipe) =>
-        item.name.toLowerCase().includes(searchValue.toLowerCase())
+    const filteredOptions = filteredElementaryOptions.filter(
+      (item) => !newFoodForbiddenToAddIdsRef.current.includes(item.value)
     );
-
-    const filteredRecipeOptions = filteredReipeData.map((item) => {
-      return { value: item.id, label: item.name, isElementary: false };
-    });
-
-    const filteredOptions = filteredElementaryOptions
-      .concat(filteredRecipeOptions)
-      .filter(
-        (item) => !newFoodForbiddenToAddIdsRef.current.includes(item.value)
-      );
 
     callback(filteredOptions);
   };
@@ -135,8 +97,8 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     getValues,
     control,
     trigger,
-  } = useForm<TMealCreateFormData>({
-    resolver: yupResolver(createValidationSchema),
+  } = useForm<TFoodRecipeCreateFormData>({
+    resolver: yupResolver(createFoodRecipeValidationSchema),
     mode: "onChange",
     defaultValues: defaultValues,
   });
@@ -162,120 +124,38 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     addFoodListRemove(itemIndex);
   };
 
-  const onSubmit: SubmitHandler<TMealCreateFormData> = async (data) => {
-    // const foodToAddList = data?.foodElementaryList?.map((item) => {
-    //   return {
-    //     foodElementaryId: item?.foodElementaryId?.value,
-    //     weight: item?.weight,
-    //   };
-    // });
+  const onSubmit: SubmitHandler<TFoodRecipeCreateFormData> = async (data) => {
+    // Create Food Recipe
+    const createFoodRecipeData = {
+      name: data.foodRecipeName,
+    };
 
-    // Get Course Meal Day
-    let courseMealDayId: string | null = null;
-
-    await doLazyGetCourseMealDayByDate(date)
+    await doCreateFoodRecipe(createFoodRecipeData)
       .unwrap()
-      .then((response) => {
-        if (response.items.length === 1) {
-          courseMealDayId = response.items[0].id;
+      .then((responseFoodRecipeId) => {
+        // Add Elementaries
+        const addElementaryList = data?.addFoodList?.map((item) => {
+          return {
+            foodElementaryId: item?.foodInfo?.value,
+            weight: item?.weight,
+          };
+        });
+
+        for (const foodElementary of addElementaryList) {
+          const addFoodElementaryData = {
+            foodRecipeId: responseFoodRecipeId,
+            data: {
+              foodElementaryId: foodElementary.foodElementaryId,
+              weight: foodElementary.weight,
+            },
+          };
+
+          doAddElementary(addFoodElementaryData).catch((e) => console.log(e));
+
+          console.log("Add Elementaries");
         }
       })
       .catch((e) => console.log(e));
-
-    if (courseMealDayId === null) {
-      const courseMealDayData = {
-        courseMealDate: date,
-      };
-
-      await doCreateCourseMealDay(courseMealDayData)
-        .unwrap()
-        .then((responseCourseMealDayId) => {
-          courseMealDayId = responseCourseMealDayId;
-        })
-        .catch((e) => console.log(e));
-    }
-
-    // Gat Course Meal
-    const [_, time] = getFormattedDateTime();
-    const mealType = selectedMealTypeId;
-    let courseMealId: string | null = null;
-
-    const createCourseMealData = {
-      mealTypeId: mealType,
-      courseMealDayId: courseMealDayId,
-      courseMealTime: time,
-    };
-
-    await doCreateCourseMeal(createCourseMealData)
-      .unwrap()
-      .then((responseCourseMealId) => {
-        courseMealId = responseCourseMealId;
-      })
-      .catch((e) => console.log(e));
-
-    // for (const foodElementary of foodToAddList) {
-    //   const addFoodElementaryData = {
-    //     id: courseMealId,
-    //     data: {
-    //       foodElementaryId: foodElementary.foodElementaryId,
-    //       weight: foodElementary.weight,
-    //     },
-    //   };
-
-    //   doAddConsumedElementary(addFoodElementaryData).catch((e) =>
-    //     console.log(e)
-    //   );
-    // }
-
-    // Add New Consumed Elementaries
-    const addElementaryList = data?.addFoodList
-      ?.filter((item) => item.foodInfo?.isElementary === true)
-      .map((item) => {
-        return {
-          foodElementaryId: item?.foodInfo?.value,
-          weight: item?.weight,
-        };
-      });
-
-    for (const foodElementary of addElementaryList) {
-      const addFoodElementaryData = {
-        id: courseMealId,
-        data: {
-          foodElementaryId: foodElementary.foodElementaryId,
-          weight: foodElementary.weight,
-        },
-      };
-
-      doAddConsumedElementary(addFoodElementaryData).catch((e) =>
-        console.log(e)
-      );
-
-      console.log("Add New Consumed Elementaries");
-    }
-
-    // Add New Consumed Recipes
-    const addRecipeList = data?.addFoodList
-      ?.filter((item) => item.foodInfo?.isElementary === false)
-      .map((item) => {
-        return {
-          foodRecipeId: item?.foodInfo?.value,
-          weight: item?.weight,
-        };
-      });
-
-    for (const foodRecipe of addRecipeList) {
-      const addFoodRecipeData = {
-        id: courseMealId,
-        data: {
-          foodRecipeId: foodRecipe.foodRecipeId,
-          weight: foodRecipe.weight,
-        },
-      };
-
-      doAddConsumedRecipe(addFoodRecipeData).catch((e) => console.log(e));
-
-      console.log("Add New Consumed Recipes");
-    }
 
     reset();
 
@@ -309,6 +189,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
   };
 
   let checkIfFilledRight = () => {
+    let foodRecipeNameFilled = getValues("foodRecipeName");
     let emptyMeals = getValues("addFoodList")?.find(
       (item) => item.foodInfo === undefined
     );
@@ -317,8 +198,21 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
 
     let addFoodWeightErrors = errors?.addFoodList;
 
+    console.log("-----------------------");
+    console.log("foodRecipeNameFilled", foodRecipeNameFilled);
+    console.log("emptyMeals", emptyMeals);
+    console.log("isAddFoodListEmply", isAddFoodListEmply);
+    console.log("addFoodWeightErrors", addFoodWeightErrors);
+    console.log("-----------------------");
+
     let result =
-      !emptyMeals && !addFoodWeightErrors && !isAddFoodListEmply ? true : false;
+      foodRecipeNameFilled &&
+      !errors?.foodRecipeName &&
+      !emptyMeals &&
+      !addFoodWeightErrors &&
+      !isAddFoodListEmply
+        ? true
+        : false;
 
     return result;
   };
@@ -333,34 +227,60 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
           className="box_content_transition flex flex-col flex-wrap justify-center w-full px-7 pt-5 pb-8"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <MealTypeOptions
-            selectedMealTypeId={selectedMealTypeId}
-            setSelectedMealTypeId={setSelectedMealTypeId}
-          />
+          <div className="text-xl w-full flex-grow">
+            <InputIlluminated
+              id={"FoodRecipeCreateForm_foodRecipeName"}
+              type="text"
+              placeholder="Название блюда"
+              disableIllumination={true}
+              additionalStyles=" h-[67px] border-0 "
+              register={{
+                ...register("foodRecipeName"),
+              }}
+              isRequired={true}
+            />
+          </div>
+          {errors.foodRecipeName && (
+            <div
+              className={
+                Object.keys(errors).length > 0
+                  ? " flex flex-col gap-y-2 justify-center "
+                  : " hidden "
+              }
+            >
+              <p
+                className={
+                  errors.foodRecipeName ? "text-pink-500 " : " hidden "
+                }
+              >
+                {errors.foodRecipeName?.message}
+              </p>
+            </div>
+          )}
 
           <div className="flex flex-col">
-            <h3 className="text-xl my-3">Блюда:</h3>
+            <h3 className="text-xl my-3">Ингредиенты:</h3>
 
             {addFoodListFields.map((select, index) => {
               return (
                 <div
-                  key={`MealCreateForm_Div_addFoodList_${select.id}_${index}`}
+                  key={`FoodRecipeCreateForm_Div_addFoodList_${select.id}_${index}`}
                   className="form-control flex flex-col"
                 >
                   <div className="gap-x-3 flex mb-1">
                     <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
                       <span className="flex gap-x-1">
-                        <h3>Блюдо</h3>
+                        <h3>Ингредиент</h3>
                         <p className="text-red">*</p>
                       </span>
                       <Controller
-                        key={`MealCreateForm_Controller_addFoodList_${select.id}_${index}`}
+                        key={`FoodRecipeCreateForm_Controller_addFoodList_${select.id}_${index}`}
                         name={`addFoodList.${index}.foodInfo` as const}
                         control={control}
                         render={({ field }) => (
                           <AsyncSelect
                             {...field}
-                            key={`MealCreateForm_AsyncSelect_addFoodList_${select.id}_${index}`}
+                            key={`FoodRecipeCreateForm_AsyncSelect_addFoodList_${select.id}_${index}`}
                             className="relative text-sm rounded-xl  "
                             components={{ NoOptionsMessage }}
                             styles={selectStyles}
@@ -378,7 +298,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
 
                     <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
                       <InputIlluminated
-                        id={`MealCreateForm_addFoodList.${index}.weight`}
+                        id={`FoodRecipeCreateForm_addFoodList.${index}.weight`}
                         type="number"
                         placeholder="Вес (г)"
                         disableIllumination={true}
@@ -483,4 +403,4 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
   );
 };
 
-export default MealCreateForm;
+export default FoodRecipeCreateForm;

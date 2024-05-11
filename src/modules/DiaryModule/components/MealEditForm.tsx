@@ -9,7 +9,6 @@ import {
   useAddConsumedRecipeMutation,
   useChangeConsumedRecipeWeightMutation,
   useDeleteConsumedRecipeMutation,
-  useGetAllFoodRecipeQuery,
 } from "../api/meals.api";
 import {
   IFoodElementary,
@@ -34,6 +33,7 @@ import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
 import { Player } from "@lordicon/react";
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import Select from "react-select";
+import { useGetAllFoodRecipeQuery } from "../../FoodRecipeModule/api/foodRecipe.api";
 
 type TProps = {
   courseMealId: string;

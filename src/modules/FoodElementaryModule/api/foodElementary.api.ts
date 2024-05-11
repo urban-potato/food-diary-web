@@ -1,5 +1,4 @@
 import { api } from "../../../global/api/api";
-import { IFoodElementary } from "../types/types";
 
 const foodElementaryApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -11,7 +10,7 @@ const foodElementaryApi = api.injectEndpoints({
 
       providesTags: () => [
         {
-          type: "FoodList",
+          type: "FoodElementaryList",
         },
       ],
     }),
@@ -33,7 +32,7 @@ const foodElementaryApi = api.injectEndpoints({
 
       invalidatesTags: () => [
         {
-          type: "FoodList",
+          type: "FoodElementaryList",
         },
       ],
     }),
@@ -48,7 +47,7 @@ const foodElementaryApi = api.injectEndpoints({
 
       invalidatesTags: () => [
         {
-          type: "FoodList",
+          type: "FoodElementaryList",
         },
       ],
     }),
@@ -62,29 +61,7 @@ const foodElementaryApi = api.injectEndpoints({
 
       invalidatesTags: () => [
         {
-          type: "FoodList",
-        },
-      ],
-    }),
-
-    getOneFoodCharacteristicType: builder.query({
-      query: (id) => ({
-        url: `/api/foodcharacteristictype/${id}`,
-        credentials: "same-origin",
-      }),
-    }),
-
-    changeFoodCharacteristicValue: builder.mutation({
-      query: ({ id, data }) => ({
-        body: data,
-        url: `/api/foodcharacteristic/${id}`,
-        method: "PUT",
-        credentials: "same-origin",
-      }),
-
-      invalidatesTags: () => [
-        {
-          type: "FoodList",
+          type: "FoodElementaryList",
         },
       ],
     }),
@@ -97,6 +74,4 @@ export const {
   useCreateFoodElementaryMutation,
   useChangeFoodElementaryNameMutation,
   useDeleteFoodElementaryMutation,
-  useGetOneFoodCharacteristicTypeQuery,
-  useChangeFoodCharacteristicValueMutation,
 } = foodElementaryApi;

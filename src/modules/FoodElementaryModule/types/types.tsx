@@ -14,10 +14,6 @@ export interface IFoodElementary {
   characteristics: IFoodCharacteristic[];
 }
 
-export interface FoodElementaryCreateFormProps {
-  setShowCreateForm: Function;
-}
-
 export interface FoodCharacteristicProps {
   name: string;
   value: number;

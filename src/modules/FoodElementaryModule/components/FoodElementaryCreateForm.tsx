@@ -2,18 +2,17 @@ import * as yup from "yup";
 import { SubmitHandler, useForm, useFormState } from "react-hook-form";
 import { validValues } from "../constants/constants";
 import { FC, useEffect } from "react";
-import {
-  FoodElementaryCreateFormProps,
-  FoodElementaryData,
-} from "../types/types";
+import { FoodElementaryData } from "../types/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useCreateFoodElementaryMutation } from "../api/foodElementary.api";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
 
-const FoodElementaryCreateForm: FC<FoodElementaryCreateFormProps> = ({
-  setShowCreateForm,
-}) => {
+type TProps = {
+  setShowCreateForm: Function;
+};
+
+const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
   const validationSchema = yup.object().shape({
     name: yup
       .string()
