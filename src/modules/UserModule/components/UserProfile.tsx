@@ -6,7 +6,7 @@ import { useGetMeQuery } from "../../AuthorizationRegistrationForms";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../global/store/hooks";
 import { logout } from "../slices/userSlice";
-import { removeTokenFromLocalStorage } from "../../../global/helpers/local_storage.helper";
+import { removeTokenFromLocalStorage } from "../../../global/helpers/local_storage.helper.ts";
 import { toast } from "react-hot-toast";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
 import { Player } from "@lordicon/react";

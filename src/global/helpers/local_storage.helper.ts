@@ -38,6 +38,8 @@ export const setTokenToLocalStorage = (
     expiry: now.getTime() + expiresIn * 1000,
   };
 
+  console.log("item", item);
+
   // console.log("item", item);
 
   localStorage.setItem(key, JSON.stringify(item));

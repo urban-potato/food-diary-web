@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useIsAuth } from "../hooks/hooks";
 import { useLoginMutation } from "../api/auth.api";
-import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.helper";
+import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.helper.ts";
 import { FC, useEffect } from "react";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import { AuthorizationData } from "../types/types";

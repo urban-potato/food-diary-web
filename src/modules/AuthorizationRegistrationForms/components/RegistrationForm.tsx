@@ -12,7 +12,7 @@ import {
 } from "../api/auth.api";
 import { useLazyGetUserInfoQuery } from "../../UserModule";
 import { toast } from "react-hot-toast";
-import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.helper";
+import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.helper.ts";
 import { FC, useEffect } from "react";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import { login } from "../../UserModule";
@@ -106,7 +106,7 @@ const RegistrationForm: FC = () => {
               console.log("data.token");
               console.log(data.token);
 
-              setTokenToLocalStorage(data.token);
+              setTokenToLocalStorage(data.token, data.expiresIn);
 
               doGetMe(undefined)
                 .unwrap()

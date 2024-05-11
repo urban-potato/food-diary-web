@@ -14,7 +14,7 @@ const MealsList: FC<TProps> = ({ date }) => {
 
   const mealTiles = dataCourseMealDay?.items[0]?.courseMeals
     ?.slice()
-    .sort(function (a: ICourseMeal, b: ICourseMeal) {
+    ?.sort(function (a: ICourseMeal, b: ICourseMeal) {
       return a.creationTime.localeCompare(b.creationTime);
     })
     ?.map((meal: ICourseMeal) => {

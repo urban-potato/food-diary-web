@@ -5,7 +5,7 @@ type TProps = {
   value: number;
 };
 
-const ConsumedCharacteristicTile: FC<TProps> = ({ name, value }) => {
+const CharacteristicTile: FC<TProps> = ({ name, value }) => {
   return (
     <div className="gap-4 flex w-full bg-near_white shadow-md rounded-xl p-3 max-w-max justify-between">
       <p>{name}:</p>
@@ -17,4 +17,4 @@ const ConsumedCharacteristicTile: FC<TProps> = ({ name, value }) => {
   );
 };
 
-export default ConsumedCharacteristicTile;
+export default CharacteristicTile;

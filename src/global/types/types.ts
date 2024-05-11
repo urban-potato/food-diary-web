@@ -64,6 +64,10 @@ export interface ICharacteristicsSum {
   characteristicSumValue: number;
 }
 
+export interface ICharacteristicsSumWithLocalId extends ICharacteristicsSum {
+  localId: number;
+}
+
 export interface IFoodCharacteristicType {
   id: string;
   name: string;

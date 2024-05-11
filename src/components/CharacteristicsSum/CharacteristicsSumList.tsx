@@ -1,21 +1,20 @@
-import { ICharacteristicsSum } from "../../../global/types/types";
-import { sortConsumedCharacteristics } from "../helpers/helpers";
-import ConsumedCharacteristicTile from "./ConsumedCharacteristicTile";
-
 import { FC } from "react";
+import { ICharacteristicsSum } from "../../global/types/types";
+import { sortConsumedCharacteristics } from "../../global/helpers/sort_characteristics.helper";
+import CharacteristicTile from "./CharacteristicTile";
 
 type TProps = {
   characteristicsSum: ICharacteristicsSum[];
 };
 
-const MealCharacteristicsSum: FC<TProps> = ({ characteristicsSum }) => {
+const CharacteristicsSumList: FC<TProps> = ({ characteristicsSum }) => {
   const sortedConsumedCharacteristics =
     sortConsumedCharacteristics(characteristicsSum);
 
   const mappedCharacteristicsSum = sortedConsumedCharacteristics.map(
     (characteristic: ICharacteristicsSum) => {
       return (
-        <ConsumedCharacteristicTile
+        <CharacteristicTile
           key={`mappedCharacteristicsSum_${characteristic.foodCharacteristicType.id}`}
           name={characteristic.foodCharacteristicType.name}
           value={characteristic.characteristicSumValue}
@@ -27,4 +26,4 @@ const MealCharacteristicsSum: FC<TProps> = ({ characteristicsSum }) => {
   return <div className="flex flex-wrap gap-3">{mappedCharacteristicsSum}</div>;
 };
 
-export default MealCharacteristicsSum;
+export default CharacteristicsSumList;

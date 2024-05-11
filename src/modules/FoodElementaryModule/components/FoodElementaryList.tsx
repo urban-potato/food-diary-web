@@ -3,15 +3,14 @@ import { useGetAllFoodElementaryQuery } from "../api/foodElementary.api";
 import FoodElementaryPiece from "./FoodElementaryPiece.tsx";
 import { ILocalFoodCharacteristic } from "../types/types";
 import { Player } from "@lordicon/react";
-
 import PRELOADER from "../../../global/assets/system-regular-18-autorenew.json";
+import { IFoodElementary } from "../../../global/types/types.ts";
 import {
   CALORIES_DEFAULT_ID,
   CARBOHYDRATE_DEFAULT_ID,
   FAT_DEFAULT_ID,
   PROTEIN_DEFAULT_ID,
-} from "../constants/constants.ts";
-import { IFoodElementary } from "../../../global/types/types.ts";
+} from "../../../global/constants/constants.ts";
 
 const FoodElementaryList: FC = () => {
   const {
@@ -103,13 +102,7 @@ const FoodElementaryList: FC = () => {
   });
 
   return (
-    <div
-      className="w-full max-w-full
-    flex flex-col justify-center items-center
-    mt-3
-    
-    "
-    >
+    <div className="w-full max-w-full flex flex-col justify-center items-center mt-3">
       <div className="text-2xl font-bold  ">
         Всего простых блюд: {totalFoodCount}
       </div>

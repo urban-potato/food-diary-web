@@ -4,9 +4,9 @@ import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.jso
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import { useDeleteCourseMealMutation } from "../api/meals.api";
 import MealEditForm from "./MealEditForm";
-import MealCharacteristicsSum from "./MealCharacteristicsSum";
 import ConsumedDishes from "./ConsumedDishes";
 import { ICourseMeal } from "../../../global/types/types";
+import CharacteristicsSumList from "../../../components/CharacteristicsSum/CharacteristicsSumList";
 
 const MealTile: FC<ICourseMeal> = ({
   id,
@@ -89,7 +89,7 @@ const MealTile: FC<ICourseMeal> = ({
               {consumedRecipes.length > 0 ? (
                 <ConsumedDishes consumedDishes={consumedRecipes} />
               ) : null}
-              <MealCharacteristicsSum characteristicsSum={characteristicsSum} />
+              <CharacteristicsSumList characteristicsSum={characteristicsSum} />
             </div>
           )}
         </div>
