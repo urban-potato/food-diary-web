@@ -7,7 +7,6 @@ import { validValues } from "../constants/constants";
 import {
   FoodElementaryData,
   FoodElementaryPieceEditProps,
-  IFoodCharacteristic,
 } from "../types/types";
 import { useForm, useFormState } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,6 +18,7 @@ import { Player } from "@lordicon/react";
 import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import { useChangeFoodCharacteristicValueMutation } from "../api/foodCharacteristic.api.ts";
+import { IFoodCharacteristic } from "../../../global/types/types.ts";
 
 const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
   id,

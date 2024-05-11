@@ -10,21 +10,13 @@ import {
   useChangeConsumedRecipeWeightMutation,
   useDeleteConsumedRecipeMutation,
 } from "../api/meals.api";
-import {
-  IFoodElementary,
-  useGetAllFoodElementaryQuery,
-} from "../../FoodElementaryModule";
+import { useGetAllFoodElementaryQuery } from "../../FoodElementaryModule";
 import {
   Controller,
   SubmitHandler,
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import {
-  IConsumedElementary,
-  IConsumedRecipe,
-  IFoodRecipe,
-} from "../types/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AsyncSelect from "react-select/async";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
@@ -34,6 +26,12 @@ import { Player } from "@lordicon/react";
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import Select from "react-select";
 import { useGetAllFoodRecipeQuery } from "../../FoodRecipeModule/api/foodRecipe.api";
+import {
+  IConsumedElementary,
+  IConsumedRecipe,
+  IFoodElementary,
+  IFoodRecipe,
+} from "../../../global/types/types";
 
 type TProps = {
   courseMealId: string;

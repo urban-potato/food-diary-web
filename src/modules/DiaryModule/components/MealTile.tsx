@@ -3,10 +3,10 @@ import { Player } from "@lordicon/react";
 import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import { useDeleteCourseMealMutation } from "../api/meals.api";
-import type { ICourseMeal } from "../types/types";
 import MealEditForm from "./MealEditForm";
 import MealCharacteristicsSum from "./MealCharacteristicsSum";
 import ConsumedDishes from "./ConsumedDishes";
+import { ICourseMeal } from "../../../global/types/types";
 
 const MealTile: FC<ICourseMeal> = ({
   id,

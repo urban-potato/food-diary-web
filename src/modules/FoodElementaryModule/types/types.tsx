@@ -1,3 +1,5 @@
+import { IFoodCharacteristic } from "../../../global/types/types";
+
 export interface FoodElementaryData {
   name: string;
   proteinValue?: number;
@@ -6,31 +8,12 @@ export interface FoodElementaryData {
   caloriesValue?: number;
 }
 
-export interface IFoodElementary {
-  id: string;
-  name: string;
-  userId: string;
-  isDefault: boolean;
-  characteristics: IFoodCharacteristic[];
-}
-
 export interface FoodCharacteristicProps {
   name: string;
   value: number;
 }
 
-export interface IFoodCharacteristic {
-  foodCharacteristicId: string;
-  characteristicTypeId: string;
-  characteristicName: string;
-  value: number;
-}
-
-export interface ILocalFoodCharacteristic {
-  foodCharacteristicId: string;
-  characteristicTypeId: string;
-  characteristicName: string;
-  value: number;
+export interface ILocalFoodCharacteristic extends IFoodCharacteristic {
   localId: number;
 }
 

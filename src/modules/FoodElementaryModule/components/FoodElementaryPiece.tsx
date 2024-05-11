@@ -1,12 +1,13 @@
 import { FC, useRef, useState } from "react";
 import FoodCharacteristic from "./FoodCharacteristic";
-import { FoodElementaryPieceProps, IFoodCharacteristic } from "../types/types";
+import { FoodElementaryPieceProps } from "../types/types";
 import { useDeleteFoodElementaryMutation } from "../api/foodElementary.api";
 import FoodElementaryPieceEdit from "./FoodElementaryPieceEdit";
 import { Player } from "@lordicon/react";
 
 import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
+import { IFoodCharacteristic } from "../../../global/types/types";
 
 const FoodElementaryPiece: FC<FoodElementaryPieceProps> = ({
   id,

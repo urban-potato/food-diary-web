@@ -1,11 +1,7 @@
 import { FC, useEffect, useRef } from "react";
 import { useGetAllFoodElementaryQuery } from "../api/foodElementary.api";
 import FoodElementaryPiece from "./FoodElementaryPiece.tsx";
-import {
-  IFoodCharacteristic,
-  IFoodElementary,
-  ILocalFoodCharacteristic,
-} from "../types/types";
+import { ILocalFoodCharacteristic } from "../types/types";
 import { Player } from "@lordicon/react";
 
 import PRELOADER from "../../../global/assets/system-regular-18-autorenew.json";
@@ -15,6 +11,7 @@ import {
   FAT_DEFAULT_ID,
   PROTEIN_DEFAULT_ID,
 } from "../constants/constants.ts";
+import { IFoodElementary } from "../../../global/types/types.ts";
 
 const FoodElementaryList: FC = () => {
   const {

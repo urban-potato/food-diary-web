@@ -1,10 +1,11 @@
+import { ICharacteristicsSum } from "../../../global/types/types";
 import { sortConsumedCharacteristics } from "../helpers/helpers";
 import ConsumedCharacteristicTile from "./ConsumedCharacteristicTile";
-import type { IConsumedCharacteristic } from "../types/types";
+
 import { FC } from "react";
 
 type TProps = {
-  characteristicsSum: IConsumedCharacteristic[];
+  characteristicsSum: ICharacteristicsSum[];
 };
 
 const MealCharacteristicsSum: FC<TProps> = ({ characteristicsSum }) => {
@@ -12,7 +13,7 @@ const MealCharacteristicsSum: FC<TProps> = ({ characteristicsSum }) => {
     sortConsumedCharacteristics(characteristicsSum);
 
   const mappedCharacteristicsSum = sortedConsumedCharacteristics.map(
-    (characteristic: IConsumedCharacteristic) => {
+    (characteristic: ICharacteristicsSum) => {
       return (
         <ConsumedCharacteristicTile
           key={`mappedCharacteristicsSum_${characteristic.foodCharacteristicType.id}`}

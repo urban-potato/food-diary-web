@@ -1,6 +1,9 @@
 import { FC } from "react";
-import { IConsumedElementary, IConsumedRecipe } from "../types/types";
 import ConsumedDishTile from "./ConsumedDishTile";
+import {
+  IConsumedElementary,
+  IConsumedRecipe,
+} from "../../../global/types/types";
 
 type TProps = {
   consumedDishes: IConsumedElementary[] | IConsumedRecipe[];

@@ -4,10 +4,8 @@ import {
   FAT_DEFAULT_ID,
   PROTEIN_DEFAULT_ID,
 } from "../../../global/constants/constants";
-import {
-  IConsumedCharacteristic,
-  IConsumedCharacteristicWithLocalId,
-} from "../types/types";
+import { ICharacteristicsSum } from "../../../global/types/types";
+import { ICharacteristicsSumWithLocalId } from "../types/types";
 
 export const formatNumber = (number: number) => {
   let numberStr = "";
@@ -40,40 +38,46 @@ export const getFormattedDateTime = () => {
 };
 
 export const sortConsumedCharacteristics = (
-  consumedCharacteristics: IConsumedCharacteristic[]
+  characteristicsSum: ICharacteristicsSum[]
 ) => {
-  let parsedCharacteristics = JSON.parse(
-    JSON.stringify(consumedCharacteristics)
-  );
+  let parsedCharacteristics = JSON.parse(JSON.stringify(characteristicsSum));
 
   let preparedCharacteristics = parsedCharacteristics.map(
-    (c: IConsumedCharacteristicWithLocalId) => {
+    (characteristic: ICharacteristicsSumWithLocalId) => {
       let localId = 4;
 
-      if (c.foodCharacteristicType.id.toLowerCase() === PROTEIN_DEFAULT_ID) {
-        c.localId = 0;
-      } else if (c.foodCharacteristicType.id.toLowerCase() === FAT_DEFAULT_ID) {
-        c.localId = 1;
-      } else if (
-        c.foodCharacteristicType.id.toLowerCase() === CARBOHYDRATE_DEFAULT_ID
+      if (
+        characteristic.foodCharacteristicType.id.toLowerCase() ===
+        PROTEIN_DEFAULT_ID
       ) {
-        c.localId = 2;
+        characteristic.localId = 0;
       } else if (
-        c.foodCharacteristicType.id.toLowerCase() === CALORIES_DEFAULT_ID
+        characteristic.foodCharacteristicType.id.toLowerCase() ===
+        FAT_DEFAULT_ID
       ) {
-        c.localId = 3;
+        characteristic.localId = 1;
+      } else if (
+        characteristic.foodCharacteristicType.id.toLowerCase() ===
+        CARBOHYDRATE_DEFAULT_ID
+      ) {
+        characteristic.localId = 2;
+      } else if (
+        characteristic.foodCharacteristicType.id.toLowerCase() ===
+        CALORIES_DEFAULT_ID
+      ) {
+        characteristic.localId = 3;
       } else {
-        c.localId = localId;
+        characteristic.localId = localId;
         localId++;
       }
 
-      return c;
+      return characteristic;
     }
   );
 
   function compare(
-    a: IConsumedCharacteristicWithLocalId,
-    b: IConsumedCharacteristicWithLocalId
+    a: ICharacteristicsSumWithLocalId,
+    b: ICharacteristicsSumWithLocalId
   ) {
     if (a.localId < b.localId) {
       return -1;

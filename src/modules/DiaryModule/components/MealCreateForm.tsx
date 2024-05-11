@@ -1,11 +1,5 @@
 import { FC, useRef, useState } from "react";
 import {
-  ICourseMeal,
-  ICourseMealDay,
-  IFoodRecipe,
-  TCalendarValue,
-} from "../types/types";
-import {
   BREAKFAST_DEFAULT_ID,
   selectStyles,
   createValidationSchema,
@@ -19,7 +13,6 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
 import { useGetAllFoodElementaryQuery } from "../../FoodElementaryModule";
-import type { IFoodElementary } from "../../FoodElementaryModule";
 import AsyncSelect from "react-select/async";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
 import {
@@ -36,6 +29,7 @@ import MealTypeOptions from "./MealTypeOptions";
 import { getFormattedDateTime } from "../helpers/helpers";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
 import { useGetAllFoodRecipeQuery } from "../../FoodRecipeModule/api/foodRecipe.api";
+import { IFoodElementary, IFoodRecipe } from "../../../global/types/types";
 
 type TProps = {
   setShowCreateForm: Function;
