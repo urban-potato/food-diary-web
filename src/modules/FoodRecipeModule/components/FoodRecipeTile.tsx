@@ -88,9 +88,11 @@ const FoodRecipeTile: FC<TProps> = ({ foodRecipe }) => {
               {sortedIngredients.length > 0 ? (
                 <Ingredients ingredients={sortedIngredients} />
               ) : null}
-              <CharacteristicsSumList
-                characteristicsSum={foodRecipe.characteristicsSum}
-              />
+              <div className="flex flex-wrap gap-3 w-full">
+                <CharacteristicsSumList
+                  characteristicsSum={foodRecipe.characteristicsSum}
+                />
+              </div>
             </div>
           </div>
         )}

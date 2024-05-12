@@ -40,7 +40,7 @@ const CalendarComponent: FC<TProps> = (props) => {
   return (
     <CalendarUI
       {...props}
-      className="Calendar"
+      className="Calendar shadow-lg rounded-lg"
       //   className="Calendar rounded-2xl border-0"
       locale={locale}
       maxDate={maxDate}

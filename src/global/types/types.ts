@@ -71,6 +71,6 @@ export interface ICharacteristicsSumWithLocalId extends ICharacteristicsSum {
 export interface IFoodCharacteristicType {
   id: string;
   name: string;
-  userId: string;
+  userId: string | null;
   isDefault: boolean;
 }

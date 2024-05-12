@@ -31,7 +31,6 @@ const MealTile: FC<ICourseMeal> = ({
     <div className="outer_box_style group w-full max-w-5xl mt-5">
       <div className="box_style "></div>
       <div className="box_content_transition flex flex-col flex-wrap w-full justify-center items-start pl-7 pr-6 py-7 gap-4">
-        
         <div className="w-full max-w-5xl  flex justify-center items-center ">
           <div className="ml-1 flex gap-5 justify-center items-center self-center ">
             <div className="text-xl font-bold">
@@ -89,7 +88,9 @@ const MealTile: FC<ICourseMeal> = ({
             {consumedRecipes.length > 0 ? (
               <ConsumedDishes consumedDishes={consumedRecipes} />
             ) : null}
-            <CharacteristicsSumList characteristicsSum={characteristicsSum} />
+            <div className="flex flex-wrap gap-3 w-full">
+              <CharacteristicsSumList characteristicsSum={characteristicsSum} />
+            </div>
           </div>
         )}
       </div>

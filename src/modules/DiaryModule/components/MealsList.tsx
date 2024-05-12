@@ -6,11 +6,17 @@ import { ICourseMeal } from "../../../global/types/types";
 
 type TProps = {
   date: string;
+  isLoadingCourseMealDay: boolean;
+  dataCourseMealDay: any;
 };
 
-const MealsList: FC<TProps> = ({ date }) => {
-  const { isLoading: isLoadingCourseMealDay, data: dataCourseMealDay } =
-    useGetCourseMealDayByDateQuery(date);
+const MealsList: FC<TProps> = ({
+  date,
+  isLoadingCourseMealDay,
+  dataCourseMealDay,
+}) => {
+  // const { isLoading: isLoadingCourseMealDay, data: dataCourseMealDay } =
+  //   useGetCourseMealDayByDateQuery(date);
 
   const mealTiles = dataCourseMealDay?.items[0]?.courseMeals
     ?.slice()
