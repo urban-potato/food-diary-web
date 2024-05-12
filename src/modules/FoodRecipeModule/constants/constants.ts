@@ -71,6 +71,76 @@ export const createFoodRecipeValidationSchema = yup.object({
     .required(),
 });
 
+export const editFoodRecipeValidationSchema = yup.object({
+  foodRecipeName: yup
+    .string()
+    .min(
+      validValues.foodRecipeName.min.value,
+      validValues.foodRecipeName.min.message(
+        validValues.foodRecipeName.min.value
+      )
+    )
+    .max(
+      validValues.foodRecipeName.max.value,
+      validValues.foodRecipeName.max.message(
+        validValues.foodRecipeName.max.value
+      )
+    )
+    .required(validValues.requiredErrorMessage),
+  addIngredientsList: yup
+    .array()
+    .of(
+      yup.object({
+        ingredientInfo: yup.object({
+          label: yup.string(),
+          value: yup
+            .string()
+            .required("• Ингредиент: " + validValues.requiredErrorMessage),
+        }),
+        // .required("• Ингредиент: " + validValues.requiredErrorMessage),
+
+        weight: yup
+          .number()
+          .required("• Вес: " + validValues.requiredErrorMessage)
+          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
+          .min(
+            validValues.weightValue.min.value,
+            validValues.weightValue.min.message(
+              validValues.weightValue.min.value
+            )
+          )
+          .integer(),
+      })
+    )
+    .required(),
+  originalIngredientsList: yup
+    .array()
+    .of(
+      yup.object({
+        ingredientInfo: yup.object({
+          label: yup.string(),
+          value: yup
+            .string()
+            .required("• Блюдо: " + validValues.requiredErrorMessage),
+        }),
+        // .required("• Блюдо: " + validValues.requiredErrorMessage),
+
+        weight: yup
+          .number()
+          .required("• Вес: " + validValues.requiredErrorMessage)
+          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
+          .min(
+            validValues.weightValue.min.value,
+            validValues.weightValue.min.message(
+              validValues.weightValue.min.value
+            )
+          )
+          .integer(),
+      })
+    )
+    .required(),
+});
+
 export const selectStyles: StylesConfig = {
   control: (styles) => ({
     ...styles,
