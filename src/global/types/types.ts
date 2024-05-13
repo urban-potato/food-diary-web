@@ -74,3 +74,7 @@ export interface IFoodCharacteristicType {
   userId: string | null;
   isDefault: boolean;
 }
+
+export interface IFoodCharacteristicTypeWithLocalId extends IFoodCharacteristicType {
+  localId: number;
+}

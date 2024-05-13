@@ -7,40 +7,42 @@ import {
 import {
   ICharacteristicsSum,
   ICharacteristicsSumWithLocalId,
+  IFoodCharacteristicType,
+  IFoodCharacteristicTypeWithLocalId,
 } from "../types/types";
 
 export const sortConsumedCharacteristics = (
-  characteristicsSum: ICharacteristicsSum[]
+  characteristicsSum: ICharacteristicsSum[] | IFoodCharacteristicType[]
 ) => {
   let parsedCharacteristics = JSON.parse(JSON.stringify(characteristicsSum));
+  let localId = 4;
 
   let preparedCharacteristics = parsedCharacteristics.map(
-    (characteristic: ICharacteristicsSumWithLocalId) => {
-      let localId = 4;
+    (
+      characteristic:
+        | ICharacteristicsSumWithLocalId
+        | IFoodCharacteristicTypeWithLocalId
+    ) => {
+      let characteristicId = null;
 
-      if (
-        characteristic.foodCharacteristicType.id.toLowerCase() ===
-        PROTEIN_DEFAULT_ID
-      ) {
+      if ("foodCharacteristicType" in characteristic) {
+        characteristicId =
+          characteristic.foodCharacteristicType.id.toLowerCase();
+      } else {
+        characteristicId = characteristic.id.toLowerCase();
+      }
+
+      if (characteristicId === PROTEIN_DEFAULT_ID) {
         characteristic.localId = 0;
-      } else if (
-        characteristic.foodCharacteristicType.id.toLowerCase() ===
-        FAT_DEFAULT_ID
-      ) {
+      } else if (characteristicId === FAT_DEFAULT_ID) {
         characteristic.localId = 1;
-      } else if (
-        characteristic.foodCharacteristicType.id.toLowerCase() ===
-        CARBOHYDRATE_DEFAULT_ID
-      ) {
+      } else if (characteristicId === CARBOHYDRATE_DEFAULT_ID) {
         characteristic.localId = 2;
-      } else if (
-        characteristic.foodCharacteristicType.id.toLowerCase() ===
-        CALORIES_DEFAULT_ID
-      ) {
+      } else if (characteristicId === CALORIES_DEFAULT_ID) {
         characteristic.localId = 3;
       } else {
         characteristic.localId = localId;
-        localId++;
+        localId += 1;
       }
 
       return characteristic;

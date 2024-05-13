@@ -1,11 +1,3 @@
-export interface UserProfileEditFormProps {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  setIsEditMode: Function;
-}
-
 export interface UserData {
   email: string;
   firstName: string;

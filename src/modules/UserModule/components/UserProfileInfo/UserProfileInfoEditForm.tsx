@@ -1,25 +1,31 @@
 import * as yup from "yup";
-import { useChangeUserInfoMutation } from "../api/user.api";
-import { validValues } from "../constants/constants";
+import { useChangeUserInfoMutation } from "../../api/user.api.ts";
+import { validValues } from "../../constants/constants.ts";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm, useFormState } from "react-hook-form";
 import { FC, useEffect, useRef } from "react";
-import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
-import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
+import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
+import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated.tsx";
 import { Player } from "@lordicon/react";
-import { UserData, UserProfileEditFormProps } from "../types/types.ts";
+import { UserData } from "../../types/types.ts";
+import EDIT_ICON from "../../../../global/assets/system-regular-63-settings-cog.json";
 
-import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
+type TProps = {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  setIsEditMode: Function;
+};
 
-const UserProfileEditForm: FC<UserProfileEditFormProps> = ({
+const UserProfileInfoEditForm: FC<TProps> = ({
   id,
   email,
   firstName,
   lastName,
   setIsEditMode,
 }) => {
-  const [doChangeUserInfo, doChangeUserInfoResult] =
-    useChangeUserInfoMutation();
+  const [doChangeUserInfo] = useChangeUserInfoMutation();
 
   const editIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
@@ -87,7 +93,7 @@ const UserProfileEditForm: FC<UserProfileEditFormProps> = ({
     };
 
     try {
-      const resultChangeUserInfo = doChangeUserInfo({
+      await doChangeUserInfo({
         id: id,
         data: submitData,
       });
@@ -118,12 +124,9 @@ const UserProfileEditForm: FC<UserProfileEditFormProps> = ({
   }, [dirtyFields, touchedFields]);
 
   return (
-    <div
-      className="flex flex-col  w-full pb-3
-      "
-    >
+    <div className="flex flex-col  w-full pb-3">
       <form
-        className="   flex flex-col flex-wrap justify-center "
+        className="flex flex-col flex-wrap justify-center"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="text-xl -mt-6">
@@ -177,12 +180,12 @@ const UserProfileEditForm: FC<UserProfileEditFormProps> = ({
         </div>
 
         <div
-          className=" mt-6 
+          className="mt-6 
           flex flex-wrap w-full 
           gap-x-4 gap-y-3
           justify-stretch items-center"
         >
-          <span className=" flex-grow">
+          <span className="flex-grow">
             <ButtonIlluminated
               label="Сохранить"
               isDarkButton={true}
@@ -193,7 +196,7 @@ const UserProfileEditForm: FC<UserProfileEditFormProps> = ({
               isDisabled={isFilledRight ? false : true}
             />
           </span>
-          <span className=" flex-grow">
+          <span className="flex-grow">
             <ButtonIlluminated
               label="Отменить"
               isDarkButton={false}
@@ -207,7 +210,7 @@ const UserProfileEditForm: FC<UserProfileEditFormProps> = ({
         </div>
       </form>
 
-      <div className="order-[-1] ml-auto gap-x-2 flex justify-center items-start ">
+      <div className="order-[-1] ml-auto gap-x-2 flex justify-center items-start">
         <span role="button" onClick={() => setIsEditMode(false)}>
           <span
             onMouseEnter={() => editIconPlayerRef.current?.playFromBeginning()}
@@ -225,4 +228,4 @@ const UserProfileEditForm: FC<UserProfileEditFormProps> = ({
   );
 };
 
-export default UserProfileEditForm;
+export default UserProfileInfoEditForm;
