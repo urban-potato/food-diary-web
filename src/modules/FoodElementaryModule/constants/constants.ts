@@ -41,6 +41,17 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
       )
     )
     .required(validValues.requiredErrorMessage),
+  caloriesValue: yup
+    .number()
+    .required(validValues.requiredErrorMessage)
+    .typeError(validValues.numberTypeErrorMessage)
+    .min(
+      validValues.characteristicValue.min.value,
+      validValues.characteristicValue.min.message(
+        validValues.characteristicValue.min.value
+      )
+    )
+    .integer(),
   addCharacteristicsList: yup
     .array()
     .of(
@@ -66,59 +77,3 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
     )
     .required(),
 });
-
-// export const createFoodElementaryValidationSchema = yup.object().shape({
-//   name: yup
-//     .string()
-//     .min(
-//       validValues.name.min.value,
-//       validValues.name.min.message(validValues.name.min.value)
-//     )
-//     .max(
-//       validValues.name.max.value,
-//       validValues.name.max.message(validValues.name.max.value)
-//     )
-//     .required(validValues.requiredErrorMessage),
-//   proteinValue: yup
-//     .number()
-//     // .required(validValues.requiredErrorMessage)
-//     .typeError(validValues.numberTypeErrorMessage)
-//     .transform((cv) => (isNaN(cv) ? 0 : cv))
-//     .min(
-//       validValues.proteinValue.min.value,
-//       validValues.proteinValue.min.message(validValues.proteinValue.min.value)
-//     )
-//     .integer(),
-//   fatValue: yup
-//     .number()
-//     // .required(validValues.requiredErrorMessage)
-//     .typeError(validValues.numberTypeErrorMessage)
-//     .transform((cv) => (isNaN(cv) ? 0 : cv))
-//     .min(
-//       validValues.fatValue.min.value,
-//       validValues.fatValue.min.message(validValues.fatValue.min.value)
-//     )
-//     .integer(),
-//   carbohydrateValue: yup
-//     .number()
-//     // .required(validValues.requiredErrorMessage)
-//     .typeError(validValues.numberTypeErrorMessage)
-//     .transform((cv) => (isNaN(cv) ? 0 : cv))
-//     .min(
-//       validValues.carbohydrateValue.min.value,
-//       validValues.carbohydrateValue.min.message(
-//         validValues.carbohydrateValue.min.value
-//       )
-//     )
-//     .integer(),
-//   caloriesValue: yup
-//     .number()
-//     // .required(validValues.requiredErrorMessage)
-//     .typeError(validValues.numberTypeErrorMessage)
-//     .transform((cv) => (isNaN(cv) ? 0 : cv))
-//     .min(
-//       validValues.caloriesValue.min.value,
-//       validValues.caloriesValue.min.message(validValues.caloriesValue.min.value)
-//     )
-//     .integer(),
-// });

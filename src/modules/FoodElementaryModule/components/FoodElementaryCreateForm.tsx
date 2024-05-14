@@ -32,6 +32,7 @@ type TProps = {
 
 type TFoodElementaryCreateFormData = {
   foodElementaryName: string;
+  caloriesValue: number;
   addCharacteristicsList: {
     characteristicInfo?: {
       label?: string | undefined;
@@ -78,10 +79,16 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
 
     const filteredOptions = filteredCharacteristicTypesOptions.filter(
       (item) =>
-        !newCharacteristicsForbiddenToAddIdsRef.current.includes(item.value)
+        !newCharacteristicsForbiddenToAddIdsRef.current.includes(item.value) &&
+        item.value != CALORIES_DEFAULT_ID
     );
 
     callback(filteredOptions);
+  };
+
+  // defaultValues
+  let defaultValues = {
+    caloriesValue: 0,
   };
 
   // useForm
@@ -96,6 +103,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
   } = useForm<TFoodElementaryCreateFormData>({
     resolver: yupResolver(createFoodElementaryValidationSchema),
     mode: "onChange",
+    defaultValues: defaultValues,
   });
 
   const { dirtyFields, touchedFields } = useFormState({ control });
@@ -133,7 +141,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
       proteinValue: 0,
       fatValue: 0,
       carbohydrateValue: 0,
-      caloriesValue: 0,
+      caloriesValue: data.caloriesValue,
     };
 
     const basicCharacteristicsIdsList = [
@@ -164,10 +172,10 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
           createFoodElementaryData.carbohydrateValue =
             basicCharacteristic.characteristicValue;
           break;
-        case CALORIES_DEFAULT_ID:
-          createFoodElementaryData.caloriesValue =
-            basicCharacteristic.characteristicValue;
-          break;
+        // case CALORIES_DEFAULT_ID:
+        //   createFoodElementaryData.caloriesValue =
+        //     basicCharacteristic.characteristicValue;
+        //   break;
 
         default:
           break;
@@ -301,8 +309,37 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
             </div>
           )}
 
+          <div className="text-xl w-full flex-grow">
+            <InputIlluminated
+              id={"FoodElementaryCreateForm_caloriesValue"}
+              type="number"
+              placeholder="Калорийность (ккал.)"
+              disableIllumination={true}
+              additionalStyles=" h-[67px] border-0 "
+              register={{
+                ...register("caloriesValue"),
+              }}
+              isRequired={true}
+            />
+          </div>
+          {errors.caloriesValue && (
+            <div
+              className={
+                Object.keys(errors).length > 0
+                  ? " flex flex-col gap-y-2 justify-center "
+                  : " hidden "
+              }
+            >
+              <p
+                className={errors.caloriesValue ? "text-pink-500 " : " hidden "}
+              >
+                {errors.caloriesValue?.message}
+              </p>
+            </div>
+          )}
+
           <div className="flex flex-col">
-            <h3 className="text-xl my-3">Нутриенты и калории:</h3>
+            <h3 className="text-xl my-3">Нутриенты:</h3>
 
             {addCharacteristicListFields.map((select, index) => {
               return (
@@ -313,7 +350,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                   <div className="gap-x-3 flex mb-1">
                     <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
                       <span className="flex gap-x-1">
-                        <h3>Нутриент / калории</h3>
+                        <h3>Нутриент</h3>
                         <p className="text-red">*</p>
                       </span>
                       <Controller
@@ -329,7 +366,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                             className="relative text-sm rounded-xl  "
                             components={{ NoOptionsMessage }}
                             styles={SELECT_STYLES}
-                            placeholder="Введите название блюда"
+                            placeholder="Введите название нутриента"
                             loadOptions={loadOptions}
                             onInputChange={handleOnInputChange}
                             onChange={(newValue) => {
@@ -345,7 +382,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                       <InputIlluminated
                         id={`FoodElementaryCreateForm_addCharacteristicsList.${index}.characteristicValue`}
                         type="number"
-                        placeholder="г. / ккал."
+                        placeholder="Вес (г)"
                         disableIllumination={true}
                         additionalStyles=" h-[67px] border-0 "
                         register={{
@@ -425,7 +462,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
 
             <div className="w-full max-w-[280px]">
               <ButtonIlluminated
-                label={"Добавить"}
+                label={"Добавить нутриент"}
                 isDarkButton={true}
                 isIlluminationFull={false}
                 onClick={() => {
