@@ -1,83 +1,90 @@
-import * as yup from "yup";
-import { SubmitHandler, useForm, useFormState } from "react-hook-form";
-import { validValues } from "../constants/constants";
-import { FC, useEffect } from "react";
-import { FoodElementaryData } from "../types/types";
+import { FC, useEffect, useRef } from "react";
+import { Player } from "@lordicon/react";
+import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  Controller,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+  useFormState,
+} from "react-hook-form";
+import AsyncSelect from "react-select/async";
 import { useCreateFoodElementaryMutation } from "../api/foodElementary.api";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
+import { createFoodElementaryValidationSchema } from "../constants/constants.ts";
+import { useAddFoodCharacteristicMutation } from "../api/foodCharacteristic.api.ts";
+import { useGetAllFoodCharacteristicTypesQuery } from "../../UserModule/api/foodCharacteristicType.api.ts";
+import { IFoodCharacteristicType } from "../../../global/types/types.ts";
+import {
+  CALORIES_DEFAULT_ID,
+  CARBOHYDRATE_DEFAULT_ID,
+  FAT_DEFAULT_ID,
+  PROTEIN_DEFAULT_ID,
+  SELECT_STYLES,
+} from "../../../global/constants/constants.ts";
+import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage.tsx";
 
 type TProps = {
   setShowCreateForm: Function;
 };
 
-const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
-  const validationSchema = yup.object().shape({
-    name: yup
-      .string()
-      .min(
-        validValues.name.min.value,
-        validValues.name.min.message(validValues.name.min.value)
-      )
-      .max(
-        validValues.name.max.value,
-        validValues.name.max.message(validValues.name.max.value)
-      )
-      .required(validValues.requiredErrorMessage),
-    proteinValue: yup
-      .number()
-      // .required(validValues.requiredErrorMessage)
-      .typeError(validValues.numberTypeErrorMessage)
-      .transform((cv) => (isNaN(cv) ? 0 : cv))
-      .min(
-        validValues.proteinValue.min.value,
-        validValues.proteinValue.min.message(validValues.proteinValue.min.value)
-      )
-      .integer(),
-    fatValue: yup
-      .number()
-      // .required(validValues.requiredErrorMessage)
-      .typeError(validValues.numberTypeErrorMessage)
-      .transform((cv) => (isNaN(cv) ? 0 : cv))
-      .min(
-        validValues.fatValue.min.value,
-        validValues.fatValue.min.message(validValues.fatValue.min.value)
-      )
-      .integer(),
-    carbohydrateValue: yup
-      .number()
-      // .required(validValues.requiredErrorMessage)
-      .typeError(validValues.numberTypeErrorMessage)
-      .transform((cv) => (isNaN(cv) ? 0 : cv))
-      .min(
-        validValues.carbohydrateValue.min.value,
-        validValues.carbohydrateValue.min.message(
-          validValues.carbohydrateValue.min.value
-        )
-      )
-      .integer(),
-    caloriesValue: yup
-      .number()
-      // .required(validValues.requiredErrorMessage)
-      .typeError(validValues.numberTypeErrorMessage)
-      .transform((cv) => (isNaN(cv) ? 0 : cv))
-      .min(
-        validValues.caloriesValue.min.value,
-        validValues.caloriesValue.min.message(
-          validValues.caloriesValue.min.value
-        )
-      )
-      .integer(),
-  });
+type TFoodElementaryCreateFormData = {
+  foodElementaryName: string;
+  addCharacteristicsList: {
+    characteristicInfo?: {
+      label?: string | undefined;
+      value: string;
+    };
+    characteristicValue: number;
+  }[];
+};
 
-  let defaultValues = {
-    proteinValue: 0,
-    fatValue: 0,
-    carbohydrateValue: 0,
-    caloriesValue: 0,
+type TSelectElement = {
+  label: string;
+  value: string;
+};
+
+const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
+  const newCharacteristicsForbiddenToAddIdsRef = useRef<Array<String>>(
+    new Array()
+  );
+
+  const deleteIconPlayerRef = useRef<Player>(null);
+  const ICON_SIZE = 28;
+
+  const [doCreateFoodElementary] = useCreateFoodElementaryMutation();
+  const [doAddFoodCharacteristic] = useAddFoodCharacteristicMutation();
+
+  // Food Characteristics Types for Async Select
+  const {
+    isLoading: isLoadingGetAllFoodCharacteristicTypes,
+    data: dataGetAllFoodCharacteristicTypes,
+    error: errorGetAllFoodCharacteristicTypes,
+  } = useGetAllFoodCharacteristicTypesQuery(undefined);
+
+  const loadOptions = (searchValue: string, callback: any) => {
+    const filteredCharacteristicTypesData: IFoodCharacteristicType[] =
+      dataGetAllFoodCharacteristicTypes?.items.filter(
+        (item: IFoodCharacteristicType) =>
+          item.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
+
+    const filteredCharacteristicTypesOptions =
+      filteredCharacteristicTypesData.map((item) => {
+        return { value: item.id, label: item.name };
+      });
+
+    const filteredOptions = filteredCharacteristicTypesOptions.filter(
+      (item) =>
+        !newCharacteristicsForbiddenToAddIdsRef.current.includes(item.value)
+    );
+
+    callback(filteredOptions);
   };
 
+  // useForm
   const {
     register,
     reset,
@@ -86,52 +93,166 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     getValues,
     control,
     trigger,
-  } = useForm<FoodElementaryData>({
-    resolver: yupResolver(validationSchema),
+  } = useForm<TFoodElementaryCreateFormData>({
+    resolver: yupResolver(createFoodElementaryValidationSchema),
     mode: "onChange",
-    defaultValues: defaultValues,
   });
 
   const { dirtyFields, touchedFields } = useFormState({ control });
 
-  const [doCreateFoodElementary, doCreateFoodElementaryResult] =
-    useCreateFoodElementaryMutation();
+  // For Generating Add characteristic Fields
+  const {
+    fields: addCharacteristicListFields,
+    append: addCharacteristicListAppend,
+    remove: addCharacteristicListRemove,
+  } = useFieldArray({
+    name: "addCharacteristicsList",
+    control,
+  });
 
-  const onSubmit: SubmitHandler<FoodElementaryData> = async (data) => {
-    const { name, proteinValue, fatValue, carbohydrateValue, caloriesValue } =
-      data;
+  const handleRemoveCharacteristicToAdd = (itemIndex: number) => {
+    if (
+      itemIndex > -1 &&
+      itemIndex < newCharacteristicsForbiddenToAddIdsRef.current.length
+    ) {
+      newCharacteristicsForbiddenToAddIdsRef.current.splice(itemIndex, 1);
+    }
 
-    console.log(data);
+    addCharacteristicListRemove(itemIndex);
+  };
 
-    const submitData = {
-      name: name,
-      proteinValue: proteinValue,
-      fatValue: fatValue,
-      carbohydrateValue: carbohydrateValue,
-      caloriesValue: caloriesValue,
+  const onSubmit: SubmitHandler<TFoodElementaryCreateFormData> = async (
+    data
+  ) => {
+    console.log("==========================================");
+    console.log("data", data);
+
+    // Create Food Elementary
+    const createFoodElementaryData = {
+      name: data.foodElementaryName,
+      proteinValue: 0,
+      fatValue: 0,
+      carbohydrateValue: 0,
+      caloriesValue: 0,
     };
 
-    try {
-      const result = doCreateFoodElementary(submitData);
+    const basicCharacteristicsIdsList = [
+      PROTEIN_DEFAULT_ID,
+      FAT_DEFAULT_ID,
+      CARBOHYDRATE_DEFAULT_ID,
+      CALORIES_DEFAULT_ID,
+    ];
+    const basicCharacteristics = data.addCharacteristicsList.filter((item) =>
+      basicCharacteristicsIdsList.includes(item.characteristicInfo?.value!)
+    );
+    const additionalCharacteristicstoAdd = data.addCharacteristicsList.filter(
+      (item) =>
+        !basicCharacteristicsIdsList.includes(item.characteristicInfo?.value!)
+    );
 
-      reset();
-      setShowCreateForm(false);
-    } catch (error: any) {
-      console.log("error");
-      console.log(error);
-      alert(error?.data?.title);
+    for (const basicCharacteristic of basicCharacteristics) {
+      switch (basicCharacteristic.characteristicInfo?.value) {
+        case PROTEIN_DEFAULT_ID:
+          createFoodElementaryData.proteinValue =
+            basicCharacteristic.characteristicValue;
+          break;
+        case FAT_DEFAULT_ID:
+          createFoodElementaryData.fatValue =
+            basicCharacteristic.characteristicValue;
+          break;
+        case CARBOHYDRATE_DEFAULT_ID:
+          createFoodElementaryData.carbohydrateValue =
+            basicCharacteristic.characteristicValue;
+          break;
+        case CALORIES_DEFAULT_ID:
+          createFoodElementaryData.caloriesValue =
+            basicCharacteristic.characteristicValue;
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    await doCreateFoodElementary(createFoodElementaryData)
+      .unwrap()
+      .then(async (responseFoodElementaryId) => {
+        console.log("Create Food Elementary");
+
+        for (const characteristic of additionalCharacteristicstoAdd) {
+          const addCharacteristicData = {
+            foodElementaryId: responseFoodElementaryId,
+            characteristicTypeId: characteristic.characteristicInfo?.value,
+            value: characteristic.characteristicValue,
+          };
+
+          await doAddFoodCharacteristic(addCharacteristicData).catch((e) =>
+            console.log(e)
+          );
+
+          console.log("Add Additional Characteristics");
+        }
+      })
+      .catch((e) => console.log(e));
+
+    reset();
+
+    // Reset Async Select Field,
+    // because it stays the same if there was only one
+    if (addCharacteristicListFields.length === 1) {
+      addCharacteristicListRemove(0);
+      addCharacteristicListAppend({
+        characteristicValue: 0,
+      });
+    }
+
+    setShowCreateForm(false);
+  };
+
+  const handleOnInputChange = () => {
+    trigger();
+  };
+
+  const handleOnChange = (newElement: TSelectElement, addFoodIndex: number) => {
+    if (
+      addFoodIndex > -1 &&
+      addFoodIndex < newCharacteristicsForbiddenToAddIdsRef.current.length
+    ) {
+      newCharacteristicsForbiddenToAddIdsRef.current.splice(
+        addFoodIndex,
+        1,
+        newElement.value
+      );
     }
   };
 
-  let isFilledRight =
-    getValues("name") &&
-    !errors?.name &&
-    !errors?.proteinValue &&
-    !errors?.fatValue &&
-    !errors?.carbohydrateValue &&
-    !errors?.caloriesValue
-      ? true
-      : false;
+  let checkIfFilledRight = () => {
+    let foodElementaryNameFilled = getValues("foodElementaryName");
+    let emptyCharacteristics = getValues("addCharacteristicsList")?.find(
+      (item) => item.characteristicInfo === undefined
+    );
+
+    // const isAddFoodListEmply = !getValues("addFoodList")?.length;
+
+    let addCharacteristicValueErrors = errors?.addCharacteristicsList;
+
+    // console.log("-----------------------");
+    // console.log("foodElementaryNameFilled", foodElementaryNameFilled);
+    // console.log("emptyCharacteristics", emptyCharacteristics);
+    // // console.log("isAddFoodListEmply", isAddFoodListEmply);
+    // console.log("addCharacteristicValueErrors", addCharacteristicValueErrors);
+    // console.log("-----------------------");
+
+    let result =
+      foodElementaryNameFilled &&
+      !errors?.foodElementaryName &&
+      !emptyCharacteristics &&
+      !addCharacteristicValueErrors
+        ? true
+        : false;
+
+    return result;
+  };
 
   useEffect(() => {
     if (Object.keys(dirtyFields).length && !Object.keys(touchedFields).length) {
@@ -140,167 +261,195 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
   }, [dirtyFields, touchedFields]);
 
   return (
-    <section
-      className=" 
-      flex-grow-100 
-      
-      w-full 
-        
-      flex flex-col flex-wrap 
-      justify-center items-center
+    <section className="flex-grow-100 w-full flex flex-col flex-wrap justify-center items-center mb-3">
+      <h2 className="mt-4 mb-3">Создать простое блюдо</h2>
 
-      mb-3
-
-      "
-    >
-      <h2 className=" mb-3">Создать простое блюдо</h2>
-
-      <div className="group/foodAdd relative w-full max-w-5xl">
-        <div
-          className="absolute inset-0 
-      
-      rounded-xl 
-
-      bg-gradient-to-r from-pink-500 to-violet-500 
-      opacity-25 
-
-      transition duration-1000 
-
-      group-hover/foodAdd:opacity-40 
-      group-hover/foodAdd:duration-500 
-      group-hover/foodAdd:scale-101
-
-      group-focus-within/foodAdd:opacity-40 
-      group-focus-within/foodAdd:duration-500 
-      group-focus-within/foodAdd:scale-101
-      
-      "
-        ></div>
+      <div className="group relative w-full max-w-5xl">
+        <div className="box_style"></div>
         <form
-          className=" flex flex-col flex-wrap justify-center 
-          w-full 
-          
-        relative
-        
-        transition duration-1000 
-
-        group-hover/foodAdd:duration-500 
-        group-hover/foodAdd:scale-101
-  
-        group-focus-within/foodAdd:duration-500 
-        group-focus-within/foodAdd:scale-101
-
-        px-7  pt-5 pb-8
-        "
+          className="box_content_transition flex flex-col flex-wrap justify-center w-full px-7 pt-5 pb-8"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="text-xl">
+          <div className="text-xl w-full flex-grow">
             <InputIlluminated
-              id="name"
+              id={"FoodElementaryCreateForm_foodElementaryName"}
               type="text"
               placeholder="Название блюда"
-              register={{ ...register("name") }}
-              // errorMessage={errors.name?.message}
-              isError={errors.name ? true : false}
-              // inset=" inset-0 "
+              disableIllumination={true}
+              additionalStyles=" h-[67px] border-0 "
+              register={{
+                ...register("foodElementaryName"),
+              }}
               isRequired={true}
             />
           </div>
-          <div className="mt-4 ">
-            <div className=" font-semibold mb-1 text-[17px]">
-              Нутриенты на 100гр:
-            </div>
-
-            <div className="w-full  flex flex-wrap gap-x-4 justify-center items-stretch">
-              <div className="flex-grow-100 ">
-                <InputIlluminated
-                  id="proteinValue"
-                  type="number"
-                  placeholder="Белки"
-                  register={{ ...register("proteinValue") }}
-                  // errorMessage={errors.proteinValue?.message}
-                  isError={errors.proteinValue ? true : false}
-                  // inset=" inset-0 "
-                />
-              </div>
-              <div className="flex-grow-100 ">
-                <InputIlluminated
-                  id="fatValue"
-                  type="number"
-                  placeholder="Жиры"
-                  register={{ ...register("fatValue") }}
-                  // errorMessage={errors.fatValue?.message}
-                  isError={errors.fatValue ? true : false}
-                  // inset=" inset-0 "
-                />
-              </div>
-              <div className="flex-grow-100 ">
-                <InputIlluminated
-                  id="carbohydrateValue"
-                  type="number"
-                  placeholder="Углеводы"
-                  register={{ ...register("carbohydrateValue") }}
-                  // errorMessage={errors.carbohydrateValue?.message}
-                  isError={errors.carbohydrateValue ? true : false}
-                  // inset=" inset-0 "
-                />
-              </div>
-              <div className="flex-grow-100 ">
-                <InputIlluminated
-                  id="caloriesValue"
-                  type="number"
-                  placeholder="Ккал"
-                  register={{ ...register("caloriesValue") }}
-                  // errorMessage={errors.caloriesValue?.message}
-                  isError={errors.caloriesValue ? true : false}
-                  // inset=" inset-0 "
-                />
-              </div>
-            </div>
-          </div>
-
-          <div
-            className={
-              Object.keys(errors).length > 0
-                ? "  flex flex-col mt-5 px-5 gap-y-2 justify-center "
-                : " hidden "
-            }
-          >
-            <p className={errors.name ? "text-pink-500 " : " hidden "}>
-              {errors.name?.message}
-            </p>
-            <p className={errors.proteinValue ? "text-pink-500 " : " hidden "}>
-              {errors.proteinValue?.message}
-            </p>
-            <p className={errors.fatValue ? "text-pink-500 " : " hidden "}>
-              {errors.fatValue?.message}
-            </p>
-            <p
+          {errors.foodElementaryName && (
+            <div
               className={
-                errors.carbohydrateValue ? "text-pink-500 " : " hidden "
+                Object.keys(errors).length > 0
+                  ? " flex flex-col gap-y-2 justify-center "
+                  : " hidden "
               }
             >
-              {errors.carbohydrateValue?.message}
-            </p>
-            <p className={errors.caloriesValue ? "text-pink-500 " : " hidden "}>
-              {errors.caloriesValue?.message}
-            </p>
+              <p
+                className={
+                  errors.foodElementaryName ? "text-pink-500 " : " hidden "
+                }
+              >
+                {errors.foodElementaryName?.message}
+              </p>
+            </div>
+          )}
+
+          <div className="flex flex-col">
+            <h3 className="text-xl my-3">Нутриенты и калории:</h3>
+
+            {addCharacteristicListFields.map((select, index) => {
+              return (
+                <div
+                  key={`FoodElementaryCreateForm_Div_addCharacteristicsList_${select.id}_${index}`}
+                  className="form-control flex flex-col"
+                >
+                  <div className="gap-x-3 flex mb-1">
+                    <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
+                      <span className="flex gap-x-1">
+                        <h3>Нутриент / калории</h3>
+                        <p className="text-red">*</p>
+                      </span>
+                      <Controller
+                        key={`FoodElementaryCreateForm_Controller_addCharacteristicsList_${select.id}_${index}`}
+                        name={
+                          `addCharacteristicsList.${index}.characteristicInfo` as const
+                        }
+                        control={control}
+                        render={({ field }) => (
+                          <AsyncSelect
+                            {...field}
+                            key={`FoodElementaryCreateForm_AsyncSelect_addCharacteristicsList_${select.id}_${index}`}
+                            className="relative text-sm rounded-xl  "
+                            components={{ NoOptionsMessage }}
+                            styles={SELECT_STYLES}
+                            placeholder="Введите название блюда"
+                            loadOptions={loadOptions}
+                            onInputChange={handleOnInputChange}
+                            onChange={(newValue) => {
+                              handleOnChange(newValue as TSelectElement, index);
+                              field.onChange(newValue);
+                            }}
+                          />
+                        )}
+                      />
+                    </div>
+
+                    <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
+                      <InputIlluminated
+                        id={`FoodElementaryCreateForm_addCharacteristicsList.${index}.characteristicValue`}
+                        type="number"
+                        placeholder="г. / ккал."
+                        disableIllumination={true}
+                        additionalStyles=" h-[67px] border-0 "
+                        register={{
+                          ...register(
+                            `addCharacteristicsList.${index}.characteristicValue` as const
+                          ),
+                        }}
+                        isRequired={true}
+                      />
+                    </div>
+
+                    <div className="max-w-[60px] flex flex-col justify-center items-center">
+                      <h3 className="text-lg my-3"> </h3>
+                      <ButtonIlluminated
+                        label={
+                          <span>
+                            <Player
+                              ref={deleteIconPlayerRef}
+                              icon={DELETE_ICON}
+                              size={ICON_SIZE}
+                              colorize="#f8f7f4"
+                            />
+                          </span>
+                        }
+                        isDarkButton={true}
+                        isIlluminationFull={false}
+                        onClick={() => {
+                          handleRemoveCharacteristicToAdd(index);
+                        }}
+                        buttonPadding=" p-[14px] "
+                        additionalStyles=" "
+                        // isDisabled={addFoodListFields.length > 1 ? false : true}
+                      />
+                    </div>
+                  </div>
+
+                  {errors.addCharacteristicsList && (
+                    <div
+                      className={
+                        Object.keys(errors).length > 0 &&
+                        errors.addCharacteristicsList[index]
+                          ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
+                          : "hidden"
+                      }
+                    >
+                      <p
+                        className={
+                          errors.addCharacteristicsList[index]
+                            ?.characteristicInfo?.value
+                            ? "text-pink-500 "
+                            : " hidden "
+                        }
+                      >
+                        {
+                          errors.addCharacteristicsList[index]
+                            ?.characteristicInfo?.value?.message
+                        }
+                      </p>
+                      <p
+                        className={
+                          errors.addCharacteristicsList[index]
+                            ?.characteristicValue
+                            ? "text-pink-500 "
+                            : " hidden "
+                        }
+                      >
+                        {
+                          errors.addCharacteristicsList[index]
+                            ?.characteristicValue?.message
+                        }
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            <div className="w-full max-w-[280px]">
+              <ButtonIlluminated
+                label={"Добавить"}
+                isDarkButton={true}
+                isIlluminationFull={false}
+                onClick={() => {
+                  newCharacteristicsForbiddenToAddIdsRef.current.push("");
+
+                  addCharacteristicListAppend({
+                    characteristicValue: 0,
+                  });
+                }}
+                buttonPadding=" p-[14px] "
+                additionalStyles=""
+              />
+            </div>
           </div>
 
-          {/* <button type="submit" className="btn btn_dark ">
-            Сохранить
-          </button> */}
-
-          <div className="mt-7">
+          <div className="mt-9">
             <ButtonIlluminated
               label="Сохранить"
               isDarkButton={true}
               isIlluminationFull={false}
-              // additionalStyles=" w-[280px] "
               isButton={true}
               type="submit"
               additionalStyles=""
-              isDisabled={isFilledRight ? false : true}
+              isDisabled={checkIfFilledRight() ? false : true}
             />
           </div>
         </form>

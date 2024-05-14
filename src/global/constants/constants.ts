@@ -1,3 +1,4 @@
+import { StylesConfig } from "react-select";
 import { ICharacteristicsSum } from "../types/types";
 
 export const PROTEIN_DEFAULT_ID = "0141a646-e0ce-4f7a-9433-97112f05db0f";
@@ -43,3 +44,20 @@ export const ZERO_CHARACTERISTICS_SUM_DATA: ICharacteristicsSum[] = [
     characteristicSumValue: 0,
   },
 ];
+
+export const SELECT_STYLES: StylesConfig = {
+  control: (styles) => ({
+    ...styles,
+    backgroundColor: "white",
+    borderRadius: "12px",
+    border: 0,
+    boxShadow: "none",
+  }),
+  noOptionsMessage: (base) => ({
+    ...base,
+  }),
+  option: (base, state) => ({
+    ...base,
+    backgroundColor: state.isSelected ? "#C2BAFF" : "white",
+  }),
+};

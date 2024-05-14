@@ -36,12 +36,16 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
     name: yup
       .string()
       .min(
-        validValues.name.min.value,
-        validValues.name.min.message(validValues.name.min.value)
+        validValues.foodElementaryName.min.value,
+        validValues.foodElementaryName.min.message(
+          validValues.foodElementaryName.min.value
+        )
       )
       .max(
-        validValues.name.max.value,
-        validValues.name.max.message(validValues.name.min.value)
+        validValues.foodElementaryName.max.value,
+        validValues.foodElementaryName.max.message(
+          validValues.foodElementaryName.min.value
+        )
       )
       .required(validValues.requiredErrorMessage),
   };
