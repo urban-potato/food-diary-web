@@ -358,7 +358,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
   return (
     <div className="w-full max-w-5xl flex flex-col justify-center items-start pl-7 pr-6 py-7 gap-4">
       <form
-        className="flex flex-col flex-wrap justify-center w-full pb-8 -mt-16"
+        className="flex flex-col flex-wrap justify-center w-full -mt-16"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="text-xl w-full flex-grow">
