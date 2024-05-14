@@ -18,6 +18,7 @@ import { useAddFoodCharacteristicMutation } from "../api/foodCharacteristic.api.
 import { useGetAllFoodCharacteristicTypesQuery } from "../../UserModule/api/foodCharacteristicType.api.ts";
 import { IFoodCharacteristicType } from "../../../global/types/types.ts";
 import {
+  BASIC_CHARACTERISTICS_IDS_LIST,
   CALORIES_DEFAULT_ID,
   CARBOHYDRATE_DEFAULT_ID,
   FAT_DEFAULT_ID,
@@ -65,6 +66,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     error: errorGetAllFoodCharacteristicTypes,
   } = useGetAllFoodCharacteristicTypesQuery(undefined);
 
+  // Load Options for Async Select (Add new CHaracteristic)
   const loadOptions = (searchValue: string, callback: any) => {
     const filteredCharacteristicTypesData: IFoodCharacteristicType[] =
       dataGetAllFoodCharacteristicTypes?.items.filter(
@@ -108,7 +110,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
 
   const { dirtyFields, touchedFields } = useFormState({ control });
 
-  // For Generating Add characteristic Fields
+  // For Generating Add Characteristic Fields
   const {
     fields: addCharacteristicListFields,
     append: addCharacteristicListAppend,
@@ -144,18 +146,14 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
       caloriesValue: data.caloriesValue,
     };
 
-    const basicCharacteristicsIdsList = [
-      PROTEIN_DEFAULT_ID,
-      FAT_DEFAULT_ID,
-      CARBOHYDRATE_DEFAULT_ID,
-      CALORIES_DEFAULT_ID,
-    ];
     const basicCharacteristics = data.addCharacteristicsList.filter((item) =>
-      basicCharacteristicsIdsList.includes(item.characteristicInfo?.value!)
+      BASIC_CHARACTERISTICS_IDS_LIST.includes(item.characteristicInfo?.value!)
     );
     const additionalCharacteristicstoAdd = data.addCharacteristicsList.filter(
       (item) =>
-        !basicCharacteristicsIdsList.includes(item.characteristicInfo?.value!)
+        !BASIC_CHARACTERISTICS_IDS_LIST.includes(
+          item.characteristicInfo?.value!
+        )
     );
 
     for (const basicCharacteristic of basicCharacteristics) {
@@ -236,24 +234,18 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
 
   let checkIfFilledRight = () => {
     let foodElementaryNameFilled = getValues("foodElementaryName");
+    let caloriesValueFilled = getValues("caloriesValue").toString();
     let emptyCharacteristics = getValues("addCharacteristicsList")?.find(
       (item) => item.characteristicInfo === undefined
     );
 
-    // const isAddFoodListEmply = !getValues("addFoodList")?.length;
-
     let addCharacteristicValueErrors = errors?.addCharacteristicsList;
-
-    // console.log("-----------------------");
-    // console.log("foodElementaryNameFilled", foodElementaryNameFilled);
-    // console.log("emptyCharacteristics", emptyCharacteristics);
-    // // console.log("isAddFoodListEmply", isAddFoodListEmply);
-    // console.log("addCharacteristicValueErrors", addCharacteristicValueErrors);
-    // console.log("-----------------------");
 
     let result =
       foodElementaryNameFilled &&
       !errors?.foodElementaryName &&
+      caloriesValueFilled &&
+      !errors?.caloriesValue &&
       !emptyCharacteristics &&
       !addCharacteristicValueErrors
         ? true

@@ -1,87 +1,132 @@
-import * as yup from "yup";
 import {
   useChangeFoodElementaryNameMutation,
   useDeleteFoodElementaryMutation,
 } from "../api/foodElementary.api";
-import { validValues } from "../constants/constants";
+import { editFoodElementaryValidationSchema } from "../constants/constants";
 import {
-  FoodElementaryData,
-  FoodElementaryPieceEditProps,
-} from "../types/types";
-import { useForm, useFormState } from "react-hook-form";
+  Controller,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+  useFormState,
+} from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Select from "react-select";
+import AsyncSelect from "react-select/async";
 import { FC, useEffect, useRef } from "react";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import { Player } from "@lordicon/react";
-
 import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
-import { useChangeFoodCharacteristicValueMutation } from "../api/foodCharacteristic.api.ts";
-import { IFoodCharacteristic } from "../../../global/types/types.ts";
+import {
+  useAddFoodCharacteristicMutation,
+  useChangeFoodCharacteristicValueMutation,
+  useDeleteFoodCharacteristicMutation,
+} from "../api/foodCharacteristic.api.ts";
+import {
+  IFoodCharacteristic,
+  IFoodCharacteristicType,
+} from "../../../global/types/types.ts";
+import { useGetAllFoodCharacteristicTypesQuery } from "../../UserModule/api/foodCharacteristicType.api.ts";
+import {
+  BASIC_CHARACTERISTICS_IDS_LIST,
+  CALORIES_DEFAULT_ID,
+  SELECT_STYLES,
+} from "../../../global/constants/constants.ts";
+import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage.tsx";
 
-const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
-  id,
-  name,
-  characteristics,
+type TProps = {
+  foodElementaryId: string;
+  foodElementaryName: string;
+  originalCharacteristics: IFoodCharacteristic[];
+  setIsEditMode: Function;
+};
+
+type TFoodElementaryEditFormData = {
+  foodElementaryName: string;
+  caloriesValue: number;
+  addCharacteristicsList: {
+    characteristicInfo?: {
+      label?: string | undefined;
+      value: string;
+    };
+    characteristicValue: number;
+  }[];
+  originalCharacteristicsList: {
+    characteristicInfo: TOriginalCharacteristic;
+    characteristicValue: number;
+  }[];
+};
+
+type TOriginalCharacteristic = {
+  label: string | undefined;
+  value: string;
+  characteristicTypeId: string;
+};
+
+type TSelectElement = {
+  label: string;
+  value: string;
+};
+
+const FoodElementaryPieceEdit: FC<TProps> = ({
+  foodElementaryId,
+  foodElementaryName,
+  originalCharacteristics,
   setIsEditMode,
 }) => {
-  const [doDeleteFood] = useDeleteFoodElementaryMutation();
+  // Characteristics forbidden to add
+  const characteristicsForbiddenToAddIdsRef = useRef<Array<String>>(
+    new Array()
+  );
+  const newCharacteristicsForbiddenToAddIdsRef = useRef<Array<String>>(
+    new Array()
+  );
+  // Characteristics to delete
+  const originalCharacteristicsToRemoveRef = useRef<
+    Array<TOriginalCharacteristic>
+  >(new Array());
 
-  let deleteFood = () => {
-    doDeleteFood(id);
+  const editIconPlayerRef = useRef<Player>(null);
+  const deleteIconPlayerRef = useRef<Player>(null);
+  const ICON_SIZE = 28;
+
+  // Edit Food Elementary
+  const [doDeleteFoodElementary] = useDeleteFoodElementaryMutation();
+  let deleteFoodElementary = async () => {
+    await doDeleteFoodElementary(foodElementaryId).catch((e: any) =>
+      console.log(e)
+    );
+  };
+  const [doChangeFoodElementaryName] = useChangeFoodElementaryNameMutation();
+
+  // Edit Food Characteristic
+  const [doAddFoodCharacteristic] = useAddFoodCharacteristicMutation();
+  const [doChangeFoodCharacteristicValue] =
+    useChangeFoodCharacteristicValueMutation();
+  const [doDeleteFoodCharacteristic] = useDeleteFoodCharacteristicMutation();
+
+  const originalCalories = originalCharacteristics.find(
+    (item) => item.characteristicTypeId === CALORIES_DEFAULT_ID
+  );
+
+  const originalCaloriesValue = originalCalories?.value ?? 0;
+
+  // Food Characteristics Types for Async Select
+  const {
+    isLoading: isLoadingGetAllFoodCharacteristicTypes,
+    data: dataGetAllFoodCharacteristicTypes,
+    error: errorGetAllFoodCharacteristicTypes,
+  } = useGetAllFoodCharacteristicTypesQuery(undefined);
+
+  // defaultValues
+  let defaultValues = {
+    foodElementaryName: foodElementaryName,
+    caloriesValue: originalCaloriesValue,
   };
 
-  let validationSchemaObject: any = {
-    name: yup
-      .string()
-      .min(
-        validValues.foodElementaryName.min.value,
-        validValues.foodElementaryName.min.message(
-          validValues.foodElementaryName.min.value
-        )
-      )
-      .max(
-        validValues.foodElementaryName.max.value,
-        validValues.foodElementaryName.max.message(
-          validValues.foodElementaryName.min.value
-        )
-      )
-      .required(validValues.requiredErrorMessage),
-  };
-
-  characteristics.forEach((item: IFoodCharacteristic) => {
-    validationSchemaObject[`${item.foodCharacteristicId}`] = yup
-      .number()
-      .typeError(validValues.numberTypeErrorMessage)
-      // .matches(
-      //   /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-      //   `• ${item.characteristicName}: ${validValues.foodCharacteristic.error}`
-      // )
-      .transform((cv) => (isNaN(cv) ? undefined : cv))
-      .min(
-        validValues.foodCharacteristic.min.value,
-        validValues.foodCharacteristic.min.message(
-          validValues.foodCharacteristic.min.value
-        )
-      )
-      // .positive()
-      .integer();
-  });
-
-  const validationSchema = yup.object().shape(validationSchemaObject);
-
-  // console.log("validationSchema");
-  // console.log(validationSchema);
-
-  let defaultValues: any = {
-    name: name,
-  };
-
-  characteristics.forEach((item: IFoodCharacteristic) => {
-    defaultValues[`${item.foodCharacteristicId}`] = item.value;
-  });
-
+  // useForm
   const {
     register,
     reset,
@@ -90,117 +135,175 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
     getValues,
     control,
     trigger,
-  } = useForm({
-    resolver: yupResolver(validationSchema),
+  } = useForm<TFoodElementaryEditFormData>({
+    resolver: yupResolver(editFoodElementaryValidationSchema),
     mode: "onChange",
     defaultValues: defaultValues,
   });
 
   const { dirtyFields, touchedFields } = useFormState({ control });
 
-  const [doChangeFoodElementaryName] = useChangeFoodElementaryNameMutation();
-
-  const [doChangeFoodCharacteristicValue] =
-    useChangeFoodCharacteristicValueMutation();
-
-  const editFoodCharacteristicsInputs = characteristics.map(
-    (c: IFoodCharacteristic) => {
-      return (
-        <div
-          className="flex-grow-100 "
-          key={`${id}_${c.foodCharacteristicId}_editFoodCharacteristicsInputs`}
-        >
-          <InputIlluminated
-            id={c.foodCharacteristicId}
-            type="number"
-            placeholder={c.characteristicName}
-            register={{ ...register(`${c.foodCharacteristicId}`) }}
-            isError={errors[`${c.foodCharacteristicId}`] ? true : false}
-          />
-        </div>
+  // Load Options for Async Select (Add new CHaracteristic)
+  const loadOptions = (searchValue: string, callback: any) => {
+    const filteredCharacteristicTypesData: IFoodCharacteristicType[] =
+      dataGetAllFoodCharacteristicTypes?.items.filter(
+        (item: IFoodCharacteristicType) =>
+          item.name.toLowerCase().includes(searchValue.toLowerCase())
       );
-    }
-  );
 
-  const onSubmit = async (data: FoodElementaryData) => {
-    // console.log("data");
-    // console.log(data);
+    const filteredCharacteristicTypesOptions =
+      filteredCharacteristicTypesData.map((item) => {
+        return { value: item.id, label: item.name };
+      });
 
-    let submitFoodNameData = {
-      name: data.name,
-    };
-    let foodCharacteristicsToChange: any = {};
-
-    const dataKeys = Object.keys(data);
-
-    dataKeys.forEach((key) => {
-      if (key !== "name") {
-        foodCharacteristicsToChange[`${key}`] =
-          data[`${key}` as keyof FoodElementaryData];
-      }
-    });
-
-    const foodCharacteristicsToChangeKeys = Object.keys(
-      foodCharacteristicsToChange
+    const filteredOptions = filteredCharacteristicTypesOptions.filter(
+      (item) =>
+        !characteristicsForbiddenToAddIdsRef.current.includes(item.value) &&
+        !newCharacteristicsForbiddenToAddIdsRef.current.includes(item.value) &&
+        item.value != CALORIES_DEFAULT_ID
     );
 
-    try {
-      doChangeFoodElementaryName({
-        id: id,
-        data: submitFoodNameData,
-      });
+    callback(filteredOptions);
+  };
 
-      foodCharacteristicsToChangeKeys.forEach((key) => {
-        doChangeFoodCharacteristicValue({
-          id: key,
-          data: {
-            value: foodCharacteristicsToChange[`${key}`],
-          },
-        });
-      });
+  // For Generating Original Characteristic Fields
+  const {
+    fields: originalCharacteristicsFields,
+    append: originalCharacteristicsAppend,
+    remove: originalCharacteristicsRemove,
+  } = useFieldArray({
+    name: "originalCharacteristicsList",
+    control,
+  });
 
-      reset();
-      setIsEditMode(false);
-    } catch (error: any) {
-      console.log("error");
-      console.log(error);
-      alert(error?.data?.title);
+  // For Generating Add Characteristic Fields
+  const {
+    fields: addCharacteristicListFields,
+    append: addCharacteristicListAppend,
+    remove: addCharacteristicListRemove,
+  } = useFieldArray({
+    name: "addCharacteristicsList",
+    control,
+  });
+
+  const handleRemoveOriginalCharacteristic = (itemIndex: number) => {
+    const characteristic = getValues(
+      `originalCharacteristicsList.${itemIndex}.characteristicInfo`
+    );
+
+    // const characteristicId = getValues(
+    //   `originalCharacteristicsList.${itemIndex}.characteristicInfo.value`
+    // );
+
+    if (
+      BASIC_CHARACTERISTICS_IDS_LIST.includes(
+        characteristic.characteristicTypeId
+      )
+    ) {
+      return;
+    }
+
+    originalCharacteristicsToRemoveRef.current.push(characteristic);
+
+    const indexInCharacteristicsForbiddenToAddIdsRef =
+      characteristicsForbiddenToAddIdsRef.current.indexOf(
+        characteristic.characteristicTypeId
+      );
+
+    if (indexInCharacteristicsForbiddenToAddIdsRef > -1) {
+      characteristicsForbiddenToAddIdsRef.current.splice(
+        indexInCharacteristicsForbiddenToAddIdsRef,
+        1
+      );
+    }
+
+    originalCharacteristicsRemove(itemIndex);
+  };
+
+  const handleRemoveCharacteristicToAdd = (itemIndex: number) => {
+    if (
+      itemIndex > -1 &&
+      itemIndex < newCharacteristicsForbiddenToAddIdsRef.current.length
+    ) {
+      newCharacteristicsForbiddenToAddIdsRef.current.splice(itemIndex, 1);
+    }
+
+    addCharacteristicListRemove(itemIndex);
+  };
+
+  const handleOnInputChange = () => {
+    trigger();
+  };
+
+  const handleOnChange = (newElement: TSelectElement, addFoodIndex: number) => {
+    if (
+      addFoodIndex > -1 &&
+      addFoodIndex < newCharacteristicsForbiddenToAddIdsRef.current.length
+    ) {
+      newCharacteristicsForbiddenToAddIdsRef.current.splice(
+        addFoodIndex,
+        1,
+        newElement.value
+      );
     }
   };
 
-  const editIconPlayerRef = useRef<Player>(null);
-  const deleteIconPlayerRef = useRef<Player>(null);
-  const ICON_SIZE = 28;
+  let checkIfFilledRight = () => {
+    let foodElementaryNameFilled = getValues("foodElementaryName");
+    let caloriesValueFilled = getValues("caloriesValue").toString();
+    let emptyCharacteristics = getValues("addCharacteristicsList")?.find(
+      (item) => item.characteristicInfo === undefined
+    );
 
-  const editFoodCharacteristicsErrors = characteristics.map(
-    (c: IFoodCharacteristic) => {
-      return (
-        <p
-          key={`${id}_${c.foodCharacteristicId}_editFoodCharacteristicsErrors`}
-          className={
-            errors[`${c.foodCharacteristicId}`] ? "text-pink-500 " : " hidden "
-          }
-        >
-          • {c.characteristicName}:{" "}
-          {`${errors[`${c.foodCharacteristicId}`]?.message}`}
-        </p>
+    const isAllCharacteristicsListsEmply =
+      !getValues("addCharacteristicsList")?.length &&
+      !getValues("originalCharacteristicsList")?.length;
+
+    let addCharacteristicValueErrors = errors?.addCharacteristicsList;
+    let originalCharacteristicValueErrors = errors?.originalCharacteristicsList;
+
+    let result =
+      foodElementaryNameFilled &&
+      !errors?.foodElementaryName &&
+      caloriesValueFilled &&
+      !errors?.caloriesValue &&
+      !emptyCharacteristics &&
+      !addCharacteristicValueErrors &&
+      !originalCharacteristicValueErrors &&
+      !isAllCharacteristicsListsEmply
+        ? true
+        : false;
+
+    return result;
+  };
+
+  useEffect(() => {
+    const originalCharacteristicsOnForm = originalCharacteristics.map(
+      (characteristic: IFoodCharacteristic) => {
+        return {
+          characteristicInfo: {
+            label: characteristic.characteristicName,
+            value: characteristic.foodCharacteristicId,
+            characteristicTypeId: characteristic.characteristicTypeId,
+          },
+          characteristicValue: characteristic.value,
+        };
+      }
+    );
+
+    originalCharacteristicsOnForm.forEach((originalCharacteristic) => {
+      if (
+        originalCharacteristic.characteristicInfo.characteristicTypeId !=
+        CALORIES_DEFAULT_ID
+      ) {
+        originalCharacteristicsAppend(originalCharacteristic);
+      }
+
+      characteristicsForbiddenToAddIdsRef.current.push(
+        originalCharacteristic.characteristicInfo.characteristicTypeId
       );
-    }
-  );
-
-  let isCharacteristicsFilledWrong = characteristics.some(
-    (c: IFoodCharacteristic) => {
-      return (
-        Object.keys(errors).length &&
-        Object.keys(errors).includes(c.foodCharacteristicId)
-      );
-    }
-  );
-
-  let isFilledRight =
-    getValues("name") && !errors?.name && !isCharacteristicsFilledWrong
-      ? true
-      : false;
+    });
+  }, []);
 
   useEffect(() => {
     if (Object.keys(dirtyFields).length && !Object.keys(touchedFields).length) {
@@ -208,53 +311,441 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
     }
   }, [dirtyFields, touchedFields]);
 
+  const onSubmit: SubmitHandler<TFoodElementaryEditFormData> = async (data) => {
+    console.log("\nFoodElementaryEditForm Submit\n");
+    console.log("data", data);
+
+    // Change Food Elementary Name
+    const foodElementaryNameOnForm = data.foodElementaryName;
+
+    if (foodElementaryNameOnForm != foodElementaryName) {
+      const changeFoodElementaryNameData = {
+        foodElementaryId: foodElementaryId,
+        data: {
+          name: foodElementaryNameOnForm,
+        },
+      };
+
+      await doChangeFoodElementaryName(changeFoodElementaryNameData);
+
+      console.log("Change Food Recipe Name");
+    }
+
+    // Change Calories Value
+    const caloriesValueOnForm = data.caloriesValue;
+
+    if (caloriesValueOnForm != originalCaloriesValue) {
+      const changeCaloriesValueData = {
+        foodCharacteristicId: originalCalories?.foodCharacteristicId,
+        data: {
+          value: caloriesValueOnForm,
+        },
+      };
+
+      await doChangeFoodCharacteristicValue(changeCaloriesValueData);
+
+      console.log("Change Calories Value");
+    }
+
+    // Delete Characteristics
+    const characteristicsToDelete = originalCharacteristicsToRemoveRef.current;
+
+    for (const characteristicToDelete of characteristicsToDelete) {
+      if (
+        !BASIC_CHARACTERISTICS_IDS_LIST.includes(
+          characteristicToDelete.characteristicTypeId
+        )
+      ) {
+        await doDeleteFoodCharacteristic(characteristicToDelete.value).catch(
+          (e) => console.log(e)
+        );
+
+        console.log("Delete Characteristics");
+      }
+    }
+
+    // Change Characteristics Value
+    const originalCharacteristicsOnFormList =
+      data?.originalCharacteristicsList?.map((item) => {
+        return {
+          foodCharacteristicId: item?.characteristicInfo.value,
+          value: item?.characteristicValue,
+        };
+      });
+
+    const characteristicsWithoutDeleted = originalCharacteristics.filter(
+      (item) =>
+        characteristicsToDelete.find(
+          (characteristic) => characteristic.value == item.foodCharacteristicId
+        ) == undefined
+    );
+
+    for (const originalCharacteristicOnForm of originalCharacteristicsOnFormList) {
+      const characteristicToChange = characteristicsWithoutDeleted.find(
+        (item) =>
+          item.foodCharacteristicId ==
+          originalCharacteristicOnForm.foodCharacteristicId
+      );
+
+      if (
+        characteristicToChange != undefined &&
+        characteristicToChange.value != originalCharacteristicOnForm.value
+      ) {
+        const changeCharacteristicValueData = {
+          foodCharacteristicId:
+            originalCharacteristicOnForm.foodCharacteristicId,
+          data: {
+            value: originalCharacteristicOnForm.value,
+          },
+        };
+
+        await doChangeFoodCharacteristicValue(
+          changeCharacteristicValueData
+        ).catch((e) => console.log(e));
+
+        console.log("Change Characteristics Value");
+      }
+    }
+
+    // Add New Characteristics
+    const addCharacteristicsList = data?.addCharacteristicsList?.map((item) => {
+      return {
+        foodElementaryId: foodElementaryId,
+        characteristicTypeId: item.characteristicInfo?.value,
+        value: item.characteristicValue,
+      };
+    });
+
+    for (const characteristicToAdd of addCharacteristicsList) {
+      await doAddFoodCharacteristic(characteristicToAdd).catch((e) =>
+        console.log(e)
+      );
+
+      console.log("Add New Characteristics");
+    }
+
+    reset();
+
+    setIsEditMode(false);
+  };
+
   return (
-    <div className="flex flex-col w-full pb-3">
+    <div className="w-full max-w-5xl flex flex-col justify-center items-start pl-7 pr-6 py-7 gap-4">
       <form
-        className="flex flex-col flex-wrap justify-center"
+        className="flex flex-col flex-wrap justify-center w-full pb-8 -mt-16"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="text-xl -mt-6">
+        <div className="text-xl w-full flex-grow">
           <InputIlluminated
-            id="name"
+            id={"FoodElementaryEditForm_foodElementaryName"}
             type="text"
             placeholder="Название блюда"
-            register={{ ...register("name") }}
-            isError={errors.name ? true : false}
+            disableIllumination={true}
+            additionalStyles=" h-[67px] border-0 "
+            register={{
+              ...register("foodElementaryName"),
+            }}
             isRequired={true}
           />
         </div>
-
-        <div className="mt-4 flex flex-col">
-          <div className="font-semibold mb-1 text-[17px]">
-            Нутриенты на 100гр:
+        {errors.foodElementaryName && (
+          <div
+            className={
+              Object.keys(errors).length > 0
+                ? " flex flex-col gap-y-2 justify-center "
+                : " hidden "
+            }
+          >
+            <p
+              className={
+                errors.foodElementaryName ? "text-pink-500 " : " hidden "
+              }
+            >
+              {errors.foodElementaryName?.message}
+            </p>
           </div>
+        )}
 
-          <div className="w-full flex flex-wrap gap-x-4 justify-stretch items-stretch">
-            {editFoodCharacteristicsInputs}
+        <div className="text-xl w-full flex-grow">
+          <InputIlluminated
+            id={"FoodElementaryEditForm_caloriesValue"}
+            type="number"
+            placeholder="Калорийность (ккал.)"
+            disableIllumination={true}
+            additionalStyles=" h-[67px] border-0 "
+            register={{
+              ...register("caloriesValue"),
+            }}
+            isRequired={true}
+          />
+        </div>
+        {errors.caloriesValue && (
+          <div
+            className={
+              Object.keys(errors).length > 0
+                ? " flex flex-col gap-y-2 justify-center "
+                : " hidden "
+            }
+          >
+            <p className={errors.caloriesValue ? "text-pink-500 " : " hidden "}>
+              {errors.caloriesValue?.message}
+            </p>
+          </div>
+        )}
+
+        <div className="flex flex-col">
+          <h3 className="text-xl my-3">Нутриенты:</h3>
+
+          {originalCharacteristicsFields.map((select, index) => {
+            return (
+              <div
+                key={`FoodElementaryEditForm_div_originalCharacteristicsFields_${select.id}_${index}`}
+                className="form-control flex flex-col"
+              >
+                <div className="gap-x-3 flex mb-1">
+                  <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
+                    <span className="flex gap-x-1">
+                      <h3>Нутриент</h3>
+                      <p className="text-red">*</p>
+                    </span>
+                    <Controller
+                      key={`FoodElementaryEditForm_controller_originalCharacteristicsFields_${select.id}_${index}`}
+                      name={
+                        `originalCharacteristicsList.${index}.characteristicInfo` as const
+                      }
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          key={`FoodElementaryEditForm_select_originalCharacteristicsFields_${select.id}_${index}`}
+                          className="relative text-sm rounded-xl  "
+                          styles={SELECT_STYLES}
+                          isDisabled={true}
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
+                    <InputIlluminated
+                      id={`originalCharacteristicsList.${index}.characteristicValue`}
+                      type="number"
+                      placeholder="Вес (г)"
+                      disableIllumination={true}
+                      additionalStyles=" h-[67px] border-0 "
+                      register={{
+                        ...register(
+                          `originalCharacteristicsList.${index}.characteristicValue` as const
+                        ),
+                      }}
+                      isRequired={true}
+                    />
+                  </div>
+
+                  <div className="max-w-[60px] flex flex-col justify-center items-center">
+                    <h3 className="text-lg my-3"> </h3>
+                    <ButtonIlluminated
+                      label={
+                        <span>
+                          <Player
+                            ref={deleteIconPlayerRef}
+                            icon={DELETE_ICON}
+                            size={ICON_SIZE}
+                            colorize="#f8f7f4"
+                          />
+                        </span>
+                      }
+                      isDarkButton={true}
+                      isIlluminationFull={false}
+                      onClick={() => {
+                        handleRemoveOriginalCharacteristic(index);
+                      }}
+                      buttonPadding=" p-[14px] "
+                      additionalStyles=" "
+                      isDisabled={index < 3 ? true : false}
+                    />
+                  </div>
+                </div>
+
+                {errors.originalCharacteristicsList && (
+                  <div
+                    className={
+                      Object.keys(errors).length > 0 &&
+                      errors.originalCharacteristicsList[index]
+                        ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
+                        : "hidden"
+                    }
+                  >
+                    <p
+                      className={
+                        errors.originalCharacteristicsList[index]
+                          ?.characteristicInfo?.value
+                          ? "text-pink-500 "
+                          : " hidden "
+                      }
+                    >
+                      {
+                        errors.originalCharacteristicsList[index]
+                          ?.characteristicInfo?.value?.message
+                      }
+                    </p>
+                    <p
+                      className={
+                        errors.originalCharacteristicsList[index]
+                          ?.characteristicValue
+                          ? "text-pink-500 "
+                          : " hidden "
+                      }
+                    >
+                      {
+                        errors.originalCharacteristicsList[index]
+                          ?.characteristicValue?.message
+                      }
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+
+          {addCharacteristicListFields.map((select, index) => {
+            return (
+              <div
+                key={`FoodElementaryEditForm_Div_addCharacteristicsList_${select.id}_${index}`}
+                className="form-control flex flex-col"
+              >
+                <div className="gap-x-3 flex mb-1">
+                  <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
+                    <span className="flex gap-x-1">
+                      <h3>Нутриент</h3>
+                      <p className="text-red">*</p>
+                    </span>
+                    <Controller
+                      key={`FoodElementaryEditForm_Controller_addCharacteristicsList_${select.id}_${index}`}
+                      name={
+                        `addCharacteristicsList.${index}.characteristicInfo` as const
+                      }
+                      control={control}
+                      render={({ field }) => (
+                        <AsyncSelect
+                          {...field}
+                          key={`FoodElementaryEditForm_AsyncSelect_addCharacteristicsList_${select.id}_${index}`}
+                          className="relative text-sm rounded-xl  "
+                          components={{ NoOptionsMessage }}
+                          styles={SELECT_STYLES}
+                          placeholder="Введите название нутриента"
+                          loadOptions={loadOptions}
+                          onInputChange={handleOnInputChange}
+                          onChange={(newValue) => {
+                            handleOnChange(newValue as TSelectElement, index);
+                            field.onChange(newValue);
+                          }}
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
+                    <InputIlluminated
+                      id={`FoodElementaryEditForm_addCharacteristicsList.${index}.characteristicValue`}
+                      type="number"
+                      placeholder="Вес (г)"
+                      disableIllumination={true}
+                      additionalStyles=" h-[67px] border-0 "
+                      register={{
+                        ...register(
+                          `addCharacteristicsList.${index}.characteristicValue` as const
+                        ),
+                      }}
+                      isRequired={true}
+                    />
+                  </div>
+
+                  <div className="max-w-[60px] flex flex-col justify-center items-center">
+                    <h3 className="text-lg my-3"> </h3>
+                    <ButtonIlluminated
+                      label={
+                        <span>
+                          <Player
+                            ref={deleteIconPlayerRef}
+                            icon={DELETE_ICON}
+                            size={ICON_SIZE}
+                            colorize="#f8f7f4"
+                          />
+                        </span>
+                      }
+                      isDarkButton={true}
+                      isIlluminationFull={false}
+                      onClick={() => {
+                        handleRemoveCharacteristicToAdd(index);
+                      }}
+                      buttonPadding=" p-[14px] "
+                      additionalStyles=" "
+                      // isDisabled={addFoodListFields.length > 1 ? false : true}
+                    />
+                  </div>
+                </div>
+
+                {errors.addCharacteristicsList && (
+                  <div
+                    className={
+                      Object.keys(errors).length > 0 &&
+                      errors.addCharacteristicsList[index]
+                        ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
+                        : "hidden"
+                    }
+                  >
+                    <p
+                      className={
+                        errors.addCharacteristicsList[index]?.characteristicInfo
+                          ?.value
+                          ? "text-pink-500 "
+                          : " hidden "
+                      }
+                    >
+                      {
+                        errors.addCharacteristicsList[index]?.characteristicInfo
+                          ?.value?.message
+                      }
+                    </p>
+                    <p
+                      className={
+                        errors.addCharacteristicsList[index]
+                          ?.characteristicValue
+                          ? "text-pink-500 "
+                          : " hidden "
+                      }
+                    >
+                      {
+                        errors.addCharacteristicsList[index]
+                          ?.characteristicValue?.message
+                      }
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+
+          <div className="w-full max-w-[280px]">
+            <ButtonIlluminated
+              label={"Добавить нутриент"}
+              isDarkButton={true}
+              isIlluminationFull={false}
+              onClick={() => {
+                newCharacteristicsForbiddenToAddIdsRef.current.push("");
+
+                addCharacteristicListAppend({
+                  characteristicValue: 0,
+                });
+              }}
+              buttonPadding=" p-[14px] "
+              additionalStyles=""
+            />
           </div>
         </div>
 
-        <div
-          className={
-            Object.keys(errors).length > 0
-              ? "flex flex-col mt-5 px-5 gap-y-2 justify-center"
-              : "hidden"
-          }
-        >
-          <p className={errors.name ? "text-pink-500" : "hidden"}>
-            {`${errors.name?.message}`}
-          </p>
-
-          {editFoodCharacteristicsErrors}
-        </div>
-
-        <div
-          className="mt-6 
-        flex flex-wrap w-full 
-        gap-x-4 gap-y-3
-        justify-stretch items-center"
-        >
+        <div className="mt-9 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
           <span className="flex-grow">
             <ButtonIlluminated
               label="Сохранить"
@@ -262,8 +753,8 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
               isIlluminationFull={false}
               isButton={true}
               type="submit"
-              buttonPadding=" p-4 "
-              isDisabled={isFilledRight ? false : true}
+              additionalStyles=""
+              isDisabled={checkIfFilledRight() ? false : true}
             />
           </span>
           <span className="flex-grow">
@@ -280,7 +771,7 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
         </div>
       </form>
 
-      <div className="order-[-1] -mt-2 ml-auto gap-x-2 flex justify-center items-start">
+      <div className="order-[-1] ml-auto gap-x-2 flex justify-center items-start">
         <span role="button" onClick={() => setIsEditMode(false)}>
           <span
             onMouseEnter={() => editIconPlayerRef.current?.playFromBeginning()}
@@ -294,7 +785,7 @@ const FoodElementaryPieceEdit: FC<FoodElementaryPieceEditProps> = ({
           </span>
         </span>
 
-        <span role="button" onClick={() => deleteFood()}>
+        <span role="button" onClick={async () => await deleteFoodElementary()}>
           <span
             onMouseEnter={() =>
               deleteIconPlayerRef.current?.playFromBeginning()

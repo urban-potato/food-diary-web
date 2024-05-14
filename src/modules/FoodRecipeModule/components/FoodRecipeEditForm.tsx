@@ -73,8 +73,8 @@ const FoodRecipeEditForm: FC<TProps> = ({
 
   // Delete Food Recipe
   const [doDeleteFoodRecipe] = useDeleteFoodRecipeMutation();
-  const deleteFoodRecipe = () => {
-    doDeleteFoodRecipe(foodRecipeId).catch((e: any) => console.log(e));
+  const deleteFoodRecipe = async () => {
+    await doDeleteFoodRecipe(foodRecipeId).catch((e: any) => console.log(e));
   };
 
   // Ingredients to delete
@@ -215,17 +215,6 @@ const FoodRecipeEditForm: FC<TProps> = ({
 
     let newIngredientsWeightErrors = errors?.addIngredientsList;
     let originalIngredientsWeightErrors = errors?.originalIngredientsList;
-
-    // console.log("\n-----------------------");
-    // console.log("foodRecipeNameFilled", foodRecipeNameFilled);
-    // console.log("emptyNewIngredients", emptyNewIngredients);
-    // console.log("isAllIngredientsListsEmply", isAllIngredientsListsEmply);
-    // console.log("newIngredientsWeightErrors", newIngredientsWeightErrors);
-    // console.log(
-    //   "originalIngredientsWeightErrors",
-    //   originalIngredientsWeightErrors
-    // );
-    // console.log("-----------------------\n");
 
     let result =
       foodRecipeNameFilled &&
@@ -682,7 +671,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
           </span>
         </span>
 
-        <span role="button" onClick={() => deleteFoodRecipe()}>
+        <span role="button" onClick={async () => await deleteFoodRecipe()}>
           <span
             onMouseEnter={() =>
               deleteIconPlayerRef.current?.playFromBeginning()

@@ -77,3 +77,81 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
     )
     .required(),
 });
+
+export const editFoodElementaryValidationSchema = yup.object().shape({
+  foodElementaryName: yup
+    .string()
+    .min(
+      validValues.foodElementaryName.min.value,
+      validValues.foodElementaryName.min.message(
+        validValues.foodElementaryName.min.value
+      )
+    )
+    .max(
+      validValues.foodElementaryName.max.value,
+      validValues.foodElementaryName.max.message(
+        validValues.foodElementaryName.max.value
+      )
+    )
+    .required(validValues.requiredErrorMessage),
+  caloriesValue: yup
+    .number()
+    .required(validValues.requiredErrorMessage)
+    .typeError(validValues.numberTypeErrorMessage)
+    .min(
+      validValues.characteristicValue.min.value,
+      validValues.characteristicValue.min.message(
+        validValues.characteristicValue.min.value
+      )
+    )
+    .integer(),
+  addCharacteristicsList: yup
+    .array()
+    .of(
+      yup.object({
+        characteristicInfo: yup.object({
+          label: yup.string(),
+          value: yup.string().required(validValues.requiredErrorMessage),
+        }),
+        // .required("• Ингредиент: " + validValues.requiredErrorMessage),
+
+        characteristicValue: yup
+          .number()
+          .required(validValues.requiredErrorMessage)
+          .typeError(validValues.numberTypeErrorMessage)
+          .min(
+            validValues.characteristicValue.min.value,
+            validValues.characteristicValue.min.message(
+              validValues.characteristicValue.min.value
+            )
+          )
+          .integer(),
+      })
+    )
+    .required(),
+  originalCharacteristicsList: yup
+    .array()
+    .of(
+      yup.object({
+        characteristicInfo: yup.object({
+          label: yup.string(),
+          value: yup.string().required(validValues.requiredErrorMessage),
+          characteristicTypeId: yup.string().required(validValues.requiredErrorMessage),
+        }),
+        // .required("• Ингредиент: " + validValues.requiredErrorMessage),
+
+        characteristicValue: yup
+          .number()
+          .required(validValues.requiredErrorMessage)
+          .typeError(validValues.numberTypeErrorMessage)
+          .min(
+            validValues.characteristicValue.min.value,
+            validValues.characteristicValue.min.message(
+              validValues.characteristicValue.min.value
+            )
+          )
+          .integer(),
+      })
+    )
+    .required(),
+});

@@ -43,9 +43,9 @@ const FoodElementaryPiece: FC<FoodElementaryPieceProps> = ({
         {isEditMode ? (
           <FoodElementaryPieceEdit
             key={`edit_${id}`}
-            id={id}
-            name={name}
-            characteristics={characteristics}
+            foodElementaryId={id}
+            foodElementaryName={name}
+            originalCharacteristics={characteristics}
             setIsEditMode={setIsEditMode}
           />
         ) : (

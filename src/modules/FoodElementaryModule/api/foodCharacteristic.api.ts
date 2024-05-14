@@ -18,9 +18,9 @@ const foodCharacteristicApi = api.injectEndpoints({
     }),
 
     changeFoodCharacteristicValue: builder.mutation({
-      query: ({ id, data }) => ({
+      query: ({ foodCharacteristicId, data }) => ({
         body: data,
-        url: `/api/foodcharacteristic/${id}`,
+        url: `/api/foodcharacteristic/${foodCharacteristicId}`,
         method: "PUT",
         credentials: "same-origin",
       }),

@@ -6,6 +6,13 @@ export const FAT_DEFAULT_ID = "d126d15b-853a-4b7e-b122-af811a160609";
 export const CARBOHYDRATE_DEFAULT_ID = "e3c6d689-4f63-44ff-8844-5bd11e4ed5af";
 export const CALORIES_DEFAULT_ID = "cdcc58c7-5c5f-454a-9728-0643afccf491";
 
+export const BASIC_CHARACTERISTICS_IDS_LIST = [
+  PROTEIN_DEFAULT_ID,
+  FAT_DEFAULT_ID,
+  CARBOHYDRATE_DEFAULT_ID,
+  CALORIES_DEFAULT_ID,
+];
+
 export const ZERO_CHARACTERISTICS_SUM_DATA: ICharacteristicsSum[] = [
   {
     foodCharacteristicType: {

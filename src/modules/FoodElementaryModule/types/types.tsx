@@ -14,10 +14,3 @@ export interface FoodElementaryPieceProps {
   name: string;
   characteristics: any;
 }
-
-export interface FoodElementaryPieceEditProps {
-  id: string;
-  name: string;
-  characteristics: any;
-  setIsEditMode: any;
-}

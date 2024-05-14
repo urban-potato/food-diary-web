@@ -16,8 +16,8 @@ const foodElementaryApi = api.injectEndpoints({
     }),
 
     getOneFoodElementary: builder.query({
-      query: (id) => ({
-        url: `/api/foodelementary/${id}`,
+      query: (foodElementaryId) => ({
+        url: `/api/foodelementary/${foodElementaryId}`,
         credentials: "same-origin",
       }),
     }),
@@ -38,9 +38,9 @@ const foodElementaryApi = api.injectEndpoints({
     }),
 
     changeFoodElementaryName: builder.mutation({
-      query: ({ id, data }) => ({
+      query: ({ foodElementaryId, data }) => ({
         body: data,
-        url: `/api/foodelementary/${id}`,
+        url: `/api/foodelementary/${foodElementaryId}`,
         method: "PUT",
         credentials: "same-origin",
       }),
@@ -53,8 +53,8 @@ const foodElementaryApi = api.injectEndpoints({
     }),
 
     deleteFoodElementary: builder.mutation({
-      query: (id) => ({
-        url: `/api/foodelementary/${id}`,
+      query: (foodElementaryId) => ({
+        url: `/api/foodelementary/${foodElementaryId}`,
         method: "DELETE",
         credentials: "same-origin",
       }),
