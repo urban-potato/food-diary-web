@@ -16,17 +16,19 @@ const FoodCharacteristicTypeInfoTile: FC<TProps> = ({
   const sortedFoodCharacteristicTypes: IFoodCharacteristicType[] =
     sortConsumedCharacteristics(foodCharacteristicTypes);
 
+  sortedFoodCharacteristicTypes.splice(3, 1);
+
+  // console.log("sortedFoodCharacteristicTypes", sortedFoodCharacteristicTypes);
+
   return (
     <div className="outer_box_style group w-full max-w-5xl">
       <div className="box_style"></div>
-      <div className="box_content_transition flex flex-wrap w-full justify-center items-start px-7 pt-5 pb-6">
+      <div className="box_content_transition flex flex-wrap w-full justify-center items-start px-7 py-7 gap-4">
         {isEditMode ? (
           <FoodCharacteristicTypeInfoEditForm
-          // id={userInfo?.id}
-          // email={userInfo?.email}
-          // firstName={userInfo?.firstName ? userInfo?.firstName : ""}
-          // lastName={userInfo?.lastName ? userInfo?.lastName : ""}
-          // setIsEditMode={setIsEditMode}
+            originalFoodCharacteristicTypes={sortedFoodCharacteristicTypes}
+            isEditMode={isEditMode}
+            setIsEditMode={setIsEditMode}
           />
         ) : (
           <FoodCharacteristicTypeInfoTileBody

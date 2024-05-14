@@ -2,6 +2,7 @@ import { FC } from "react";
 import { InputIlluminatedProps } from "./types/types";
 
 const InputIlluminated: FC<InputIlluminatedProps> = ({
+  ref = undefined,
   id,
   type,
   placeholder,
@@ -14,6 +15,8 @@ const InputIlluminated: FC<InputIlluminatedProps> = ({
   isRequired = false,
   disableIllumination = false,
   additionalStyles = "",
+  isDisabled = false,
+  ...rest
 }) => {
   const illumination = {
     base:
@@ -61,20 +64,26 @@ const InputIlluminated: FC<InputIlluminatedProps> = ({
               ? errorMessage || isError
                 ? illumination.error + inset
                 : illumination.base + inset
-              : "" 
+              : ""
           }
         ></div>
         <input
+          {...rest}
+          ref={ref}
           id={id}
           type={type}
           {...register}
-          style={{ backgroundColor: errorMessage || isError ? bgError : bg }}
+          style={{
+            backgroundColor: errorMessage || isError ? bgError : bg,
+            color: isDisabled ? "gray" : "black",
+          }}
           className={
             errorMessage || isError
               ? "relative text-sm border-0 " + " " + additionalStyles
               : "relative text-sm " + " " + additionalStyles
           }
           // onClick={(event) => {event.stopPropagation();}}
+          disabled={isDisabled}
         />
       </div>
 

@@ -1,4 +1,5 @@
 export interface InputIlluminatedProps {
+  ref?: any;
   id: string;
   type: string;
   placeholder?: string | number;
@@ -11,4 +12,5 @@ export interface InputIlluminatedProps {
   isRequired?: boolean;
   disableIllumination?: boolean;
   additionalStyles?: string;
+  isDisabled?: boolean;
 }

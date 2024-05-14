@@ -37,7 +37,7 @@ const userApi = api.injectEndpoints({
       ],
     }),
 
-    changeFoodCharacteristicType: builder.mutation({
+    changeFoodCharacteristicTypeName: builder.mutation({
       query: ({ foodCharacteristicTypeId, data }) => ({
         body: data,
         url: `/api/foodcharacteristictype/${foodCharacteristicTypeId}`,
@@ -72,6 +72,6 @@ export const {
   useGetOneFoodCharacteristicTypeQuery,
   useGetAllFoodCharacteristicTypesQuery,
   useCreateFoodCharacteristicTypeMutation,
-  useChangeFoodCharacteristicTypeMutation,
+  useChangeFoodCharacteristicTypeNameMutation,
   useDeleteFoodCharacteristicTypeMutation,
 } = userApi;
