@@ -1,12 +1,13 @@
 import { FC, useRef, useState } from "react";
 import { Player } from "@lordicon/react";
-import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
-import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
-import { useDeleteCourseMealMutation } from "../api/meals.api";
+import EDIT_ICON from "../../../../global/assets/system-regular-63-settings-cog.json";
+import DELETE_ICON from "../../../../global/assets/system-regular-39-trash.json";
+import { useDeleteCourseMealMutation } from "../../api/meals.api";
 import MealEditForm from "./MealEditForm";
-import ConsumedDishes from "./ConsumedDishes";
-import { ICourseMeal } from "../../../global/types/types";
-import CharacteristicTilesList from "../../../components/CharacteristicTilesList/CharacteristicTilesList";
+import ConsumedDishesList from "../ConsumedDishesList/ConsumedDishesList";
+import { ICourseMeal } from "../../../../global/types/types";
+import CharacteristicTilesList from "../../../../components/CharacteristicTilesList/CharacteristicTilesList";
+import MealInfo from "./MealInfo";
 
 const MealTile: FC<ICourseMeal> = ({
   id,
@@ -30,7 +31,7 @@ const MealTile: FC<ICourseMeal> = ({
   return (
     <div className="outer_box_style group w-full max-w-5xl mt-5">
       <div className="box_style "></div>
-      <div className="box_content_transition flex flex-col flex-wrap w-full justify-center items-start pl-7 pr-6 py-7 gap-4">
+      <div className="box_content_transition flex flex-col flex-wrap w-full justify-center items-start pl-7 pr-6 py-7">
         <div className="w-full max-w-5xl  flex justify-center items-center ">
           <div className="ml-1 flex gap-5 justify-center items-center self-center ">
             <div className="text-xl font-bold">
@@ -81,19 +82,11 @@ const MealTile: FC<ICourseMeal> = ({
             setIsEditMode={setIsEditMode}
           />
         ) : (
-          <div className="mt-4 flex flex-col gap-y-5">
-            {consumedElementaries.length > 0 ? (
-              <ConsumedDishes consumedDishes={consumedElementaries} />
-            ) : null}
-            {consumedRecipes.length > 0 ? (
-              <ConsumedDishes consumedDishes={consumedRecipes} />
-            ) : null}
-            <div className="flex flex-wrap gap-3 w-full">
-              <CharacteristicTilesList
-                characteristicsList={characteristicsSum}
-              />
-            </div>
-          </div>
+          <MealInfo
+            consumedElementaries={consumedElementaries}
+            consumedRecipes={consumedRecipes}
+            characteristicsSum={characteristicsSum}
+          />
         )}
       </div>
     </div>

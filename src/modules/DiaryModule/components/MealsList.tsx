@@ -1,7 +1,7 @@
 import { FC } from "react";
 import Preloader from "../../../components/Preloader/Preloader";
 import { useGetCourseMealDayByDateQuery } from "../api/meals.api";
-import MealTile from "./MealTile";
+import MealTile from "./MealTile/MealTile";
 import { ICourseMeal } from "../../../global/types/types";
 
 type TProps = {

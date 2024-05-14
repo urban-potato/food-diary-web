@@ -3,13 +3,13 @@ import ConsumedDishTile from "./ConsumedDishTile";
 import {
   IConsumedElementary,
   IConsumedRecipe,
-} from "../../../global/types/types";
+} from "../../../../global/types/types";
 
 type TProps = {
   consumedDishes: IConsumedElementary[] | IConsumedRecipe[];
 };
 
-const ConsumedDishes: FC<TProps> = ({ consumedDishes }) => {
+const ConsumedDishesList: FC<TProps> = ({ consumedDishes }) => {
   const mappedConsumedDishes = consumedDishes.map(
     (dish: IConsumedElementary | IConsumedRecipe) => {
       let name;
@@ -36,4 +36,4 @@ const ConsumedDishes: FC<TProps> = ({ consumedDishes }) => {
   );
 };
 
-export default ConsumedDishes;
+export default ConsumedDishesList;

@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
-import MealTypeOptions from "./MealTypeOptions";
-import { editValidationSchema, selectStyles } from "../constants/constants";
+import MealTypeOptions from "../MealTypeOptions";
+import { editValidationSchema, selectStyles } from "../../constants/constants";
 import {
   useAddConsumedElementaryMutation,
   useChangeConsumedElementaryWeightMutation,
@@ -9,8 +9,8 @@ import {
   useAddConsumedRecipeMutation,
   useChangeConsumedRecipeWeightMutation,
   useDeleteConsumedRecipeMutation,
-} from "../api/meals.api";
-import { useGetAllFoodElementaryQuery } from "../../FoodElementaryModule";
+} from "../../api/meals.api";
+import { useGetAllFoodElementaryQuery } from "../../../FoodElementaryModule";
 import {
   Controller,
   SubmitHandler,
@@ -19,19 +19,19 @@ import {
 } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AsyncSelect from "react-select/async";
-import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
-import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
-import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
+import NoOptionsMessage from "../../../../components/NoOptionsMessage/NoOptionsMessage";
+import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated";
+import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated";
 import { Player } from "@lordicon/react";
-import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
+import DELETE_ICON from "../../../../global/assets/system-regular-39-trash.json";
 import Select from "react-select";
-import { useGetAllFoodRecipeQuery } from "../../FoodRecipeModule/api/foodRecipe.api";
+import { useGetAllFoodRecipeQuery } from "../../../FoodRecipeModule/api/foodRecipe.api";
 import {
   IConsumedElementary,
   IConsumedRecipe,
   IFoodElementary,
   IFoodRecipe,
-} from "../../../global/types/types";
+} from "../../../../global/types/types";
 
 type TProps = {
   courseMealId: string;
@@ -508,7 +508,7 @@ const MealEditForm: FC<TProps> = ({
 
   return (
     <form
-      className="flex flex-col flex-wrap justify-center w-full px-7 pt-5 pb-8"
+      className="flex flex-col flex-wrap justify-center w-full "
       onSubmit={handleSubmit(onSubmit)}
     >
       <MealTypeOptions
@@ -855,7 +855,7 @@ const MealEditForm: FC<TProps> = ({
         </div>
       </div>
 
-      <div className="mt-9 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
+      <div className="mt-7 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
         <span className="flex-grow">
           <ButtonIlluminated
             label="Сохранить"

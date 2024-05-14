@@ -4,10 +4,10 @@ import MealCreateForm from "./MealCreateForm";
 import MealsList from "./MealsList";
 import { TCalendarValue } from "../types/types";
 import { ru } from "date-fns/locale";
-import { Calendar } from "./Calendar";
+import { Calendar } from "./widgets/Calendar";
 import { format } from "date-fns";
 import { useGetCourseMealDayByDateQuery } from "../api/meals.api";
-import DaysCharacteristicsSum from "./DaysCharacteristicsSum";
+import DaysCharacteristicsSum from "./widgets/DaysCharacteristicsSum";
 
 const DiaryModule = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
