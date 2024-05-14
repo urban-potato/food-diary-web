@@ -130,7 +130,7 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
 
     await doCreateFoodRecipe(createFoodRecipeData)
       .unwrap()
-      .then((responseFoodRecipeId) => {
+      .then(async (responseFoodRecipeId) => {
         // Add Elementaries
         const addElementaryList = data?.addFoodList?.map((item) => {
           return {
@@ -148,7 +148,9 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
             },
           };
 
-          doAddElementary(addFoodElementaryData).catch((e) => console.log(e));
+          await doAddElementary(addFoodElementaryData).catch((e) =>
+            console.log(e)
+          );
 
           console.log("Add Elementaries");
         }

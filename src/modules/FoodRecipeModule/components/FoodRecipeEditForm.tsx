@@ -274,7 +274,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
         },
       };
 
-      doChangeFoodRecipeName(changeFoodRecipeNameData);
+      await doChangeFoodRecipeName(changeFoodRecipeNameData);
 
       console.log("Change Food Recipe Name");
     }
@@ -288,7 +288,9 @@ const FoodRecipeEditForm: FC<TProps> = ({
         foodElementaryId: ingredientToDeleteId,
       };
 
-      doDeleteElementary(deleteIngredientData).catch((e) => console.log(e));
+      await doDeleteElementary(deleteIngredientData).catch((e) =>
+        console.log(e)
+      );
 
       console.log("Delete Ingredients");
     }
@@ -303,11 +305,11 @@ const FoodRecipeEditForm: FC<TProps> = ({
       }
     );
 
-    for (const originalIngredient of originalIngredientsList) {
-      const ingredientsWithoutDeleted = ingredients.filter(
-        (item) => !ingredientsIdsToDelete.includes(item.foodElementary.id)
-      );
+    const ingredientsWithoutDeleted = ingredients.filter(
+      (item) => !ingredientsIdsToDelete.includes(item.foodElementary.id)
+    );
 
+    for (const originalIngredient of originalIngredientsList) {
       const ingredientToChange = ingredientsWithoutDeleted.find(
         (item) => item.foodElementary.id == originalIngredient.foodElementaryId
       );
@@ -324,7 +326,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
           },
         };
 
-        doChangeElementaryWeight(changeIngredientWeightData).catch((e) =>
+        await doChangeElementaryWeight(changeIngredientWeightData).catch((e) =>
           console.log(e)
         );
 
@@ -349,7 +351,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
         },
       };
 
-      doAddElementary(addIngredientData).catch((e) => console.log(e));
+      await doAddElementary(addIngredientData).catch((e) => console.log(e));
 
       console.log("Add New Ingredients");
     }

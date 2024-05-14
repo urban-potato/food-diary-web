@@ -240,7 +240,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
         },
       };
 
-      doAddConsumedElementary(addFoodElementaryData).catch((e) =>
+      await doAddConsumedElementary(addFoodElementaryData).catch((e) =>
         console.log(e)
       );
 
@@ -266,7 +266,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
         },
       };
 
-      doAddConsumedRecipe(addFoodRecipeData).catch((e) => console.log(e));
+      await doAddConsumedRecipe(addFoodRecipeData).catch((e) => console.log(e));
 
       console.log("Add New Consumed Recipes");
     }

@@ -256,8 +256,8 @@ const MealEditForm: FC<TProps> = ({
         foodElementaryId: elementaryToDeleteId,
       };
 
-      doDeleteConsumedElementary(deleteConsumedElementaryData).catch((e) =>
-        console.log(e)
+      await doDeleteConsumedElementary(deleteConsumedElementaryData).catch(
+        (e) => console.log(e)
       );
 
       console.log("Delete Consumed Elementaries");
@@ -272,7 +272,7 @@ const MealEditForm: FC<TProps> = ({
         foodRecipeId: recipeToDeleteId,
       };
 
-      doDeleteConsumedRecipe(deleteConsumedRecipeData).catch((e) =>
+      await doDeleteConsumedRecipe(deleteConsumedRecipeData).catch((e) =>
         console.log(e)
       );
 
@@ -288,7 +288,7 @@ const MealEditForm: FC<TProps> = ({
         },
       };
 
-      doChangeMealType(changeMealTypeData).catch((e) => console.log(e));
+      await doChangeMealType(changeMealTypeData).catch((e) => console.log(e));
 
       console.log("Change Meal Type");
     }
@@ -303,11 +303,11 @@ const MealEditForm: FC<TProps> = ({
       }
     );
 
-    for (const originalElementary of originalElementaryList) {
-      const consumedElementariesWithoutDeleted = consumedElementaries.filter(
-        (item) => !elementariesIdsToDelete.includes(item.foodElementary.id)
-      );
+    const consumedElementariesWithoutDeleted = consumedElementaries.filter(
+      (item) => !elementariesIdsToDelete.includes(item.foodElementary.id)
+    );
 
+    for (const originalElementary of originalElementaryList) {
       const consumedElementaryToChange =
         consumedElementariesWithoutDeleted.find(
           (item) =>
@@ -327,7 +327,7 @@ const MealEditForm: FC<TProps> = ({
           },
         };
 
-        doChangeConsumedElementaryWeight(
+        await doChangeConsumedElementaryWeight(
           changeConsumedElementaryWeightData
         ).catch((e) => console.log(e));
 
@@ -343,11 +343,11 @@ const MealEditForm: FC<TProps> = ({
       };
     });
 
-    for (const originalRecipe of originalRecipeList) {
-      const consumedRecipesWithoutDeleted = consumedRecipes.filter(
-        (item) => !recipesIdsToDelete.includes(item.foodRecipe.id)
-      );
+    const consumedRecipesWithoutDeleted = consumedRecipes.filter(
+      (item) => !recipesIdsToDelete.includes(item.foodRecipe.id)
+    );
 
+    for (const originalRecipe of originalRecipeList) {
       const consumedRecipeToChange = consumedRecipesWithoutDeleted.find(
         (item) => item.foodRecipe.id == originalRecipe.foodRecipeId
       );
@@ -364,9 +364,9 @@ const MealEditForm: FC<TProps> = ({
           },
         };
 
-        doChangeConsumedRecipeWeight(changeConsumedRecipeWeightData).catch(
-          (e) => console.log(e)
-        );
+        await doChangeConsumedRecipeWeight(
+          changeConsumedRecipeWeightData
+        ).catch((e) => console.log(e));
 
         console.log("Change Consumed Recipes Weight");
       }
@@ -391,7 +391,7 @@ const MealEditForm: FC<TProps> = ({
         },
       };
 
-      doAddConsumedElementary(addFoodElementaryData).catch((e) =>
+      await doAddConsumedElementary(addFoodElementaryData).catch((e) =>
         console.log(e)
       );
 
@@ -417,7 +417,7 @@ const MealEditForm: FC<TProps> = ({
         },
       };
 
-      doAddConsumedRecipe(addFoodRecipeData).catch((e) => console.log(e));
+      await doAddConsumedRecipe(addFoodRecipeData).catch((e) => console.log(e));
 
       console.log("Add New Consumed Recipes");
     }

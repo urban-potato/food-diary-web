@@ -37,11 +37,6 @@ type TFoodCharacteristicTypeInfoEditFormData = {
   }[];
 };
 
-type TSelectElement = {
-  label: string;
-  value: string;
-};
-
 const FoodCharacteristicTypeInfoEditForm: FC<TProps> = ({
   originalFoodCharacteristicTypes,
   isEditMode,
