@@ -7,12 +7,17 @@ import {
 import {
   ICharacteristicsSum,
   ICharacteristicsSumWithLocalId,
+  IFoodCharacteristic,
   IFoodCharacteristicType,
   IFoodCharacteristicTypeWithLocalId,
+  IFoodCharacteristicWithLocalId,
 } from "../types/types";
 
 export const sortConsumedCharacteristics = (
-  characteristicsSum: ICharacteristicsSum[] | IFoodCharacteristicType[]
+  characteristicsSum:
+    | ICharacteristicsSum[]
+    | IFoodCharacteristicType[]
+    | IFoodCharacteristic[]
 ) => {
   let parsedCharacteristics = JSON.parse(JSON.stringify(characteristicsSum));
   let localId = 4;
@@ -22,12 +27,15 @@ export const sortConsumedCharacteristics = (
       characteristic:
         | ICharacteristicsSumWithLocalId
         | IFoodCharacteristicTypeWithLocalId
+        | IFoodCharacteristicWithLocalId
     ) => {
       let characteristicId = null;
 
       if ("foodCharacteristicType" in characteristic) {
         characteristicId =
           characteristic.foodCharacteristicType.id.toLowerCase();
+      } else if ("characteristicTypeId" in characteristic) {
+        characteristic.characteristicTypeId.toLowerCase();
       } else {
         characteristicId = characteristic.id.toLowerCase();
       }

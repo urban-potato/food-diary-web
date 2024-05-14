@@ -8,9 +8,3 @@ export interface FoodCharacteristicProps {
 export interface ILocalFoodCharacteristic extends IFoodCharacteristic {
   localId: number;
 }
-
-export interface FoodElementaryPieceProps {
-  id: string;
-  name: string;
-  characteristics: any;
-}

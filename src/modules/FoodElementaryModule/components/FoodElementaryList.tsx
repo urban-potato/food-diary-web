@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef } from "react";
 import { useGetAllFoodElementaryQuery } from "../api/foodElementary.api";
-import FoodElementaryPiece from "./FoodElementaryPiece.tsx";
+import FoodElementaryTile from "./FoodElementaryTile/FoodElementaryTile.tsx";
 import { ILocalFoodCharacteristic } from "../types/types";
 import { Player } from "@lordicon/react";
 import PRELOADER from "../../../global/assets/system-regular-18-autorenew.json";
@@ -86,7 +86,7 @@ const FoodElementaryList: FC = () => {
 
   let foodItemsSorted = foodItems?.map((item: IFoodElementary) => {
     return (
-      <FoodElementaryPiece
+      <FoodElementaryTile
         key={`${item.id}_foodItemsSorted`}
         id={item.id}
         name={item.name}

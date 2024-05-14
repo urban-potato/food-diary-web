@@ -1,8 +1,5 @@
-import {
-  useChangeFoodElementaryNameMutation,
-  useDeleteFoodElementaryMutation,
-} from "../api/foodElementary.api";
-import { editFoodElementaryValidationSchema } from "../constants/constants";
+import { useChangeFoodElementaryNameMutation } from "../../api/foodElementary.api.ts";
+import { editFoodElementaryValidationSchema } from "../../constants/constants.ts";
 import {
   Controller,
   SubmitHandler,
@@ -14,27 +11,26 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
 import { FC, useEffect, useRef } from "react";
-import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
-import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
+import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
+import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated.tsx";
 import { Player } from "@lordicon/react";
-import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
-import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
+import DELETE_ICON from "../../../../global/assets/system-regular-39-trash.json";
 import {
   useAddFoodCharacteristicMutation,
   useChangeFoodCharacteristicValueMutation,
   useDeleteFoodCharacteristicMutation,
-} from "../api/foodCharacteristic.api.ts";
+} from "../../api/foodCharacteristic.api.ts";
 import {
   IFoodCharacteristic,
   IFoodCharacteristicType,
-} from "../../../global/types/types.ts";
-import { useGetAllFoodCharacteristicTypesQuery } from "../../UserModule/api/foodCharacteristicType.api.ts";
+} from "../../../../global/types/types.ts";
+import { useGetAllFoodCharacteristicTypesQuery } from "../../../UserModule/api/foodCharacteristicType.api.ts";
 import {
   BASIC_CHARACTERISTICS_IDS_LIST,
   CALORIES_DEFAULT_ID,
   SELECT_STYLES,
-} from "../../../global/constants/constants.ts";
-import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage.tsx";
+} from "../../../../global/constants/constants.ts";
+import NoOptionsMessage from "../../../../components/NoOptionsMessage/NoOptionsMessage.tsx";
 
 type TProps = {
   foodElementaryId: string;
@@ -70,7 +66,7 @@ type TSelectElement = {
   value: string;
 };
 
-const FoodElementaryPieceEdit: FC<TProps> = ({
+const FoodElementaryEditForm: FC<TProps> = ({
   foodElementaryId,
   foodElementaryName,
   originalCharacteristics,
@@ -88,17 +84,11 @@ const FoodElementaryPieceEdit: FC<TProps> = ({
     Array<TOriginalCharacteristic>
   >(new Array());
 
-  const editIconPlayerRef = useRef<Player>(null);
+  // const editIconPlayerRef = useRef<Player>(null);
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
 
   // Edit Food Elementary
-  const [doDeleteFoodElementary] = useDeleteFoodElementaryMutation();
-  let deleteFoodElementary = async () => {
-    await doDeleteFoodElementary(foodElementaryId).catch((e: any) =>
-      console.log(e)
-    );
-  };
   const [doChangeFoodElementaryName] = useChangeFoodElementaryNameMutation();
 
   // Edit Food Characteristic
@@ -190,10 +180,6 @@ const FoodElementaryPieceEdit: FC<TProps> = ({
     const characteristic = getValues(
       `originalCharacteristicsList.${itemIndex}.characteristicInfo`
     );
-
-    // const characteristicId = getValues(
-    //   `originalCharacteristicsList.${itemIndex}.characteristicInfo.value`
-    // );
 
     if (
       BASIC_CHARACTERISTICS_IDS_LIST.includes(
@@ -430,9 +416,9 @@ const FoodElementaryPieceEdit: FC<TProps> = ({
   };
 
   return (
-    <div className="w-full max-w-5xl flex flex-col justify-center items-start pl-7 pr-6 py-7 gap-4">
+    <div className="w-full max-w-5xl flex flex-col justify-center items-start -mt-12">
       <form
-        className="flex flex-col flex-wrap justify-center w-full pb-8 -mt-16"
+        className="flex flex-col flex-wrap justify-center w-full"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="text-xl w-full flex-grow">
@@ -446,8 +432,10 @@ const FoodElementaryPieceEdit: FC<TProps> = ({
               ...register("foodElementaryName"),
             }}
             isRequired={true}
+            addSpaceAfterLabel={true}
           />
         </div>
+
         {errors.foodElementaryName && (
           <div
             className={
@@ -681,7 +669,6 @@ const FoodElementaryPieceEdit: FC<TProps> = ({
                       }}
                       buttonPadding=" p-[14px] "
                       additionalStyles=" "
-                      // isDisabled={addFoodListFields.length > 1 ? false : true}
                     />
                   </div>
                 </div>
@@ -745,7 +732,7 @@ const FoodElementaryPieceEdit: FC<TProps> = ({
           </div>
         </div>
 
-        <div className="mt-9 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
+        <div className="mt-7 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
           <span className="flex-grow">
             <ButtonIlluminated
               label="Сохранить"
@@ -770,38 +757,8 @@ const FoodElementaryPieceEdit: FC<TProps> = ({
           </span>
         </div>
       </form>
-
-      <div className="order-[-1] ml-auto gap-x-2 flex justify-center items-start">
-        <span role="button" onClick={() => setIsEditMode(false)}>
-          <span
-            onMouseEnter={() => editIconPlayerRef.current?.playFromBeginning()}
-          >
-            <Player
-              ref={editIconPlayerRef}
-              icon={EDIT_ICON}
-              size={ICON_SIZE}
-              colorize="#0d0b26"
-            />
-          </span>
-        </span>
-
-        <span role="button" onClick={async () => await deleteFoodElementary()}>
-          <span
-            onMouseEnter={() =>
-              deleteIconPlayerRef.current?.playFromBeginning()
-            }
-          >
-            <Player
-              ref={deleteIconPlayerRef}
-              icon={DELETE_ICON}
-              size={ICON_SIZE}
-              colorize="#0d0b26"
-            />
-          </span>
-        </span>
-      </div>
     </div>
   );
 };
 
-export default FoodElementaryPieceEdit;
+export default FoodElementaryEditForm;

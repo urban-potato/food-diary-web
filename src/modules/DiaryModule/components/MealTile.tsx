@@ -6,7 +6,7 @@ import { useDeleteCourseMealMutation } from "../api/meals.api";
 import MealEditForm from "./MealEditForm";
 import ConsumedDishes from "./ConsumedDishes";
 import { ICourseMeal } from "../../../global/types/types";
-import CharacteristicsSumList from "../../../components/CharacteristicsSum/CharacteristicsSumList";
+import CharacteristicTilesList from "../../../components/CharacteristicTilesList/CharacteristicTilesList";
 
 const MealTile: FC<ICourseMeal> = ({
   id,
@@ -89,7 +89,9 @@ const MealTile: FC<ICourseMeal> = ({
               <ConsumedDishes consumedDishes={consumedRecipes} />
             ) : null}
             <div className="flex flex-wrap gap-3 w-full">
-              <CharacteristicsSumList characteristicsSum={characteristicsSum} />
+              <CharacteristicTilesList
+                characteristicsList={characteristicsSum}
+              />
             </div>
           </div>
         )}

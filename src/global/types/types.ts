@@ -13,6 +13,10 @@ export interface IFoodCharacteristic {
   value: number;
 }
 
+export interface IFoodCharacteristicWithLocalId extends IFoodCharacteristic {
+  localId: number;
+}
+
 export interface ICourseMealDay {
   id: string;
   userId: string;
@@ -75,6 +79,7 @@ export interface IFoodCharacteristicType {
   isDefault: boolean;
 }
 
-export interface IFoodCharacteristicTypeWithLocalId extends IFoodCharacteristicType {
+export interface IFoodCharacteristicTypeWithLocalId
+  extends IFoodCharacteristicType {
   localId: number;
 }

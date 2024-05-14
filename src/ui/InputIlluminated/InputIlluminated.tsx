@@ -1,7 +1,24 @@
 import { FC } from "react";
-import { InputIlluminatedProps } from "./types/types";
 
-const InputIlluminated: FC<InputIlluminatedProps> = ({
+type TProps = {
+  ref?: any;
+  id: string;
+  type: string;
+  placeholder?: string | number;
+  register: any;
+  errorMessage?: any;
+  isError?: boolean;
+  inset?: string;
+  bg?: string;
+  bgError?: string;
+  isRequired?: boolean;
+  disableIllumination?: boolean;
+  additionalStyles?: string;
+  isDisabled?: boolean;
+  addSpaceAfterLabel?: boolean;
+};
+
+const InputIlluminated: FC<TProps> = ({
   ref = undefined,
   id,
   type,
@@ -16,6 +33,7 @@ const InputIlluminated: FC<InputIlluminatedProps> = ({
   disableIllumination = false,
   additionalStyles = "",
   isDisabled = false,
+  addSpaceAfterLabel = false,
   ...rest
 }) => {
   const illumination = {
@@ -43,12 +61,27 @@ const InputIlluminated: FC<InputIlluminatedProps> = ({
 
   return (
     <div className=" ">
-      <label htmlFor={id} className=" ">
-        <h3 className="flex gap-x-1">
-          {placeholder}
-          <p className={isRequired ? "text-red" : "hidden"}>*</p>
-        </h3>
-      </label>
+      <div className="flex">
+        <label htmlFor={id} className="truncate">
+          <h3 className="flex gap-x-1 truncate">
+            <p className="truncate">
+              {placeholder}
+            </p>
+            <p
+              className={
+                isRequired
+                  ? "text-red"
+                  : "hidden"
+              }
+            >
+              *
+            </p>
+          </h3>
+        </label>
+        {addSpaceAfterLabel ? (
+          <div className="ml-auto gap-x-2 flex justify-center items-start w-16 flex-shrink-0"></div>
+        ) : null}
+      </div>
 
       <div className=" relative group/input ">
         {/* <div

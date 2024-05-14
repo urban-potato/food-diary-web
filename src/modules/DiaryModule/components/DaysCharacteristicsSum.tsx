@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { ICharacteristicsSum } from "../../../global/types/types";
-import CharacteristicsSumList from "../../../components/CharacteristicsSum/CharacteristicsSumList";
+import CharacteristicTilesList from "../../../components/CharacteristicTilesList/CharacteristicTilesList";
 
 type TProps = {
   characteristicsSum: ICharacteristicsSum[];
@@ -20,7 +20,7 @@ const DaysCharacteristicsSum: FC<TProps> = ({ characteristicsSum }) => {
         </div>
       )} */}
 
-      <CharacteristicsSumList characteristicsSum={characteristicsSum} />
+      <CharacteristicTilesList characteristicsList={characteristicsSum} />
     </div>
   );
 };

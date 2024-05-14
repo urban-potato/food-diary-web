@@ -6,7 +6,7 @@ import { useDeleteFoodRecipeMutation } from "../api/foodRecipe.api";
 import FoodRecipeEditForm from "./FoodRecipeEditForm";
 import Ingredients from "./Ingredients";
 import { IFoodRecipe, IIngredient } from "../../../global/types/types";
-import CharacteristicsSumList from "../../../components/CharacteristicsSum/CharacteristicsSumList";
+import CharacteristicTilesList from "../../../components/CharacteristicTilesList/CharacteristicTilesList";
 
 type TProps = {
   foodRecipe: IFoodRecipe;
@@ -89,8 +89,8 @@ const FoodRecipeTile: FC<TProps> = ({ foodRecipe }) => {
                 <Ingredients ingredients={sortedIngredients} />
               ) : null}
               <div className="flex flex-wrap gap-3 w-full">
-                <CharacteristicsSumList
-                  characteristicsSum={foodRecipe.characteristicsSum}
+                <CharacteristicTilesList
+                  characteristicsList={foodRecipe.characteristicsSum}
                 />
               </div>
             </div>
