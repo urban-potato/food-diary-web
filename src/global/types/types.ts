@@ -1,3 +1,10 @@
+export interface IMealType {
+  id: string;
+  name: string;
+  userId: string;
+  isDefault: boolean;
+}
+
 export interface IFoodElementary {
   id: string;
   name: string;

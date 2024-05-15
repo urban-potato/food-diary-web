@@ -22,12 +22,18 @@ export const validValues = {
 
 export const createValidationSchema = yup.object({
   creationTime: yup.string().required(validValues.requiredErrorMessage),
+  // mealType: yup
+  //   .object({
+  //     label: yup.string().required(validValues.requiredErrorMessage),
+  //     value: yup.string().required(validValues.requiredErrorMessage),
+  //   })
+  //   .required(validValues.requiredErrorMessage),
   addFoodList: yup
     .array()
     .of(
       yup.object({
         foodInfo: yup.object({
-          label: yup.string(),
+          label: yup.string().required(validValues.requiredErrorMessage),
           value: yup.string().required(validValues.requiredErrorMessage),
           isElementary: yup.boolean(),
         }),
@@ -141,5 +147,18 @@ export const selectStyles: StylesConfig = {
   option: (base, state) => ({
     ...base,
     backgroundColor: state.isSelected ? "#C2BAFF" : "white",
+  }),
+};
+
+export const selectMealTypeStyles: StylesConfig = {
+  ...selectStyles,
+  control: (base) => ({
+    ...base,
+    backgroundColor: "white",
+    borderRadius: "12px",
+    border: 0,
+    boxShadow: "none",
+    height: 56,
+    minHeight: 56,
   }),
 };

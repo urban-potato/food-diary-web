@@ -64,18 +64,8 @@ const InputIlluminated: FC<TProps> = ({
       <div className="flex">
         <label htmlFor={id} className="truncate">
           <h3 className="flex gap-x-1 truncate">
-            <p className="truncate">
-              {placeholder}
-            </p>
-            <p
-              className={
-                isRequired
-                  ? "text-red"
-                  : "hidden"
-              }
-            >
-              *
-            </p>
+            <p className="truncate">{placeholder}</p>
+            <p className={isRequired ? "text-red" : "hidden"}>*</p>
           </h3>
         </label>
         {addSpaceAfterLabel ? (
@@ -120,7 +110,9 @@ const InputIlluminated: FC<TProps> = ({
         />
       </div>
 
-      <p className="text-pink-500 mt-3">{errorMessage}</p>
+      <p className={isError ? "text-pink-500 mt-3" : "hidden"}>
+        {errorMessage}
+      </p>
     </div>
   );
 };

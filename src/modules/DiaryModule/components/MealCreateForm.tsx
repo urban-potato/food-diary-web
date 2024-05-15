@@ -3,6 +3,7 @@ import {
   BREAKFAST_DEFAULT_ID,
   selectStyles,
   createValidationSchema,
+  selectMealTypeStyles,
 } from "../constants/constants";
 import {
   Controller,
@@ -14,6 +15,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
 import { useGetAllFoodElementaryQuery } from "../../FoodElementaryModule";
 import AsyncSelect from "react-select/async";
+import Select from "react-select";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
 import {
   useAddConsumedElementaryMutation,
@@ -23,13 +25,18 @@ import {
   useLazyGetCourseMealDayByDateQuery,
 } from "../api/meals.api";
 import { Player } from "@lordicon/react";
-
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import MealTypeOptions from "./MealTypeOptions";
 import { getFormattedDateTime, getNowTime } from "../helpers/helpers";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
 import { useGetAllFoodRecipeQuery } from "../../FoodRecipeModule/api/foodRecipe.api";
-import { IFoodElementary, IFoodRecipe } from "../../../global/types/types";
+import {
+  IFoodElementary,
+  IFoodRecipe,
+  IMealType,
+} from "../../../global/types/types";
+import { useGetAllMealTypesQuery } from "../api/mealTypes.api";
+import Preloader from "../../../components/Preloader/Preloader";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -38,9 +45,13 @@ type TProps = {
 
 type TMealCreateFormData = {
   creationTime: string;
+  // mealType: {
+  //   label: string;
+  //   value: string;
+  // };
   addFoodList: {
     foodInfo?: {
-      label?: string | undefined;
+      label: string;
       value: string;
       isElementary: boolean;
     };
@@ -54,14 +65,25 @@ type TSelectElement = {
   isElementary: boolean;
 };
 
+type TSelectOption = {
+  label: string;
+  value: string;
+};
+
 const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
+  const [mealTypeOptions, setMealTypeOptions] = useState<Array<TSelectOption>>(
+    new Array()
+  );
+  const [selectedMealTypeOption, setSelectedMealTypeOption] =
+    useState<TSelectOption | null>(null);
+
   const newFoodForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
 
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
 
-  const [selectedMealTypeId, setSelectedMealTypeId] =
-    useState(BREAKFAST_DEFAULT_ID);
+  // const [selectedMealTypeId, setSelectedMealTypeId] =
+  //   useState(BREAKFAST_DEFAULT_ID);
 
   const [doLazyGetCourseMealDayByDate] = useLazyGetCourseMealDayByDateQuery();
   const [doCreateCourseMealDay] = useCreateCourseMealDayMutation();
@@ -108,6 +130,29 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
       .filter(
         (item) => !newFoodForbiddenToAddIdsRef.current.includes(item.value)
       );
+
+    callback(filteredOptions);
+  };
+
+  // Meal Types for Async Select
+  const {
+    isLoading: isLoadingGetAllMealTypes,
+    data: dataGetAllMealTypes,
+    error: errorGetAllMealTypes,
+    isSuccess: isSuccessGetAllMealTypes,
+  } = useGetAllMealTypesQuery(undefined);
+
+  const loadOptionsMealTypes = (searchValue: string, callback: any) => {
+    // const filteredData: IMealType[] =
+    //   dataGetAllMealTypes?.items.filter((item: IFoodElementary) =>
+    //     item.name.toLowerCase().includes(searchValue.toLowerCase())
+    //   );
+
+    const filteredOptions = dataGetAllMealTypes?.items?.map(
+      (item: IMealType) => {
+        return { value: item.id, label: item.name };
+      }
+    );
 
     callback(filteredOptions);
   };
@@ -159,8 +204,6 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
   };
 
   const onSubmit: SubmitHandler<TMealCreateFormData> = async (data) => {
-    console.log("data", data);
-
     // Get Course Meal Day
     let courseMealDayId: string | null = null;
 
@@ -187,7 +230,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     }
 
     const time = data.creationTime.toString().concat(":00");
-    const mealType = selectedMealTypeId;
+    const mealType = selectedMealTypeOption?.value;
     let courseMealId: string | null = null;
 
     const createCourseMealData = {
@@ -299,7 +342,37 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     return result;
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (isSuccessGetAllMealTypes) {
+      const mealTypeOptions = dataGetAllMealTypes.items;
+      const sortedMealTypeOptions = [
+        mealTypeOptions.find(
+          (item: IMealType) =>
+            item.name.toLowerCase() == "завтрак" && item.isDefault
+        ),
+        mealTypeOptions.find(
+          (item: IMealType) =>
+            item.name.toLowerCase() == "обед" && item.isDefault
+        ),
+        mealTypeOptions.find(
+          (item: IMealType) =>
+            item.name.toLowerCase() == "ужин" && item.isDefault
+        ),
+      ];
+
+      const selectOptions: TSelectOption[] = [];
+
+      sortedMealTypeOptions.forEach((item: IMealType) =>
+        selectOptions.push({
+          label: item.name,
+          value: item.id,
+        })
+      );
+
+      setMealTypeOptions(selectOptions);
+      setSelectedMealTypeOption(selectOptions[0]);
+    }
+  }, [dataGetAllMealTypes]);
 
   return (
     <section className="flex-grow-100 w-full flex flex-col flex-wrap justify-center items-center mb-3">
@@ -311,185 +384,214 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
           className="box_content_transition flex flex-col flex-wrap justify-center w-full px-7 pt-5 pb-8"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="w-full flex-grow flex flex-wrap sm:flex-nowrap justify-center items-center gap-3">
-            <div className="w-max">
-              <InputIlluminated
-                id={"FoodRecipeCreateForm_creationTime"}
-                type="time"
-                placeholder="Время"
-                disableIllumination={true}
-                additionalStyles=" h-[67px] border-0 "
-                register={{
-                  ...register("creationTime"),
-                }}
-                isRequired={true}
-              />
-              {errors.creationTime && (
-                <div
-                  className={
-                    Object.keys(errors).length > 0
-                      ? " flex flex-col gap-y-2 justify-center "
-                      : " hidden "
-                  }
-                >
-                  <p
-                    className={
-                      errors.creationTime ? "text-pink-500 " : " hidden "
-                    }
-                  >
-                    {errors.creationTime?.message}
-                  </p>
-                </div>
-              )}
+          {isLoadingGetAllMealTypes ? (
+            <div className="flex justify-center items-center">
+              <Preloader />
             </div>
-
-            <div className="w-full self-end">
-              <MealTypeOptions
-                selectedMealTypeId={selectedMealTypeId}
-                setSelectedMealTypeId={setSelectedMealTypeId}
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            {/* <h3 className="text-xl my-3">Блюда:</h3> */}
-
-            {addFoodListFields.map((select, index) => {
-              return (
-                <div
-                  key={`MealCreateForm_Div_addFoodList_${select.id}_${index}`}
-                  className="form-control flex flex-col"
-                >
-                  <div className="gap-x-3 flex mb-1">
-                    <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
-                      <span className="flex gap-x-1">
-                        <h3>Блюдо</h3>
-                        <p className="text-red">*</p>
-                      </span>
-                      <Controller
-                        key={`MealCreateForm_Controller_addFoodList_${select.id}_${index}`}
-                        name={`addFoodList.${index}.foodInfo` as const}
-                        control={control}
-                        render={({ field }) => (
-                          <AsyncSelect
-                            {...field}
-                            key={`MealCreateForm_AsyncSelect_addFoodList_${select.id}_${index}`}
-                            className="relative text-sm rounded-xl  "
-                            components={{ NoOptionsMessage }}
-                            styles={selectStyles}
-                            placeholder="Введите название блюда"
-                            loadOptions={loadOptions}
-                            onInputChange={handleOnInputChange}
-                            onChange={(newValue) => {
-                              handleOnChange(newValue as TSelectElement, index);
-                              field.onChange(newValue);
-                            }}
-                          />
-                        )}
-                      />
-                    </div>
-
-                    <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
-                      <InputIlluminated
-                        id={`MealCreateForm_addFoodList.${index}.weight`}
-                        type="number"
-                        placeholder="Вес (г)"
-                        disableIllumination={true}
-                        additionalStyles=" h-[67px] border-0 "
-                        register={{
-                          ...register(`addFoodList.${index}.weight` as const),
-                        }}
-                        isRequired={true}
-                      />
-                    </div>
-
-                    <div className="max-w-[60px] flex flex-col justify-center items-center">
-                      <h3 className="text-lg my-3"> </h3>
-                      <ButtonIlluminated
-                        label={
-                          <span>
-                            <Player
-                              ref={deleteIconPlayerRef}
-                              icon={DELETE_ICON}
-                              size={ICON_SIZE}
-                              colorize="#f8f7f4"
-                            />
-                          </span>
-                        }
-                        isDarkButton={true}
-                        isIlluminationFull={false}
-                        onClick={() => {
-                          handleRemoveFoodToAdd(index);
-                        }}
-                        buttonPadding=" p-[14px] "
-                        additionalStyles=" "
-                        isDisabled={addFoodListFields.length > 1 ? false : true}
-                      />
-                    </div>
-                  </div>
-
-                  {errors.addFoodList && (
+          ) : (
+            <>
+              <div className="w-full flex-grow flex flex-wrap sm:flex-nowrap justify-center items-end gap-2 mb-5">
+                <div className="w-full">
+                  <InputIlluminated
+                    id={"FoodRecipeCreateForm_creationTime"}
+                    type="time"
+                    placeholder="Время"
+                    disableIllumination={true}
+                    additionalStyles=" h-[56px] border-0 "
+                    register={{
+                      ...register("creationTime"),
+                    }}
+                    isRequired={true}
+                  />
+                  {errors.creationTime && (
                     <div
                       className={
-                        Object.keys(errors).length > 0 &&
-                        errors.addFoodList[index]
-                          ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
-                          : "hidden"
+                        Object.keys(errors).length > 0
+                          ? " flex flex-col gap-y-2 justify-center "
+                          : " hidden "
                       }
                     >
                       <p
                         className={
-                          errors.addFoodList[index]?.foodInfo?.value
-                            ? "text-pink-500 "
-                            : " hidden "
+                          errors.creationTime ? "text-pink-500 " : " hidden "
                         }
                       >
-                        {errors.addFoodList[index]?.foodInfo?.value?.message}
-                      </p>
-                      <p
-                        className={
-                          errors.addFoodList[index]?.weight
-                            ? "text-pink-500 "
-                            : " hidden "
-                        }
-                      >
-                        {errors.addFoodList[index]?.weight?.message}
+                        {errors.creationTime?.message}
                       </p>
                     </div>
                   )}
                 </div>
-              );
-            })}
 
-            <div className="w-full max-w-[280px]">
-              <ButtonIlluminated
-                label={"Еще одно блюдо"}
-                isDarkButton={true}
-                isIlluminationFull={false}
-                onClick={() => {
-                  newFoodForbiddenToAddIdsRef.current.push("");
+                <div className=" gap-x-3 flex flex-col justify-center w-full h-full gap-2 flex-grow ">
+                  <span className="flex gap-x-1">
+                    <h3>Тип</h3>
+                    <p className="text-red">*</p>
+                  </span>
 
-                  addFoodListAppend({
-                    weight: 0,
-                  });
-                }}
-                buttonPadding=" p-[14px] "
-                additionalStyles=""
-              />
-            </div>
-          </div>
+                  <Select
+                    defaultValue={selectedMealTypeOption}
+                    onChange={(newValue) =>
+                      setSelectedMealTypeOption(newValue as TSelectOption)
+                    }
+                    options={mealTypeOptions}
+                    placeholder={<div className="text-black">Завтрак</div>}
+                    className="relative text-sm rounded-xl"
+                    components={{ NoOptionsMessage }}
+                    styles={selectMealTypeStyles}
+                    isSearchable={false}
+                  />
+                </div>
+              </div>
 
-          <div className="mt-9">
-            <ButtonIlluminated
-              label="Сохранить"
-              isDarkButton={true}
-              isIlluminationFull={false}
-              isButton={true}
-              type="submit"
-              additionalStyles=""
-              isDisabled={checkIfFilledRight() ? false : true}
-            />
-          </div>
+              <div className="flex flex-col">
+                {addFoodListFields.map((select, index) => {
+                  return (
+                    <div
+                      key={`MealCreateForm_Div_addFoodList_${select.id}_${index}`}
+                      className="form-control flex flex-col"
+                    >
+                      <div className="gap-x-3 flex mb-1">
+                        <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
+                          <span className="flex gap-x-1">
+                            <h3>Блюдо</h3>
+                            <p className="text-red">*</p>
+                          </span>
+                          <Controller
+                            key={`MealCreateForm_Controller_addFoodList_${select.id}_${index}`}
+                            name={`addFoodList.${index}.foodInfo` as const}
+                            control={control}
+                            render={({ field }) => (
+                              <AsyncSelect
+                                {...field}
+                                key={`MealCreateForm_AsyncSelect_addFoodList_${select.id}_${index}`}
+                                className="relative text-sm rounded-xl  "
+                                components={{ NoOptionsMessage }}
+                                styles={selectStyles}
+                                placeholder="Введите название блюда"
+                                loadOptions={loadOptions}
+                                onInputChange={handleOnInputChange}
+                                onChange={(newValue) => {
+                                  handleOnChange(
+                                    newValue as TSelectElement,
+                                    index
+                                  );
+                                  field.onChange(newValue);
+                                }}
+                              />
+                            )}
+                          />
+                        </div>
+
+                        <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
+                          <InputIlluminated
+                            id={`MealCreateForm_addFoodList.${index}.weight`}
+                            type="number"
+                            placeholder="Вес (г)"
+                            disableIllumination={true}
+                            additionalStyles=" h-[67px] border-0 "
+                            register={{
+                              ...register(
+                                `addFoodList.${index}.weight` as const
+                              ),
+                            }}
+                            isRequired={true}
+                          />
+                        </div>
+
+                        <div className="max-w-[60px] flex flex-col justify-center items-center">
+                          <h3 className="text-lg my-3"> </h3>
+                          <ButtonIlluminated
+                            label={
+                              <span>
+                                <Player
+                                  ref={deleteIconPlayerRef}
+                                  icon={DELETE_ICON}
+                                  size={ICON_SIZE}
+                                  colorize="#f8f7f4"
+                                />
+                              </span>
+                            }
+                            isDarkButton={true}
+                            isIlluminationFull={false}
+                            onClick={() => {
+                              handleRemoveFoodToAdd(index);
+                            }}
+                            buttonPadding=" p-[14px] "
+                            additionalStyles=" "
+                            isDisabled={
+                              addFoodListFields.length > 1 ? false : true
+                            }
+                          />
+                        </div>
+                      </div>
+
+                      {errors.addFoodList && (
+                        <div
+                          className={
+                            Object.keys(errors).length > 0 &&
+                            errors.addFoodList[index]
+                              ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
+                              : "hidden"
+                          }
+                        >
+                          <p
+                            className={
+                              errors.addFoodList[index]?.foodInfo?.value
+                                ? "text-pink-500 "
+                                : " hidden "
+                            }
+                          >
+                            {
+                              errors.addFoodList[index]?.foodInfo?.value
+                                ?.message
+                            }
+                          </p>
+                          <p
+                            className={
+                              errors.addFoodList[index]?.weight
+                                ? "text-pink-500 "
+                                : " hidden "
+                            }
+                          >
+                            {errors.addFoodList[index]?.weight?.message}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                <div className="w-full max-w-[280px]">
+                  <ButtonIlluminated
+                    label={"Еще одно блюдо"}
+                    isDarkButton={true}
+                    isIlluminationFull={false}
+                    onClick={() => {
+                      newFoodForbiddenToAddIdsRef.current.push("");
+
+                      addFoodListAppend({
+                        weight: 0,
+                      });
+                    }}
+                    buttonPadding=" p-[14px] "
+                    additionalStyles=""
+                  />
+                </div>
+              </div>
+
+              <div className="mt-9">
+                <ButtonIlluminated
+                  label="Сохранить"
+                  isDarkButton={true}
+                  isIlluminationFull={false}
+                  isButton={true}
+                  type="submit"
+                  additionalStyles=""
+                  isDisabled={checkIfFilledRight() ? false : true}
+                />
+              </div>
+            </>
+          )}
         </form>
       </div>
     </section>
