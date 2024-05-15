@@ -22,11 +22,7 @@ const Ingredients: FC<TProps> = ({ ingredients }) => {
     }
   );
 
-  return (
-    <div className="flex flex-col gap-3 max-w-max">
-      {mappedFoodElementariesList}
-    </div>
-  );
+  return <>{mappedFoodElementariesList}</>;
 };
 
 export default Ingredients;

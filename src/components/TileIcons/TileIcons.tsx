@@ -29,7 +29,7 @@ const TileIcons: FC<TProps> = ({ isEditMode, setIsEditMode, handleDelete }) => {
         </span>
       </span>
 
-      <span role="button" onClick={() => handleDelete()}>
+      <span role="button" onClick={async () => await handleDelete()}>
         <span
           onMouseEnter={() => deleteIconPlayerRef.current?.playFromBeginning()}
         >

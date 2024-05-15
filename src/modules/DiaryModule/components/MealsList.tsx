@@ -1,6 +1,5 @@
 import { FC } from "react";
 import Preloader from "../../../components/Preloader/Preloader";
-import { useGetCourseMealDayByDateQuery } from "../api/meals.api";
 import MealTile from "./MealTile/MealTile";
 import { ICourseMeal } from "../../../global/types/types";
 
@@ -15,9 +14,6 @@ const MealsList: FC<TProps> = ({
   isLoadingCourseMealDay,
   dataCourseMealDay,
 }) => {
-  // const { isLoading: isLoadingCourseMealDay, data: dataCourseMealDay } =
-  //   useGetCourseMealDayByDateQuery(date);
-
   const mealTiles = dataCourseMealDay?.items[0]?.courseMeals
     ?.slice()
     ?.sort(function (a: ICourseMeal, b: ICourseMeal) {

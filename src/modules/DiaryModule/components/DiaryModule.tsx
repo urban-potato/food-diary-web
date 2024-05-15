@@ -32,7 +32,7 @@ const DiaryModule = () => {
           className="flex-grow-1"
         />
 
-        <div className="flex-grow-1 lg:hidden max-w-max ">
+        <div className="flex-grow-1 lg:hidden max-w-max flex flex-wrap gap-3 w-full">
           <DaysCharacteristicsSum
             characteristicsSum={
               dataCourseMealDay?.items?.length > 0

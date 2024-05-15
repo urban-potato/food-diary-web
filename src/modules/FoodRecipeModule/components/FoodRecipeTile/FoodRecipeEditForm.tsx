@@ -5,28 +5,26 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import { IFoodElementary, IIngredient } from "../../../global/types/types";
+import { IFoodElementary, IIngredient } from "../../../../global/types/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
-import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
+import NoOptionsMessage from "../../../../components/NoOptionsMessage/NoOptionsMessage";
 import { Player } from "@lordicon/react";
-import EDIT_ICON from "../../../global/assets/system-regular-63-settings-cog.json";
-import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
+import DELETE_ICON from "../../../../global/assets/system-regular-39-trash.json";
 import {
   useAddElementaryMutation,
   useChangeElementaryWeightMutation,
   useChangeFoodRecipeNameMutation,
   useDeleteElementaryMutation,
-  useDeleteFoodRecipeMutation,
-} from "../api/foodRecipe.api";
-import { useGetAllFoodElementaryQuery } from "../../FoodElementaryModule";
+} from "../../api/foodRecipe.api";
+import { useGetAllFoodElementaryQuery } from "../../../FoodElementaryModule";
 import {
   editFoodRecipeValidationSchema,
   selectStyles,
-} from "../constants/constants";
-import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
-import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
+} from "../../constants/constants";
+import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated";
+import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated";
 
 type TProps = {
   foodRecipeId: string;
@@ -67,15 +65,8 @@ const FoodRecipeEditForm: FC<TProps> = ({
   const ingredientsForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
   const newIngredientsForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
 
-  const editIconPlayerRef = useRef<Player>(null);
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
-
-  // Delete Food Recipe
-  const [doDeleteFoodRecipe] = useDeleteFoodRecipeMutation();
-  const deleteFoodRecipe = async () => {
-    await doDeleteFoodRecipe(foodRecipeId).catch((e: any) => console.log(e));
-  };
 
   // Ingredients to delete
   const originalIngredientsToRemoveIdsRef = useRef<Array<String>>(new Array());
@@ -350,15 +341,10 @@ const FoodRecipeEditForm: FC<TProps> = ({
     setIsEditMode(false);
   };
 
-  // const onSubmit: SubmitHandler<TFoodRecipeEditFormData> = async (data) => {
-  //   console.log("data", data);
-  //   setIsEditMode(false);
-  // };
-
   return (
-    <div className="w-full max-w-5xl flex flex-col justify-center items-start pl-7 pr-6 py-7 gap-4">
+    <div className="w-full max-w-5xl flex flex-col justify-center items-start -mt-12">
       <form
-        className="flex flex-col flex-wrap justify-center w-full -mt-16"
+        className="flex flex-col flex-wrap justify-center w-full"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="text-xl w-full flex-grow">
@@ -656,36 +642,6 @@ const FoodRecipeEditForm: FC<TProps> = ({
           </span>
         </div>
       </form>
-
-      <div className="order-[-1] ml-auto gap-x-2 flex justify-center items-start">
-        <span role="button" onClick={() => setIsEditMode(false)}>
-          <span
-            onMouseEnter={() => editIconPlayerRef.current?.playFromBeginning()}
-          >
-            <Player
-              ref={editIconPlayerRef}
-              icon={EDIT_ICON}
-              size={ICON_SIZE}
-              colorize="#0d0b26"
-            />
-          </span>
-        </span>
-
-        <span role="button" onClick={async () => await deleteFoodRecipe()}>
-          <span
-            onMouseEnter={() =>
-              deleteIconPlayerRef.current?.playFromBeginning()
-            }
-          >
-            <Player
-              ref={deleteIconPlayerRef}
-              icon={DELETE_ICON}
-              size={ICON_SIZE}
-              colorize="#0d0b26"
-            />
-          </span>
-        </span>
-      </div>
     </div>
   );
 };

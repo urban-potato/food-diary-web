@@ -31,9 +31,7 @@ const ConsumedDishesList: FC<TProps> = ({ consumedDishes }) => {
       );
     }
   );
-  return (
-    <div className="flex flex-col gap-3 max-w-max">{mappedConsumedDishes}</div>
-  );
+  return <>{mappedConsumedDishes}</>;
 };
 
 export default ConsumedDishesList;

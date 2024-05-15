@@ -163,6 +163,10 @@
     group-focus-within:scale-101;
   }
 
+  .box_icons {
+    @apply mr-0 mx-auto justify-self-end gap-x-2 flex justify-center items-start;
+  }
+
   /* .text_border {
     text-shadow:
      -1px -1px 0 #f8f7f4,  

@@ -2,7 +2,7 @@ import { FC } from "react";
 import Preloader from "../../../components/Preloader/Preloader";
 import { useGetAllFoodRecipeQuery } from "../api/foodRecipe.api";
 import { IFoodRecipe } from "../../../global/types/types";
-import FoodRecipeTile from "./FoodRecipeTile";
+import FoodRecipeTile from "./FoodRecipeTile/FoodRecipeTile";
 
 const FoodRecipesList: FC = () => {
   const {
