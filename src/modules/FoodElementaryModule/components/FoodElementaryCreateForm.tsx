@@ -7,7 +7,6 @@ import {
   SubmitHandler,
   useFieldArray,
   useForm,
-  useFormState,
 } from "react-hook-form";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
@@ -25,7 +24,6 @@ import {
   FAT_DEFAULT_ID,
   PROTEIN_DEFAULT_ID,
   SELECT_STYLES,
-  ZERO_CHARACTERISTICS_SUM_DATA,
 } from "../../../global/constants/constants.ts";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage.tsx";
 import { sortConsumedCharacteristics } from "../../../global/helpers/sort_characteristics.helper.ts";
@@ -118,8 +116,6 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     mode: "onChange",
     defaultValues: defaultValues,
   });
-
-  const { dirtyFields, touchedFields } = useFormState({ control });
 
   // For Generating Default Characteristic Fields
   const {
@@ -271,73 +267,34 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
   };
 
   useEffect(() => {
-    const defaultCharacteristicsOnForm = [
-      {
-        characteristicInfo: {
-          label: "Белки",
-          value: PROTEIN_DEFAULT_ID,
-        },
-        characteristicValue: 0,
-      },
-      {
-        characteristicInfo: {
-          label: "Жиры",
-          value: FAT_DEFAULT_ID,
-        },
-        characteristicValue: 0,
-      },
-      {
-        characteristicInfo: {
-          label: "Углеводы",
-          value: CARBOHYDRATE_DEFAULT_ID,
-        },
-        characteristicValue: 0,
-      },
-    ];
+    if (isSuccessGetAllFoodCharacteristicTypes) {
+      const defaultCharacteristics: IFoodCharacteristicType[] =
+        dataGetAllFoodCharacteristicTypes?.items.filter(
+          (item: IFoodCharacteristicType) =>
+            BASIC_CHARACTERISTICS_IDS_LIST.includes(item.id) &&
+            item.id != CALORIES_DEFAULT_ID
+        );
 
-    defaultCharacteristicsOnForm.forEach((defaultCharacteristic) => {
-      defaultaracteristicsAppend(defaultCharacteristic);
-    });
-  }, []);
+      const sortedDefaultCharacteristics: IFoodCharacteristicType[] =
+        sortConsumedCharacteristics(defaultCharacteristics);
 
-  // useEffect(() => {
-  //   if (isSuccessGetAllFoodCharacteristicTypes) {
-  //     const defaultCharacteristics: IFoodCharacteristicType[] =
-  //       dataGetAllFoodCharacteristicTypes?.items.filter(
-  //         (item: IFoodCharacteristicType) =>
-  //           BASIC_CHARACTERISTICS_IDS_LIST.includes(item.id) &&
-  //           item.id != CALORIES_DEFAULT_ID
-  //       );
+      const defaultCharacteristicsOnForm = sortedDefaultCharacteristics?.map(
+        (characteristic: IFoodCharacteristicType) => {
+          return {
+            characteristicInfo: {
+              label: characteristic.name,
+              value: characteristic.id,
+            },
+            characteristicValue: 0,
+          };
+        }
+      );
 
-  //     const sortedDefaultCharacteristics: IFoodCharacteristicType[] =
-  //       sortConsumedCharacteristics(defaultCharacteristics);
-
-  //     const defaultCharacteristicsOnForm = sortedDefaultCharacteristics?.map(
-  //       (characteristic: IFoodCharacteristicType) => {
-  //         return {
-  //           characteristicInfo: {
-  //             label: characteristic.name,
-  //             value: characteristic.id,
-  //           },
-  //           characteristicValue: 0,
-  //         };
-  //       }
-  //     );
-
-  //     defaultCharacteristicsOnForm?.forEach((defaultCharacteristic) => {
-  //       defaultaracteristicsAppend(defaultCharacteristic);
-  //     });
-  //   }
-
-  //   // const sortedDefaultCharacteristics: IFoodCharacteristicType[] =
-  //   //   sortConsumedCharacteristics(defaultCharacteristics);
-  // }, [dataGetAllFoodCharacteristicTypes]);
-
-  useEffect(() => {
-    if (Object.keys(dirtyFields).length && !Object.keys(touchedFields).length) {
-      trigger();
+      defaultCharacteristicsOnForm?.forEach((defaultCharacteristic) => {
+        defaultaracteristicsAppend(defaultCharacteristic);
+      });
     }
-  }, [dirtyFields, touchedFields]);
+  }, [dataGetAllFoodCharacteristicTypes]);
 
   const handleAddNutrient = () => {
     newCharacteristicsForbiddenToAddIdsRef.current.push("");
