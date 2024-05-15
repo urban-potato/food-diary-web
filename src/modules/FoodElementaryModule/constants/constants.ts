@@ -76,6 +76,30 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
       })
     )
     .required(),
+  defaultCharacteristicsList: yup
+    .array()
+    .of(
+      yup.object({
+        characteristicInfo: yup.object({
+          label: yup.string().required(validValues.requiredErrorMessage),
+          value: yup.string().required(validValues.requiredErrorMessage),
+        }),
+        // .required("• Ингредиент: " + validValues.requiredErrorMessage),
+
+        characteristicValue: yup
+          .number()
+          .required(validValues.requiredErrorMessage)
+          .typeError(validValues.numberTypeErrorMessage)
+          .min(
+            validValues.characteristicValue.min.value,
+            validValues.characteristicValue.min.message(
+              validValues.characteristicValue.min.value
+            )
+          )
+          .integer(),
+      })
+    )
+    .required(),
 });
 
 export const editFoodElementaryValidationSchema = yup.object().shape({
@@ -136,7 +160,9 @@ export const editFoodElementaryValidationSchema = yup.object().shape({
         characteristicInfo: yup.object({
           label: yup.string(),
           value: yup.string().required(validValues.requiredErrorMessage),
-          characteristicTypeId: yup.string().required(validValues.requiredErrorMessage),
+          characteristicTypeId: yup
+            .string()
+            .required(validValues.requiredErrorMessage),
         }),
         // .required("• Ингредиент: " + validValues.requiredErrorMessage),
 
