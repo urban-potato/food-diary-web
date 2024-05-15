@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   BREAKFAST_DEFAULT_ID,
   selectStyles,
@@ -26,7 +26,7 @@ import { Player } from "@lordicon/react";
 
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import MealTypeOptions from "./MealTypeOptions";
-import { getFormattedDateTime } from "../helpers/helpers";
+import { getFormattedDateTime, getNowTime } from "../helpers/helpers";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
 import { useGetAllFoodRecipeQuery } from "../../FoodRecipeModule/api/foodRecipe.api";
 import { IFoodElementary, IFoodRecipe } from "../../../global/types/types";
@@ -37,6 +37,7 @@ type TProps = {
 };
 
 type TMealCreateFormData = {
+  creationTime: string;
   addFoodList: {
     foodInfo?: {
       label?: string | undefined;
@@ -118,6 +119,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
         weight: 0,
       },
     ],
+    creationTime: getNowTime(),
   };
 
   // useForm
@@ -157,12 +159,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
   };
 
   const onSubmit: SubmitHandler<TMealCreateFormData> = async (data) => {
-    // const foodToAddList = data?.foodElementaryList?.map((item) => {
-    //   return {
-    //     foodElementaryId: item?.foodElementaryId?.value,
-    //     weight: item?.weight,
-    //   };
-    // });
+    console.log("data", data);
 
     // Get Course Meal Day
     let courseMealDayId: string | null = null;
@@ -189,8 +186,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
         .catch((e) => console.log(e));
     }
 
-    // Gat Course Meal
-    const [_, time] = getFormattedDateTime();
+    const time = data.creationTime.toString().concat(":00");
     const mealType = selectedMealTypeId;
     let courseMealId: string | null = null;
 
@@ -206,20 +202,6 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
         courseMealId = responseCourseMealId;
       })
       .catch((e) => console.log(e));
-
-    // for (const foodElementary of foodToAddList) {
-    //   const addFoodElementaryData = {
-    //     id: courseMealId,
-    //     data: {
-    //       foodElementaryId: foodElementary.foodElementaryId,
-    //       weight: foodElementary.weight,
-    //     },
-    //   };
-
-    //   doAddConsumedElementary(addFoodElementaryData).catch((e) =>
-    //     console.log(e)
-    //   );
-    // }
 
     // Add New Consumed Elementaries
     const addElementaryList = data?.addFoodList
@@ -317,6 +299,8 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     return result;
   };
 
+  useEffect(() => {}, []);
+
   return (
     <section className="flex-grow-100 w-full flex flex-col flex-wrap justify-center items-center mb-3">
       <h2 className="mt-4 mb-3">Новая запись</h2>
@@ -327,13 +311,48 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
           className="box_content_transition flex flex-col flex-wrap justify-center w-full px-7 pt-5 pb-8"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <MealTypeOptions
-            selectedMealTypeId={selectedMealTypeId}
-            setSelectedMealTypeId={setSelectedMealTypeId}
-          />
+          <div className="w-full flex-grow flex flex-wrap sm:flex-nowrap justify-center items-center gap-3">
+            <div className="w-max">
+              <InputIlluminated
+                id={"FoodRecipeCreateForm_creationTime"}
+                type="time"
+                placeholder="Время"
+                disableIllumination={true}
+                additionalStyles=" h-[67px] border-0 "
+                register={{
+                  ...register("creationTime"),
+                }}
+                isRequired={true}
+              />
+              {errors.creationTime && (
+                <div
+                  className={
+                    Object.keys(errors).length > 0
+                      ? " flex flex-col gap-y-2 justify-center "
+                      : " hidden "
+                  }
+                >
+                  <p
+                    className={
+                      errors.creationTime ? "text-pink-500 " : " hidden "
+                    }
+                  >
+                    {errors.creationTime?.message}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="w-full self-end">
+              <MealTypeOptions
+                selectedMealTypeId={selectedMealTypeId}
+                setSelectedMealTypeId={setSelectedMealTypeId}
+              />
+            </div>
+          </div>
 
           <div className="flex flex-col">
-            <h3 className="text-xl my-3">Блюда:</h3>
+            {/* <h3 className="text-xl my-3">Блюда:</h3> */}
 
             {addFoodListFields.map((select, index) => {
               return (

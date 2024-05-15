@@ -16,7 +16,7 @@ const MealTypeOptions: FC<TProps> = ({
   setSelectedMealTypeId,
 }) => {
   return (
-    <div className="h-full w-full flex flex-wrap justify-center items-center py-3 gap-x-5 gap-y-2">
+    <div className="h-full w-full flex justify-center items-center py-3 gap-3">
       <span className="w-full sm:w-[30%]">
         <ButtonIlluminated
           label={"Завтрак"}

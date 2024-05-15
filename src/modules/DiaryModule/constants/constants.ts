@@ -21,23 +21,22 @@ export const validValues = {
 };
 
 export const createValidationSchema = yup.object({
+  creationTime: yup.string().required(validValues.requiredErrorMessage),
   addFoodList: yup
     .array()
     .of(
       yup.object({
         foodInfo: yup.object({
           label: yup.string(),
-          value: yup
-            .string()
-            .required("• Блюдо: " + validValues.requiredErrorMessage),
+          value: yup.string().required(validValues.requiredErrorMessage),
           isElementary: yup.boolean(),
         }),
-        // .required("• Блюдо: " + validValues.requiredErrorMessage),
+        // .required(validValues.requiredErrorMessage),
 
         weight: yup
           .number()
-          .required("• Вес: " + validValues.requiredErrorMessage)
-          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
+          .required(validValues.requiredErrorMessage)
+          .typeError(validValues.numberTypeErrorMessage)
           .min(
             validValues.weightValue.min.value,
             validValues.weightValue.min.message(
@@ -57,17 +56,15 @@ export const editValidationSchema = yup.object({
       yup.object({
         foodInfo: yup.object({
           label: yup.string(),
-          value: yup
-            .string()
-            .required("• Блюдо: " + validValues.requiredErrorMessage),
+          value: yup.string().required(validValues.requiredErrorMessage),
           isElementary: yup.boolean(),
         }),
-        // .required("• Блюдо: " + validValues.requiredErrorMessage),
+        // .required("validValues.requiredErrorMessage),
 
         weight: yup
           .number()
-          .required("• Вес: " + validValues.requiredErrorMessage)
-          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
+          .required(validValues.requiredErrorMessage)
+          .typeError(validValues.numberTypeErrorMessage)
           .min(
             validValues.weightValue.min.value,
             validValues.weightValue.min.message(
@@ -85,16 +82,14 @@ export const editValidationSchema = yup.object({
       yup.object({
         foodElementaryId: yup.object({
           label: yup.string(),
-          value: yup
-            .string()
-            .required("• Блюдо: " + validValues.requiredErrorMessage),
+          value: yup.string().required(validValues.requiredErrorMessage),
         }),
-        // .required("• Блюдо: " + validValues.requiredErrorMessage),
+        // .required(validValues.requiredErrorMessage),
 
         weight: yup
           .number()
-          .required("• Вес: " + validValues.requiredErrorMessage)
-          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
+          .required(validValues.requiredErrorMessage)
+          .typeError(validValues.numberTypeErrorMessage)
           .min(
             validValues.weightValue.min.value,
             validValues.weightValue.min.message(
@@ -112,16 +107,14 @@ export const editValidationSchema = yup.object({
       yup.object({
         foodRecipeId: yup.object({
           label: yup.string(),
-          value: yup
-            .string()
-            .required("• Блюдо: " + validValues.requiredErrorMessage),
+          value: yup.string().required(validValues.requiredErrorMessage),
         }),
-        // .required("• Блюдо: " + validValues.requiredErrorMessage),
+        // .required(validValues.requiredErrorMessage),
 
         weight: yup
           .number()
-          .required("• Вес: " + validValues.requiredErrorMessage)
-          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
+          .required(validValues.requiredErrorMessage)
+          .typeError(validValues.numberTypeErrorMessage)
           .min(
             validValues.weightValue.min.value,
             validValues.weightValue.min.message(

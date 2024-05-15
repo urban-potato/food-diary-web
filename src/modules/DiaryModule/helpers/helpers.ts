@@ -27,3 +27,14 @@ export const getFormattedDateTime = () => {
 
   return result;
 };
+
+export const getNowTime = () => {
+  const nowDate = new Date();
+
+  let hours = formatNumber(nowDate.getHours());
+  let minutes = formatNumber(nowDate.getMinutes());
+
+  const time = `${hours}:${minutes}`;
+
+  return time;
+};
