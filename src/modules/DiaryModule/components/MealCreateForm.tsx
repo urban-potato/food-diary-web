@@ -35,6 +35,7 @@ import {
 } from "../../../global/types/types";
 import { useGetAllMealTypesQuery } from "../api/mealTypes.api";
 import Preloader from "../../../components/Preloader/Preloader";
+import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -424,121 +425,27 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
               </div>
 
               <div className="flex flex-col">
-                {addFoodListFields.map((select, index) => {
+                {addFoodListFields.map((item, index) => {
                   return (
-                    <div
-                      key={`MealCreateForm_Div_addFoodList_${select.id}_${index}`}
-                      className="form-control flex flex-col mb-1"
-                    >
-                      <div className="gap-x-3 flex items-end">
-                        <div className="flex flex-col justify-center gap-1 flex-grow">
-                          <span className="flex gap-x-1">
-                            <h3>Блюдо</h3>
-                            <p className="text-red">*</p>
-                          </span>
-                          <Controller
-                            key={`MealCreateForm_Controller_addFoodList_${select.id}_${index}`}
-                            name={`addFoodList.${index}.foodInfo` as const}
-                            control={control}
-                            render={({ field }) => (
-                              <AsyncSelect
-                                {...field}
-                                key={`MealCreateForm_AsyncSelect_addFoodList_${select.id}_${index}`}
-                                className="relative text-sm rounded-xl  "
-                                components={{ NoOptionsMessage }}
-                                styles={selectStyles}
-                                placeholder="Введите название блюда"
-                                loadOptions={loadOptions}
-                                onInputChange={handleOnInputChange}
-                                onChange={(newValue) => {
-                                  handleOnChange(
-                                    newValue as TSelectElement,
-                                    index
-                                  );
-                                  field.onChange(newValue);
-                                }}
-                              />
-                            )}
-                          />
-                        </div>
-
-                        <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
-                          <InputIlluminated
-                            id={`MealCreateForm_addFoodList.${index}.weight`}
-                            type="number"
-                            placeholder="Вес (г)"
-                            disableIllumination={true}
-                            additionalStyles=" h-[67px] border-0 "
-                            register={{
-                              ...register(
-                                `addFoodList.${index}.weight` as const
-                              ),
-                            }}
-                            isRequired={true}
-                          />
-                        </div>
-
-                        <div className="max-w-[50px] flex flex-col justify-center items-center self-center">
-                          <h3 className="text-lg my-4"> </h3>
-                          <ButtonIlluminated
-                            label={
-                              <span>
-                                <Player
-                                  ref={deleteIconPlayerRef}
-                                  icon={DELETE_ICON}
-                                  size={ICON_SIZE}
-                                  colorize="#f8f7f4"
-                                />
-                              </span>
-                            }
-                            isDarkButton={true}
-                            isIlluminationFull={false}
-                            onClick={() => {
-                              handleRemoveFoodToAdd(index);
-                            }}
-                            buttonPadding=" p-[12px] "
-                            additionalStyles=" "
-                            isDisabled={
-                              addFoodListFields.length > 1 ? false : true
-                            }
-                            isIttuminationDisabled={true}
-                          />
-                        </div>
-                      </div>
-
-                      {errors.addFoodList && (
-                        <div
-                          className={
-                            Object.keys(errors).length > 0 &&
-                            errors.addFoodList[index]
-                              ? "flex flex-col mt-1 justify-center items-start"
-                              : "hidden"
-                          }
-                        >
-                          <p
-                            className={
-                              errors.addFoodList[index]?.foodInfo?.value
-                                ? "text-pink-500"
-                                : "hidden"
-                            }
-                          >
-                            {
-                              errors.addFoodList[index]?.foodInfo?.value
-                                ?.message
-                            }
-                          </p>
-                          <p
-                            className={
-                              errors.addFoodList[index]?.weight
-                                ? "text-pink-500"
-                                : "hidden"
-                            }
-                          >
-                            {errors.addFoodList[index]?.weight?.message}
-                          </p>
-                        </div>
-                      )}
-                    </div>
+                    <AsyncSelectRowWithWeightField
+                      key={`MealCreateForm_Div_addFoodList_${item.id}_${index}`}
+                      itemId={item.id}
+                      itemIndex={index}
+                      selectPlaceholder={"Введите название блюда"}
+                      handleRemoveItem={handleRemoveFoodToAdd}
+                      controllerName={`addFoodList.${index}.foodInfo` as const}
+                      control={control}
+                      register={{
+                        ...register(`addFoodList.${index}.weight` as const),
+                      }}
+                      errors={errors}
+                      errorsGroup={errors.addFoodList}
+                      errorSelect={errors.addFoodList?.[index]?.foodInfo?.value}
+                      errorFeild={errors.addFoodList?.[index]?.weight}
+                      loadSelectOptions={loadOptions}
+                      handleOnSelectInputChange={handleOnInputChange}
+                      handleOnSelectValueChange={handleOnChange}
+                    />
                   );
                 })}
 
