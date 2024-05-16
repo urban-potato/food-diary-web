@@ -19,6 +19,7 @@ type TProps = {
   errorsGroup: any;
   errorSelect: any;
   errorFeild: any;
+  isDeleteButtonDisabled?: boolean;
 };
 
 const DisabledSelectRowWithWeightField: FC<TProps> = ({
@@ -33,6 +34,7 @@ const DisabledSelectRowWithWeightField: FC<TProps> = ({
   errorsGroup,
   errorSelect,
   errorFeild,
+  isDeleteButtonDisabled = false,
 }) => {
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
@@ -93,6 +95,7 @@ const DisabledSelectRowWithWeightField: FC<TProps> = ({
             buttonPadding=" p-[12px] "
             additionalStyles=" "
             isIttuminationDisabled={true}
+            isDisabled={isDeleteButtonDisabled}
           />
         </div>
       </div>
