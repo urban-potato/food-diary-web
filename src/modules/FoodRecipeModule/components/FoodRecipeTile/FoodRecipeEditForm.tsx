@@ -1,17 +1,7 @@
 import { FC, useEffect, useRef } from "react";
-import {
-  Controller,
-  SubmitHandler,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { IFoodElementary, IIngredient } from "../../../../global/types/types";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Select from "react-select";
-import AsyncSelect from "react-select/async";
-import NoOptionsMessage from "../../../../components/NoOptionsMessage/NoOptionsMessage";
-import { Player } from "@lordicon/react";
-import DELETE_ICON from "../../../../global/assets/system-regular-39-trash.json";
 import {
   useAddElementaryMutation,
   useChangeElementaryWeightMutation,
@@ -19,12 +9,11 @@ import {
   useDeleteElementaryMutation,
 } from "../../api/foodRecipe.api";
 import { useGetAllFoodElementaryQuery } from "../../../FoodElementaryModule";
-import {
-  editFoodRecipeValidationSchema,
-  selectStyles,
-} from "../../constants/constants";
+import { editFoodRecipeValidationSchema } from "../../constants/constants";
 import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated";
 import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated";
+import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField";
+import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
 
 type TProps = {
   foodRecipeId: string;
@@ -64,9 +53,6 @@ const FoodRecipeEditForm: FC<TProps> = ({
 }) => {
   const ingredientsForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
   const newIngredientsForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
-
-  const deleteIconPlayerRef = useRef<Player>(null);
-  const ICON_SIZE = 28;
 
   // Ingredients to delete
   const originalIngredientsToRemoveIdsRef = useRef<Array<String>>(new Array());
@@ -342,14 +328,14 @@ const FoodRecipeEditForm: FC<TProps> = ({
   };
 
   return (
-    <div className="w-full max-w-5xl flex flex-col justify-center items-start -mt-12">
+    <div className="w-full max-w-5xl flex flex-col justify-center items-start -mt-5">
       <form
         className="flex flex-col flex-wrap justify-center w-full"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="text-xl w-full flex-grow">
           <InputIlluminated
-            id={"foodRecipeName"}
+            id={"FoodRecipeEditForm_foodRecipeName"}
             type="text"
             placeholder="Название блюда"
             disableIllumination={true}
@@ -358,6 +344,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
               ...register("foodRecipeName"),
             }}
             isRequired={true}
+            labelSize={"text-lg"}
           />
         </div>
         {errors.foodRecipeName && (
@@ -376,232 +363,81 @@ const FoodRecipeEditForm: FC<TProps> = ({
           </div>
         )}
 
-        <div className="flex flex-col">
-          <h3 className="text-xl my-3">Ингредиенты:</h3>
-
-          {originalIngredientsFields.map((select, index) => {
+        <div className="flex flex-col mt-5">
+          {originalIngredientsFields.map((item, index) => {
             return (
-              <div
-                key={`FoodRecipeEditForm_div_originalIngredientsFields_${select.id}_${index}`}
-                className="form-control flex flex-col"
-              >
-                <div className="gap-x-3 flex mb-1">
-                  <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
-                    <span className="flex gap-x-1">
-                      <h3>Ингредиент</h3>
-                      <p className="text-red">*</p>
-                    </span>
-                    <Controller
-                      key={`FoodRecipeEditForm_controller_originalIngredientsFields_${select.id}_${index}`}
-                      name={
-                        `originalIngredientsList.${index}.ingredientInfo` as const
-                      }
-                      control={control}
-                      render={({ field }) => (
-                        <Select
-                          {...field}
-                          key={`FoodRecipeEditForm_select_originalIngredientsFields_${select.id}_${index}`}
-                          className="relative text-sm rounded-xl  "
-                          styles={selectStyles}
-                          isDisabled={true}
-                        />
-                      )}
-                    />
-                  </div>
-
-                  <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
-                    <InputIlluminated
-                      id={`originalIngredientsList.${index}.weight`}
-                      type="number"
-                      placeholder="Вес (г)"
-                      disableIllumination={true}
-                      additionalStyles=" h-[67px] border-0 "
-                      register={{
-                        ...register(
-                          `originalIngredientsList.${index}.weight` as const
-                        ),
-                      }}
-                      isRequired={true}
-                    />
-                  </div>
-
-                  <div className="max-w-[60px] flex flex-col justify-center items-center">
-                    <h3 className="text-lg my-3"> </h3>
-                    <ButtonIlluminated
-                      label={
-                        <span>
-                          <Player
-                            ref={deleteIconPlayerRef}
-                            icon={DELETE_ICON}
-                            size={ICON_SIZE}
-                            colorize="#f8f7f4"
-                          />
-                        </span>
-                      }
-                      isDarkButton={true}
-                      isIlluminationFull={false}
-                      onClick={() => {
-                        handleRemoveOriginalIngredient(index);
-                      }}
-                      buttonPadding=" p-[14px] "
-                      additionalStyles=" "
-                    />
-                  </div>
-                </div>
-
-                {errors.originalIngredientsList && (
-                  <div
-                    className={
-                      Object.keys(errors).length > 0 &&
-                      errors.originalIngredientsList[index]
-                        ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
-                        : "hidden"
-                    }
-                  >
-                    <p
-                      className={
-                        errors.originalIngredientsList[index]?.ingredientInfo
-                          ?.value
-                          ? "text-pink-500 "
-                          : " hidden "
-                      }
-                    >
-                      {
-                        errors.originalIngredientsList[index]?.ingredientInfo
-                          ?.value?.message
-                      }
-                    </p>
-                    <p
-                      className={
-                        errors.originalIngredientsList[index]?.weight
-                          ? "text-pink-500 "
-                          : " hidden "
-                      }
-                    >
-                      {errors.originalIngredientsList[index]?.weight?.message}
-                    </p>
-                  </div>
-                )}
-              </div>
+              <DisabledSelectRowWithWeightField
+                key={`FoodRecipeEditForm_div_originalIngredientsFields_${item.id}_${index}`}
+                itemId={item.id}
+                itemIndex={index}
+                label={"Ингредиент"}
+                selectPlaceholder={"Введите название ингредиента"}
+                handleRemoveItem={handleRemoveOriginalIngredient}
+                controllerName={
+                  `originalIngredientsList.${index}.ingredientInfo` as const
+                }
+                control={control}
+                register={{
+                  ...register(
+                    `originalIngredientsList.${index}.weight` as const
+                  ),
+                }}
+                errors={errors}
+                errorsGroup={errors.originalIngredientsList}
+                errorSelect={
+                  errors.originalIngredientsList?.[index]?.ingredientInfo?.value
+                }
+                errorFeild={errors.originalIngredientsList?.[index]?.weight}
+                isDeleteButtonDisabled={
+                  originalIngredientsFields.length +
+                    addIngredientsListFields.length <
+                  2
+                    ? true
+                    : false
+                }
+              />
             );
           })}
 
-          {addIngredientsListFields.map((select, index) => {
+          {addIngredientsListFields.map((item, index) => {
             return (
-              <div
-                key={`FoodRecipeEditForm_Div_addIngredientsList_${select.id}_${index}`}
-                className="form-control flex flex-col"
-              >
-                <div className="gap-x-3 flex mb-1">
-                  <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
-                    <span className="flex gap-x-1">
-                      <h3>Ингредиент</h3>
-                      <p className="text-red">*</p>
-                    </span>
-                    <Controller
-                      key={`FoodRecipeEditForm_Controller_addIngredientsList_${select.id}_${index}`}
-                      name={
-                        `addIngredientsList.${index}.ingredientInfo` as const
-                      }
-                      control={control}
-                      render={({ field }) => (
-                        <AsyncSelect
-                          {...field}
-                          key={`FoodRecipeEditForm_AsyncSelect_addIngredientsList_${select.id}_${index}`}
-                          className="relative text-sm rounded-xl  "
-                          components={{ NoOptionsMessage }}
-                          styles={selectStyles}
-                          placeholder="Введите название ингредиента"
-                          loadOptions={loadOptions}
-                          onInputChange={handleOnInputChange}
-                          onChange={(newValue) => {
-                            handleOnChange(newValue as TSelectElement, index);
-                            field.onChange(newValue);
-                          }}
-                        />
-                      )}
-                    />
-                  </div>
-
-                  <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
-                    <InputIlluminated
-                      id={`FoodRecipeEditForm_addIngredientsList.${index}.weight`}
-                      type="number"
-                      placeholder="Вес (г)"
-                      disableIllumination={true}
-                      additionalStyles=" h-[67px] border-0 "
-                      register={{
-                        ...register(
-                          `addIngredientsList.${index}.weight` as const
-                        ),
-                      }}
-                      isRequired={true}
-                    />
-                  </div>
-
-                  <div className="max-w-[60px] flex flex-col justify-center items-center">
-                    <h3 className="text-lg my-3"> </h3>
-                    <ButtonIlluminated
-                      label={
-                        <span>
-                          <Player
-                            ref={deleteIconPlayerRef}
-                            icon={DELETE_ICON}
-                            size={ICON_SIZE}
-                            colorize="#f8f7f4"
-                          />
-                        </span>
-                      }
-                      isDarkButton={true}
-                      isIlluminationFull={false}
-                      onClick={() => {
-                        handleRemoveIngredientToAdd(index);
-                      }}
-                      buttonPadding=" p-[14px] "
-                      additionalStyles=" "
-                    />
-                  </div>
-                </div>
-
-                {errors.addIngredientsList && (
-                  <div
-                    className={
-                      Object.keys(errors).length > 0 &&
-                      errors.addIngredientsList[index]
-                        ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
-                        : "hidden"
-                    }
-                  >
-                    <p
-                      className={
-                        errors.addIngredientsList[index]?.ingredientInfo?.value
-                          ? "text-pink-500 "
-                          : " hidden "
-                      }
-                    >
-                      {
-                        errors.addIngredientsList[index]?.ingredientInfo?.value
-                          ?.message
-                      }
-                    </p>
-                    <p
-                      className={
-                        errors.addIngredientsList[index]?.weight
-                          ? "text-pink-500 "
-                          : " hidden "
-                      }
-                    >
-                      {errors.addIngredientsList[index]?.weight?.message}
-                    </p>
-                  </div>
-                )}
-              </div>
+              <AsyncSelectRowWithWeightField
+                key={`FoodRecipeEditForm_Div_addIngredientsList_${item.id}_${index}`}
+                itemId={item.id}
+                itemIndex={index}
+                label={"Ингредиент"}
+                selectPlaceholder={"Введите название ингредиента"}
+                handleRemoveItem={handleRemoveIngredientToAdd}
+                controllerName={
+                  `addIngredientsList.${index}.ingredientInfo` as const
+                }
+                control={control}
+                register={{
+                  ...register(`addIngredientsList.${index}.weight` as const),
+                }}
+                errors={errors}
+                errorsGroup={errors.addIngredientsList}
+                errorSelect={
+                  errors.addIngredientsList?.[index]?.ingredientInfo?.value
+                }
+                errorFeild={errors.addIngredientsList?.[index]?.weight}
+                loadSelectOptions={loadOptions}
+                handleOnSelectInputChange={handleOnInputChange}
+                handleOnSelectValueChange={handleOnChange}
+                isDeleteButtonDisabled={
+                  originalIngredientsFields.length +
+                    addIngredientsListFields.length <
+                  2
+                    ? true
+                    : false
+                }
+              />
             );
           })}
 
-          <div className="w-full max-w-[280px]">
+          <div className="w-full max-w-[280px] mt-3">
             <ButtonIlluminated
-              label={"Еще одно блюдо"}
+              label={"Еще один ингредиент"}
               isDarkButton={true}
               isIlluminationFull={false}
               onClick={() => {
@@ -611,13 +447,14 @@ const FoodRecipeEditForm: FC<TProps> = ({
                   weight: 0,
                 });
               }}
-              buttonPadding=" p-[14px] "
+              buttonPadding=" p-[12px] "
               additionalStyles=""
+              isIttuminationDisabled={true}
             />
           </div>
         </div>
 
-        <div className="mt-9 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
+        <div className="mt-5 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
           <span className="flex-grow">
             <ButtonIlluminated
               label="Сохранить"
@@ -627,6 +464,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
               type="submit"
               additionalStyles=""
               isDisabled={checkIfFilledRight() ? false : true}
+              isIttuminationDisabled={true}
             />
           </span>
           <span className="flex-grow">
@@ -637,7 +475,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
               onClick={() => {
                 setIsEditMode(false);
               }}
-              buttonPadding=" p-4 "
+              isIttuminationDisabled={true}
             />
           </span>
         </div>
