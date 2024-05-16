@@ -284,6 +284,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                 ...register("foodElementaryName"),
               }}
               isRequired={true}
+              labelSize={"text-lg"}
             />
           </div>
           {errors.foodElementaryName && (
@@ -315,6 +316,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                 ...register("caloriesValue"),
               }}
               isRequired={true}
+              labelSize={"text-lg"}
             />
           </div>
           {errors.caloriesValue && (
@@ -340,6 +342,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                   key={`FoodElementaryCreateForm_div_defaultCharacteristicsFields_${item.id}_${index}`}
                   itemId={item.id}
                   itemIndex={index}
+                  label={"Нутриент"}
                   selectPlaceholder={"Введите название нутриента"}
                   handleRemoveItem={(_) => {}}
                   controllerName={
@@ -372,6 +375,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                   key={`FoodElementaryCreateForm_Div_addCharacteristicsList_${item.id}_${index}`}
                   itemId={item.id}
                   itemIndex={index}
+                  label={"Нутриент"}
                   selectPlaceholder={"Введите название нутриента"}
                   handleRemoveItem={handleRemoveCharacteristicToAdd}
                   controllerName={

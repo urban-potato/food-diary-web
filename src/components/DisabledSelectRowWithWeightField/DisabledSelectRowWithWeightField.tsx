@@ -10,6 +10,7 @@ import InputIlluminated from "../../ui/InputIlluminated/InputIlluminated";
 type TProps = {
   itemId: any;
   itemIndex: any;
+  label: any;
   selectPlaceholder: any;
   handleRemoveItem: any;
   controllerName: any;
@@ -25,6 +26,7 @@ type TProps = {
 const DisabledSelectRowWithWeightField: FC<TProps> = ({
   itemId,
   itemIndex,
+  label,
   selectPlaceholder,
   handleRemoveItem,
   controllerName,
@@ -43,8 +45,8 @@ const DisabledSelectRowWithWeightField: FC<TProps> = ({
     <div className="form-control flex flex-col mb-1">
       <div className="gap-x-3 flex items-end">
         <div className="flex flex-col justify-center gap-1 flex-grow">
-          <span className="flex gap-x-1">
-            <h3>Блюдо</h3>
+          <span className="flex gap-x-1 text-base">
+            <h3>{label}</h3>
             <p className="text-red">*</p>
           </span>
           <Controller

@@ -431,6 +431,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                       key={`MealCreateForm_Div_addFoodList_${item.id}_${index}`}
                       itemId={item.id}
                       itemIndex={index}
+                      label={"Блюдо"}
                       selectPlaceholder={"Введите название блюда"}
                       handleRemoveItem={handleRemoveFoodToAdd}
                       controllerName={`addFoodList.${index}.foodInfo` as const}

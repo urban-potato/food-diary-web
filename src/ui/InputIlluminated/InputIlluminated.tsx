@@ -16,6 +16,7 @@ type TProps = {
   additionalStyles?: string;
   isDisabled?: boolean;
   addSpaceAfterLabel?: boolean;
+  labelSize?: string;
 };
 
 const InputIlluminated: FC<TProps> = ({
@@ -34,6 +35,7 @@ const InputIlluminated: FC<TProps> = ({
   additionalStyles = "",
   isDisabled = false,
   addSpaceAfterLabel = false,
+  labelSize = "text-base",
   ...rest
 }) => {
   const illumination = {
@@ -62,7 +64,7 @@ const InputIlluminated: FC<TProps> = ({
   return (
     <div className=" ">
       <div className="flex mb-1">
-        <label htmlFor={id} className="block truncate ">
+        <label htmlFor={id} className={`block truncate ${labelSize}`}>
           <h3 className="flex gap-x-1 truncate">
             <p className="truncate">{placeholder}</p>
             <p className={isRequired ? "text-red" : "hidden"}>*</p>
