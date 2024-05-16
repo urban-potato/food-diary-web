@@ -1,19 +1,12 @@
 import { FC, useEffect, useRef, useState } from "react";
 import {
-  selectStyles,
   createValidationSchema,
   selectMealTypeStyles,
 } from "../constants/constants";
-import {
-  Controller,
-  SubmitHandler,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
 import { useGetAllFoodElementaryQuery } from "../../FoodElementaryModule";
-import AsyncSelect from "react-select/async";
 import Select from "react-select";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
 import {
@@ -24,7 +17,6 @@ import {
   useLazyGetCourseMealDayByDateQuery,
 } from "../api/meals.api";
 import { Player } from "@lordicon/react";
-import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import { getNowTime } from "../helpers/helpers";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
 import { useGetAllFoodRecipeQuery } from "../../FoodRecipeModule/api/foodRecipe.api";
@@ -73,9 +65,6 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     useState<TSelectOption | null>(null);
 
   const newFoodForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
-
-  const deleteIconPlayerRef = useRef<Player>(null);
-  const ICON_SIZE = 28;
 
   const [doLazyGetCourseMealDayByDate] = useLazyGetCourseMealDayByDateQuery();
   const [doCreateCourseMealDay] = useCreateCourseMealDayMutation();
@@ -446,6 +435,9 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                       loadSelectOptions={loadOptions}
                       handleOnSelectInputChange={handleOnInputChange}
                       handleOnSelectValueChange={handleOnChange}
+                      isDeleteButtonDisabled={
+                        addFoodListFields.length < 2 ? true : false
+                      }
                     />
                   );
                 })}
