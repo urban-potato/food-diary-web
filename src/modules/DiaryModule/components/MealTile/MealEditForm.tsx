@@ -38,6 +38,8 @@ import {
 } from "../../../../global/types/types";
 import { useGetAllMealTypesQuery } from "../../api/mealTypes.api";
 import Preloader from "../../../../components/Preloader/Preloader";
+import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField";
+import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
 
 type TProps = {
   courseMealId: string;
@@ -579,8 +581,8 @@ const MealEditForm: FC<TProps> = ({
           </div>
         ) : (
           <>
-            <div className="w-full flex-grow flex justify-center items-end gap-2 mb-5">
-              <div className="gap-x-3 flex flex-col justify-center w-full h-full gap-2 flex-grow ">
+            <div className="w-full flex-grow flex justify-center items-end gap-y-1 gap-x-3 mb-5 -mt-5">
+              <div className="flex flex-col justify-center w-full h-full gap-1 flex-grow">
                 <span className="flex gap-x-1">
                   <h3>Тип</h3>
                   <p className="text-red">*</p>
@@ -606,336 +608,89 @@ const MealEditForm: FC<TProps> = ({
             </div>
 
             <div className="flex flex-col">
-              {originalElementaryFields.map((select, index) => {
+              {originalElementaryFields.map((item, index) => {
                 return (
-                  <div
-                    key={`MealEditForm_div_originalElementaryFields_${select.id}_${index}`}
-                    className="form-control flex flex-col"
-                  >
-                    <div className="gap-x-3 flex mb-1">
-                      <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
-                        <span className="flex gap-x-1">
-                          <h3>Блюдо</h3>
-                          <p className="text-red">*</p>
-                        </span>
-                        <Controller
-                          key={`MealEditForm_controller_originalElementaryFields_${select.id}_${index}`}
-                          name={
-                            `originalFoodElementaryList.${index}.foodElementaryId` as const
-                          }
-                          control={control}
-                          render={({ field }) => (
-                            <Select
-                              {...field}
-                              key={`MealEditForm_select_originalElementaryFields_${select.id}_${index}`}
-                              className="relative text-sm rounded-xl  "
-                              styles={selectStyles}
-                              isDisabled={true}
-                            />
-                          )}
-                        />
-                      </div>
-
-                      <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
-                        <InputIlluminated
-                          id={`originalFoodElementaryList.${index}.weight`}
-                          type="number"
-                          placeholder="Вес (г)"
-                          disableIllumination={true}
-                          additionalStyles=" h-[67px] border-0 "
-                          register={{
-                            ...register(
-                              `originalFoodElementaryList.${index}.weight` as const
-                            ),
-                          }}
-                          isRequired={true}
-                        />
-                      </div>
-
-                      <div className="max-w-[60px] flex flex-col justify-center items-center">
-                        <h3 className="text-lg my-3"> </h3>
-                        <ButtonIlluminated
-                          label={
-                            <span>
-                              <Player
-                                ref={deleteIconPlayerRef}
-                                icon={DELETE_ICON}
-                                size={ICON_SIZE}
-                                colorize="#f8f7f4"
-                              />
-                            </span>
-                          }
-                          isDarkButton={true}
-                          isIlluminationFull={false}
-                          onClick={() => {
-                            handleRemoveOriginalElementary(index);
-                          }}
-                          buttonPadding=" p-[14px] "
-                          additionalStyles=" "
-                        />
-                      </div>
-                    </div>
-
-                    {errors.originalFoodElementaryList && (
-                      <div
-                        className={
-                          Object.keys(errors).length > 0 &&
-                          errors.originalFoodElementaryList[index]
-                            ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
-                            : "hidden"
-                        }
-                      >
-                        <p
-                          className={
-                            errors.originalFoodElementaryList[index]
-                              ?.foodElementaryId?.value
-                              ? "text-pink-500 "
-                              : " hidden "
-                          }
-                        >
-                          {
-                            errors.originalFoodElementaryList[index]
-                              ?.foodElementaryId?.value?.message
-                          }
-                        </p>
-                        <p
-                          className={
-                            errors.originalFoodElementaryList[index]?.weight
-                              ? "text-pink-500 "
-                              : " hidden "
-                          }
-                        >
-                          {
-                            errors.originalFoodElementaryList[index]?.weight
-                              ?.message
-                          }
-                        </p>
-                      </div>
-                    )}
-                  </div>
+                  <DisabledSelectRowWithWeightField
+                    key={`MealEditForm_div_originalElementaryFields_${item.id}_${index}`}
+                    itemId={item.id}
+                    itemIndex={index}
+                    selectPlaceholder={"Введите название блюда"}
+                    handleRemoveItem={handleRemoveOriginalElementary}
+                    controllerName={
+                      `originalFoodElementaryList.${index}.foodElementaryId` as const
+                    }
+                    control={control}
+                    register={{
+                      ...register(
+                        `originalFoodElementaryList.${index}.weight` as const
+                      ),
+                    }}
+                    errors={errors}
+                    errorsGroup={errors.originalFoodElementaryList}
+                    errorSelect={
+                      errors.originalFoodElementaryList?.[index]
+                        ?.foodElementaryId?.value
+                    }
+                    errorFeild={
+                      errors.originalFoodElementaryList?.[index]?.weight
+                    }
+                  />
                 );
               })}
 
-              {originalRecipeFields.map((select, index) => {
+              {originalRecipeFields.map((item, index) => {
                 return (
-                  <div
-                    key={`MealEditForm_div_originalRecipeFields_${select.id}_${index}`}
-                    className="form-control flex flex-col"
-                  >
-                    <div className="gap-x-3 flex mb-1">
-                      <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
-                        <span className="flex gap-x-1">
-                          <h3>Блюдо</h3>
-                          <p className="text-red">*</p>
-                        </span>
-                        <Controller
-                          key={`MealEditForm_controller_originalRecipeFields_${select.id}_${index}`}
-                          name={
-                            `originalFoodRecipeList.${index}.foodRecipeId` as const
-                          }
-                          control={control}
-                          render={({ field }) => (
-                            <Select
-                              {...field}
-                              key={`MealEditForm_select_originalRecipeFields_${select.id}_${index}`}
-                              className="relative text-sm rounded-xl  "
-                              styles={selectStyles}
-                              isDisabled={true}
-                            />
-                          )}
-                        />
-                      </div>
-
-                      <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
-                        <InputIlluminated
-                          id={`originalFoodRecipeList.${index}.weight`}
-                          type="number"
-                          placeholder="Вес (г)"
-                          disableIllumination={true}
-                          additionalStyles=" h-[67px] border-0 "
-                          register={{
-                            ...register(
-                              `originalFoodRecipeList.${index}.weight` as const
-                            ),
-                          }}
-                          isRequired={true}
-                        />
-                      </div>
-
-                      <div className="max-w-[60px] flex flex-col justify-center items-center">
-                        <h3 className="text-lg my-3"> </h3>
-                        <ButtonIlluminated
-                          label={
-                            <span>
-                              <Player
-                                ref={deleteIconPlayerRef}
-                                icon={DELETE_ICON}
-                                size={ICON_SIZE}
-                                colorize="#f8f7f4"
-                              />
-                            </span>
-                          }
-                          isDarkButton={true}
-                          isIlluminationFull={false}
-                          onClick={() => {
-                            handleRemoveOriginalRecipe(index);
-                          }}
-                          buttonPadding=" p-[14px] "
-                          additionalStyles=" "
-                        />
-                      </div>
-                    </div>
-
-                    {errors.originalFoodRecipeList && (
-                      <div
-                        className={
-                          Object.keys(errors).length > 0 &&
-                          errors.originalFoodRecipeList[index]
-                            ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
-                            : "hidden"
-                        }
-                      >
-                        <p
-                          className={
-                            errors.originalFoodRecipeList[index]?.foodRecipeId
-                              ?.value
-                              ? "text-pink-500 "
-                              : " hidden "
-                          }
-                        >
-                          {
-                            errors.originalFoodRecipeList[index]?.foodRecipeId
-                              ?.value?.message
-                          }
-                        </p>
-                        <p
-                          className={
-                            errors.originalFoodRecipeList[index]?.weight
-                              ? "text-pink-500 "
-                              : " hidden "
-                          }
-                        >
-                          {
-                            errors.originalFoodRecipeList[index]?.weight
-                              ?.message
-                          }
-                        </p>
-                      </div>
-                    )}
-                  </div>
+                  <DisabledSelectRowWithWeightField
+                    key={`MealEditForm_div_originalRecipeFields_${item.id}_${index}`}
+                    itemId={item.id}
+                    itemIndex={index}
+                    selectPlaceholder={"Введите название блюда"}
+                    handleRemoveItem={handleRemoveOriginalRecipe}
+                    controllerName={
+                      `originalFoodRecipeList.${index}.foodRecipeId` as const
+                    }
+                    control={control}
+                    register={{
+                      ...register(
+                        `originalFoodRecipeList.${index}.weight` as const
+                      ),
+                    }}
+                    errors={errors}
+                    errorsGroup={errors.originalFoodRecipeList}
+                    errorSelect={
+                      errors.originalFoodRecipeList?.[index]?.foodRecipeId
+                        ?.value
+                    }
+                    errorFeild={errors.originalFoodRecipeList?.[index]?.weight}
+                  />
                 );
               })}
 
-              {addFoodListFields.map((select, index) => {
+              {addFoodListFields.map((item, index) => {
                 return (
-                  <div
-                    key={`MealEditForm_Div_addFoodList_${select.id}_${index}`}
-                    className="form-control flex flex-col"
-                  >
-                    <div className="gap-x-3 flex mb-1">
-                      <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
-                        <span className="flex gap-x-1">
-                          <h3>Блюдо</h3>
-                          <p className="text-red">*</p>
-                        </span>
-                        <Controller
-                          key={`MealEditForm_Controller_addFoodList_${select.id}_${index}`}
-                          name={`addFoodList.${index}.foodInfo` as const}
-                          control={control}
-                          render={({ field }) => (
-                            <AsyncSelect
-                              {...field}
-                              key={`MealEditForm_AsyncSelect_addFoodList_${select.id}_${index}`}
-                              className="relative text-sm rounded-xl  "
-                              components={{ NoOptionsMessage }}
-                              styles={selectStyles}
-                              placeholder="Введите название блюда"
-                              loadOptions={loadOptions}
-                              onInputChange={handleOnInputChange}
-                              onChange={(newValue) => {
-                                handleOnChange(
-                                  newValue as TSelectElement,
-                                  index
-                                );
-                                field.onChange(newValue);
-                              }}
-                            />
-                          )}
-                        />
-                      </div>
-
-                      <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
-                        <InputIlluminated
-                          id={`MealEditForm_addFoodList.${index}.weight`}
-                          type="number"
-                          placeholder="Вес (г)"
-                          disableIllumination={true}
-                          additionalStyles=" h-[67px] border-0 "
-                          register={{
-                            ...register(`addFoodList.${index}.weight` as const),
-                          }}
-                          isRequired={true}
-                        />
-                      </div>
-
-                      <div className="max-w-[60px] flex flex-col justify-center items-center">
-                        <h3 className="text-lg my-3"> </h3>
-                        <ButtonIlluminated
-                          label={
-                            <span>
-                              <Player
-                                ref={deleteIconPlayerRef}
-                                icon={DELETE_ICON}
-                                size={ICON_SIZE}
-                                colorize="#f8f7f4"
-                              />
-                            </span>
-                          }
-                          isDarkButton={true}
-                          isIlluminationFull={false}
-                          onClick={() => {
-                            handleRemoveFoodToAdd(index);
-                          }}
-                          buttonPadding=" p-[14px] "
-                          additionalStyles=" "
-                        />
-                      </div>
-                    </div>
-
-                    {errors.addFoodList && (
-                      <div
-                        className={
-                          Object.keys(errors).length > 0 &&
-                          errors.addFoodList[index]
-                            ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
-                            : "hidden"
-                        }
-                      >
-                        <p
-                          className={
-                            errors.addFoodList[index]?.foodInfo?.value
-                              ? "text-pink-500 "
-                              : " hidden "
-                          }
-                        >
-                          {errors.addFoodList[index]?.foodInfo?.value?.message}
-                        </p>
-                        <p
-                          className={
-                            errors.addFoodList[index]?.weight
-                              ? "text-pink-500 "
-                              : " hidden "
-                          }
-                        >
-                          {errors.addFoodList[index]?.weight?.message}
-                        </p>
-                      </div>
-                    )}
-                  </div>
+                  <AsyncSelectRowWithWeightField
+                    key={`MealEditForm_Div_addFoodList_${item.id}_${index}`}
+                    itemId={item.id}
+                    itemIndex={index}
+                    selectPlaceholder={"Введите название блюда"}
+                    handleRemoveItem={handleRemoveFoodToAdd}
+                    controllerName={`addFoodList.${index}.foodInfo` as const}
+                    control={control}
+                    register={{
+                      ...register(`addFoodList.${index}.weight` as const),
+                    }}
+                    errors={errors}
+                    errorsGroup={errors.addFoodList}
+                    errorSelect={errors.addFoodList?.[index]?.foodInfo?.value}
+                    errorFeild={errors.addFoodList?.[index]?.weight}
+                    loadSelectOptions={loadOptions}
+                    handleOnSelectInputChange={handleOnInputChange}
+                    handleOnSelectValueChange={handleOnChange}
+                  />
                 );
               })}
 
-              <div className="w-full max-w-[280px]">
+              <div className="w-full max-w-[280px] mt-3">
                 <ButtonIlluminated
                   label={"Еще одно блюдо"}
                   isDarkButton={true}
@@ -947,13 +702,14 @@ const MealEditForm: FC<TProps> = ({
                       weight: 0,
                     });
                   }}
-                  buttonPadding=" p-[14px] "
+                  buttonPadding=" p-[12px] "
                   additionalStyles=""
+                  isIttuminationDisabled={true}
                 />
               </div>
             </div>
 
-            <div className="mt-7 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
+            <div className="mt-5 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
               <span className="flex-grow">
                 <ButtonIlluminated
                   label="Сохранить"
@@ -963,6 +719,7 @@ const MealEditForm: FC<TProps> = ({
                   type="submit"
                   additionalStyles=""
                   isDisabled={checkIfFilledRight() ? false : true}
+                  isIttuminationDisabled={true}
                 />
               </span>
               <span className="flex-grow">
@@ -973,7 +730,7 @@ const MealEditForm: FC<TProps> = ({
                   onClick={() => {
                     setIsEditMode(false);
                   }}
-                  buttonPadding=" p-4 "
+                  isIttuminationDisabled={true}
                 />
               </span>
             </div>

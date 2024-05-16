@@ -398,7 +398,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                   )}
                 </div>
 
-                <div className="  flex flex-col justify-center w-full h-full gap-1 flex-grow ">
+                <div className="flex flex-col justify-center w-full h-full gap-1 flex-grow">
                   <span className="flex gap-x-1">
                     <h3>Тип</h3>
                     <p className="text-red">*</p>
@@ -501,7 +501,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                             isDisabled={
                               addFoodListFields.length > 1 ? false : true
                             }
-                            idIttuminationDisabled={true}
+                            isIttuminationDisabled={true}
                           />
                         </div>
                       </div>
@@ -556,7 +556,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                     }}
                     buttonPadding=" p-[14px] "
                     additionalStyles=""
-                    idIttuminationDisabled={true}
+                    isIttuminationDisabled={true}
                   />
                 </div>
               </div>
@@ -570,7 +570,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                   type="submit"
                   additionalStyles=""
                   isDisabled={checkIfFilledRight() ? false : true}
-                  idIttuminationDisabled={true}
+                  isIttuminationDisabled={true}
                 />
               </div>
             </>

@@ -66,13 +66,13 @@ const ButtonIlluminated: FC<ButtonIIlluminatedProps> = ({
   type = "submit",
   buttonPadding = " p-5 ",
   isDisabled = false,
-  idIttuminationDisabled = false,
+  isIttuminationDisabled = false,
 }) => {
   return (
     <div className=" relative group/illuminatedButton flex ">
       <div
         className={
-          isDisabled || idIttuminationDisabled
+          isDisabled || isIttuminationDisabled
             ? illumination.disabled + inset
             : isIlluminationFull
             ? illumination.full + inset
