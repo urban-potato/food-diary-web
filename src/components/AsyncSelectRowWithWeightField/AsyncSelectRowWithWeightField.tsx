@@ -9,22 +9,23 @@ import DELETE_ICON from "../../global/assets/system-regular-39-trash.json";
 import { FC, useRef } from "react";
 
 type TProps = {
-    itemId: any;
-    itemIndex: any;
-    label: any;
-    selectPlaceholder: any;
-    handleRemoveItem: any;
-    controllerName: any;
-    control: any;
-    register: any;
-    errors: any;
-    errorsGroup: any;
-    errorSelect: any;
-    errorFeild: any;
-    loadSelectOptions: any;
-    handleOnSelectInputChange: any;
-    handleOnSelectValueChange: any;
-  };
+  itemId: any;
+  itemIndex: any;
+  label: any;
+  selectPlaceholder: any;
+  handleRemoveItem: any;
+  controllerName: any;
+  control: any;
+  register: any;
+  errors: any;
+  errorsGroup: any;
+  errorSelect: any;
+  errorFeild: any;
+  loadSelectOptions: any;
+  handleOnSelectInputChange: any;
+  handleOnSelectValueChange: any;
+  isDeleteButtonDisabled?: boolean;
+};
 
 const AsyncSelectRowWithWeightField: FC<TProps> = ({
   itemId,
@@ -42,6 +43,7 @@ const AsyncSelectRowWithWeightField: FC<TProps> = ({
   loadSelectOptions,
   handleOnSelectInputChange,
   handleOnSelectValueChange,
+  isDeleteButtonDisabled = false,
 }) => {
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
@@ -108,6 +110,7 @@ const AsyncSelectRowWithWeightField: FC<TProps> = ({
             buttonPadding=" p-[12px] "
             additionalStyles=" "
             isIttuminationDisabled={true}
+            isDisabled={isDeleteButtonDisabled}
           />
         </div>
       </div>
