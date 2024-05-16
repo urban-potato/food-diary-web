@@ -1,15 +1,6 @@
 import { FC, useEffect, useRef } from "react";
-import { Player } from "@lordicon/react";
-import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Controller,
-  SubmitHandler,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
-import Select from "react-select";
-import AsyncSelect from "react-select/async";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { useCreateFoodElementaryMutation } from "../api/foodElementary.api";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
@@ -23,10 +14,10 @@ import {
   CARBOHYDRATE_DEFAULT_ID,
   FAT_DEFAULT_ID,
   PROTEIN_DEFAULT_ID,
-  SELECT_STYLES,
 } from "../../../global/constants/constants.ts";
-import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage.tsx";
 import { sortConsumedCharacteristics } from "../../../global/helpers/sort_characteristics.helper.ts";
+import DisabledSelectRowWithWeightField from "../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField.tsx";
+import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField.tsx";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -60,9 +51,6 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
   const newCharacteristicsForbiddenToAddIdsRef = useRef<Array<String>>(
     new Array()
   );
-
-  const deleteIconPlayerRef = useRef<Player>(null);
-  const ICON_SIZE = 28;
 
   const [doCreateFoodElementary] = useCreateFoodElementaryMutation();
   const [doAddFoodCharacteristic] = useAddFoodCharacteristicMutation();
@@ -237,35 +225,6 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     }
   };
 
-  const checkIfFilledRight = () => {
-    const foodElementaryNameFilled = getValues("foodElementaryName");
-    const caloriesValueFilled = getValues("caloriesValue").toString();
-    const emptyCharacteristics = getValues("addCharacteristicsList")?.find(
-      (item) => item.characteristicInfo === undefined
-    );
-
-    const isAllCharacteristicsListsEmply =
-      !getValues("addCharacteristicsList")?.length &&
-      !getValues("defaultCharacteristicsList")?.length;
-
-    let addCharacteristicValueErrors = errors?.addCharacteristicsList;
-    let defaultCharacteristicValueErrors = errors?.defaultCharacteristicsList;
-
-    let result =
-      foodElementaryNameFilled &&
-      !errors?.foodElementaryName &&
-      caloriesValueFilled &&
-      !errors?.caloriesValue &&
-      !emptyCharacteristics &&
-      !addCharacteristicValueErrors &&
-      !defaultCharacteristicValueErrors &&
-      !isAllCharacteristicsListsEmply
-        ? true
-        : false;
-
-    return result;
-  };
-
   useEffect(() => {
     if (isSuccessGetAllFoodCharacteristicTypes) {
       const defaultCharacteristics: IFoodCharacteristicType[] =
@@ -308,10 +267,10 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     <section className="flex-grow-100 w-full flex flex-col flex-wrap justify-center items-center mb-3">
       <h2 className="mt-4 mb-3">Создать простое блюдо</h2>
 
-      <div className="group relative w-full max-w-5xl">
+      <div className="outer_box_style group w-full max-w-5xl mt-5">
         <div className="box_style"></div>
         <form
-          className="box_content_transition flex flex-col flex-wrap justify-center w-full px-7 pt-5 pb-8"
+          className="box_content_transition flex flex-col flex-wrap w-full justify-center p-7"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="text-xl w-full flex-grow">
@@ -345,7 +304,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
             </div>
           )}
 
-          <div className="text-xl w-full flex-grow">
+          <div className="text-xl w-full flex-grow mt-2 mb-5">
             <InputIlluminated
               id={"FoodElementaryCreateForm_caloriesValue"}
               type="number"
@@ -375,250 +334,84 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
           )}
 
           <div className="flex flex-col">
-            <h3 className="text-xl my-3">Нутриенты:</h3>
-
-            {defaultCharacteristicsFields.map((select, index) => {
+            {defaultCharacteristicsFields.map((item, index) => {
               return (
-                <div
-                  key={`FoodElementaryCreateForm_div_defaultCharacteristicsFields_${select.id}_${index}`}
-                  className="form-control flex flex-col"
-                >
-                  <div className="gap-x-3 flex mb-1">
-                    <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
-                      <span className="flex gap-x-1">
-                        <h3>Нутриент</h3>
-                        <p className="text-red">*</p>
-                      </span>
-                      <Controller
-                        key={`FoodElementaryCreateForm_controller_defaultCharacteristicsFields_${select.id}_${index}`}
-                        name={
-                          `defaultCharacteristicsList.${index}.characteristicInfo` as const
-                        }
-                        control={control}
-                        render={({ field }) => (
-                          <Select
-                            {...field}
-                            key={`FoodElementaryCreateForm_select_defaultCharacteristicsFields_${select.id}_${index}`}
-                            className="relative text-sm rounded-xl  "
-                            styles={SELECT_STYLES}
-                            isDisabled={true}
-                          />
-                        )}
-                      />
-                    </div>
-
-                    <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
-                      <InputIlluminated
-                        id={`originalCharacteristicsList.${index}.characteristicValue`}
-                        type="number"
-                        placeholder="Вес (г)"
-                        disableIllumination={true}
-                        additionalStyles=" h-[67px] border-0 "
-                        register={{
-                          ...register(
-                            `defaultCharacteristicsList.${index}.characteristicValue` as const
-                          ),
-                        }}
-                        isRequired={true}
-                      />
-                    </div>
-
-                    <div className="max-w-[60px] flex flex-col justify-center items-center">
-                      <h3 className="text-lg my-3"> </h3>
-                      <ButtonIlluminated
-                        label={
-                          <span>
-                            <Player
-                              ref={deleteIconPlayerRef}
-                              icon={DELETE_ICON}
-                              size={ICON_SIZE}
-                              colorize="#f8f7f4"
-                            />
-                          </span>
-                        }
-                        isDarkButton={true}
-                        isIlluminationFull={false}
-                        onClick={() => {}}
-                        buttonPadding=" p-[14px] "
-                        additionalStyles=" "
-                        isDisabled={true}
-                      />
-                    </div>
-                  </div>
-
-                  {errors.defaultCharacteristicsList && (
-                    <div
-                      className={
-                        Object.keys(errors).length > 0 &&
-                        errors.defaultCharacteristicsList[index]
-                          ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
-                          : "hidden"
-                      }
-                    >
-                      <p
-                        className={
-                          errors.defaultCharacteristicsList[index]
-                            ?.characteristicInfo?.value
-                            ? "text-pink-500 "
-                            : " hidden "
-                        }
-                      >
-                        {
-                          errors.defaultCharacteristicsList[index]
-                            ?.characteristicInfo?.value?.message
-                        }
-                      </p>
-                      <p
-                        className={
-                          errors.defaultCharacteristicsList[index]
-                            ?.characteristicValue
-                            ? "text-pink-500 "
-                            : " hidden "
-                        }
-                      >
-                        {
-                          errors.defaultCharacteristicsList[index]
-                            ?.characteristicValue?.message
-                        }
-                      </p>
-                    </div>
-                  )}
-                </div>
+                <DisabledSelectRowWithWeightField
+                  key={`FoodElementaryCreateForm_div_defaultCharacteristicsFields_${item.id}_${index}`}
+                  itemId={item.id}
+                  itemIndex={index}
+                  selectPlaceholder={"Введите название нутриента"}
+                  handleRemoveItem={(_) => {}}
+                  controllerName={
+                    `defaultCharacteristicsList.${index}.characteristicInfo` as const
+                  }
+                  control={control}
+                  register={{
+                    ...register(
+                      `defaultCharacteristicsList.${index}.characteristicValue` as const
+                    ),
+                  }}
+                  errors={errors}
+                  errorsGroup={errors.defaultCharacteristicsList}
+                  errorSelect={
+                    errors.defaultCharacteristicsList?.[index]
+                      ?.characteristicInfo?.value
+                  }
+                  errorFeild={
+                    errors.defaultCharacteristicsList?.[index]
+                      ?.characteristicValue
+                  }
+                  isDeleteButtonDisabled={true}
+                />
               );
             })}
 
-            {addCharacteristicListFields.map((select, index) => {
+            {addCharacteristicListFields.map((item, index) => {
               return (
-                <div
-                  key={`FoodElementaryCreateForm_Div_addCharacteristicsList_${select.id}_${index}`}
-                  className="form-control flex flex-col"
-                >
-                  <div className="gap-x-3 flex mb-1">
-                    <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
-                      <span className="flex gap-x-1">
-                        <h3>Нутриент</h3>
-                        <p className="text-red">*</p>
-                      </span>
-                      <Controller
-                        key={`FoodElementaryCreateForm_Controller_addCharacteristicsList_${select.id}_${index}`}
-                        name={
-                          `addCharacteristicsList.${index}.characteristicInfo` as const
-                        }
-                        control={control}
-                        render={({ field }) => (
-                          <AsyncSelect
-                            {...field}
-                            key={`FoodElementaryCreateForm_AsyncSelect_addCharacteristicsList_${select.id}_${index}`}
-                            className="relative text-sm rounded-xl  "
-                            components={{ NoOptionsMessage }}
-                            styles={SELECT_STYLES}
-                            placeholder="Введите название нутриента"
-                            loadOptions={loadOptions}
-                            onInputChange={handleOnInputChange}
-                            onChange={(newValue) => {
-                              handleOnChange(newValue as TSelectElement, index);
-                              field.onChange(newValue);
-                            }}
-                          />
-                        )}
-                      />
-                    </div>
-
-                    <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
-                      <InputIlluminated
-                        id={`FoodElementaryCreateForm_addCharacteristicsList.${index}.characteristicValue`}
-                        type="number"
-                        placeholder="Вес (г)"
-                        disableIllumination={true}
-                        additionalStyles=" h-[67px] border-0 "
-                        register={{
-                          ...register(
-                            `addCharacteristicsList.${index}.characteristicValue` as const
-                          ),
-                        }}
-                        isRequired={true}
-                      />
-                    </div>
-
-                    <div className="max-w-[60px] flex flex-col justify-center items-center">
-                      <h3 className="text-lg my-3"> </h3>
-                      <ButtonIlluminated
-                        label={
-                          <span>
-                            <Player
-                              ref={deleteIconPlayerRef}
-                              icon={DELETE_ICON}
-                              size={ICON_SIZE}
-                              colorize="#f8f7f4"
-                            />
-                          </span>
-                        }
-                        isDarkButton={true}
-                        isIlluminationFull={false}
-                        onClick={() => {
-                          handleRemoveCharacteristicToAdd(index);
-                        }}
-                        buttonPadding=" p-[14px] "
-                        additionalStyles=" "
-                        // isDisabled={addFoodListFields.length > 1 ? false : true}
-                      />
-                    </div>
-                  </div>
-
-                  {errors.addCharacteristicsList && (
-                    <div
-                      className={
-                        Object.keys(errors).length > 0 &&
-                        errors.addCharacteristicsList[index]
-                          ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
-                          : "hidden"
-                      }
-                    >
-                      <p
-                        className={
-                          errors.addCharacteristicsList[index]
-                            ?.characteristicInfo?.value
-                            ? "text-pink-500 "
-                            : " hidden "
-                        }
-                      >
-                        {
-                          errors.addCharacteristicsList[index]
-                            ?.characteristicInfo?.value?.message
-                        }
-                      </p>
-                      <p
-                        className={
-                          errors.addCharacteristicsList[index]
-                            ?.characteristicValue
-                            ? "text-pink-500 "
-                            : " hidden "
-                        }
-                      >
-                        {
-                          errors.addCharacteristicsList[index]
-                            ?.characteristicValue?.message
-                        }
-                      </p>
-                    </div>
-                  )}
-                </div>
+                <AsyncSelectRowWithWeightField
+                  key={`FoodElementaryCreateForm_Div_addCharacteristicsList_${item.id}_${index}`}
+                  itemId={item.id}
+                  itemIndex={index}
+                  selectPlaceholder={"Введите название нутриента"}
+                  handleRemoveItem={handleRemoveCharacteristicToAdd}
+                  controllerName={
+                    `addCharacteristicsList.${index}.characteristicInfo` as const
+                  }
+                  control={control}
+                  register={{
+                    ...register(
+                      `addCharacteristicsList.${index}.characteristicValue` as const
+                    ),
+                  }}
+                  errors={errors}
+                  errorsGroup={errors.addCharacteristicsList}
+                  errorSelect={
+                    errors.addCharacteristicsList?.[index]?.characteristicInfo
+                      ?.value
+                  }
+                  errorFeild={
+                    errors.addCharacteristicsList?.[index]?.characteristicValue
+                  }
+                  loadSelectOptions={loadOptions}
+                  handleOnSelectInputChange={handleOnInputChange}
+                  handleOnSelectValueChange={handleOnChange}
+                />
               );
             })}
 
-            <div className="w-full max-w-[280px]">
+            <div className="w-full max-w-[280px] mt-3">
               <ButtonIlluminated
                 label={"Добавить нутриент"}
                 isDarkButton={true}
                 isIlluminationFull={false}
                 onClick={() => handleAddNutrient()}
-                buttonPadding=" p-[14px] "
+                buttonPadding=" p-[12px] "
                 additionalStyles=""
               />
             </div>
           </div>
 
-          <div className="mt-9">
+          <div className="mt-5">
             <ButtonIlluminated
               label="Сохранить"
               isDarkButton={true}
@@ -626,7 +419,6 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
               isButton={true}
               type="submit"
               additionalStyles=""
-              isDisabled={checkIfFilledRight() ? false : true}
             />
           </div>
         </form>
