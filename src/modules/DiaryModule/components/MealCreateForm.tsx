@@ -26,8 +26,7 @@ import {
 } from "../api/meals.api";
 import { Player } from "@lordicon/react";
 import DELETE_ICON from "../../../global/assets/system-regular-39-trash.json";
-import MealTypeOptions from "./MealTypeOptions";
-import { getFormattedDateTime, getNowTime } from "../helpers/helpers";
+import { getNowTime } from "../helpers/helpers";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
 import { useGetAllFoodRecipeQuery } from "../../FoodRecipeModule/api/foodRecipe.api";
 import {
@@ -45,10 +44,6 @@ type TProps = {
 
 type TMealCreateFormData = {
   creationTime: string;
-  // mealType: {
-  //   label: string;
-  //   value: string;
-  // };
   addFoodList: {
     foodInfo?: {
       label: string;
@@ -81,9 +76,6 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
 
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
-
-  // const [selectedMealTypeId, setSelectedMealTypeId] =
-  //   useState(BREAKFAST_DEFAULT_ID);
 
   const [doLazyGetCourseMealDayByDate] = useLazyGetCourseMealDayByDateQuery();
   const [doCreateCourseMealDay] = useCreateCourseMealDayMutation();
@@ -134,28 +126,13 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     callback(filteredOptions);
   };
 
-  // Meal Types for Async Select
+  // Meal Types for Select
   const {
     isLoading: isLoadingGetAllMealTypes,
     data: dataGetAllMealTypes,
     error: errorGetAllMealTypes,
     isSuccess: isSuccessGetAllMealTypes,
   } = useGetAllMealTypesQuery(undefined);
-
-  const loadOptionsMealTypes = (searchValue: string, callback: any) => {
-    // const filteredData: IMealType[] =
-    //   dataGetAllMealTypes?.items.filter((item: IFoodElementary) =>
-    //     item.name.toLowerCase().includes(searchValue.toLowerCase())
-    //   );
-
-    const filteredOptions = dataGetAllMealTypes?.items?.map(
-      (item: IMealType) => {
-        return { value: item.id, label: item.name };
-      }
-    );
-
-    callback(filteredOptions);
-  };
 
   // defaultValues
   let defaultValues = {

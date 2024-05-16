@@ -22,12 +22,6 @@ export const validValues = {
 
 export const createValidationSchema = yup.object({
   creationTime: yup.string().required(validValues.requiredErrorMessage),
-  // mealType: yup
-  //   .object({
-  //     label: yup.string().required(validValues.requiredErrorMessage),
-  //     value: yup.string().required(validValues.requiredErrorMessage),
-  //   })
-  //   .required(validValues.requiredErrorMessage),
   addFoodList: yup
     .array()
     .of(
