@@ -411,6 +411,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                 onClick={() => handleAddNutrient()}
                 buttonPadding=" p-[12px] "
                 additionalStyles=""
+                isIttuminationDisabled={true}
               />
             </div>
           </div>
@@ -423,6 +424,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
               isButton={true}
               type="submit"
               additionalStyles=""
+              isIttuminationDisabled={true}
             />
           </div>
         </form>

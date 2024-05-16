@@ -1,20 +1,15 @@
 import { useChangeFoodElementaryNameMutation } from "../../api/foodElementary.api.ts";
 import { editFoodElementaryValidationSchema } from "../../constants/constants.ts";
 import {
-  Controller,
   SubmitHandler,
   useFieldArray,
   useForm,
   useFormState,
 } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Select from "react-select";
-import AsyncSelect from "react-select/async";
 import { FC, useEffect, useRef } from "react";
 import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
 import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated.tsx";
-import { Player } from "@lordicon/react";
-import DELETE_ICON from "../../../../global/assets/system-regular-39-trash.json";
 import {
   useAddFoodCharacteristicMutation,
   useChangeFoodCharacteristicValueMutation,
@@ -28,9 +23,7 @@ import { useGetAllFoodCharacteristicTypesQuery } from "../../../UserModule/api/f
 import {
   BASIC_CHARACTERISTICS_IDS_LIST,
   CALORIES_DEFAULT_ID,
-  SELECT_STYLES,
 } from "../../../../global/constants/constants.ts";
-import NoOptionsMessage from "../../../../components/NoOptionsMessage/NoOptionsMessage.tsx";
 import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField.tsx";
 import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField.tsx";
 
@@ -85,10 +78,6 @@ const FoodElementaryEditForm: FC<TProps> = ({
   const originalCharacteristicsToRemoveRef = useRef<
     Array<TOriginalCharacteristic>
   >(new Array());
-
-  // const editIconPlayerRef = useRef<Player>(null);
-  const deleteIconPlayerRef = useRef<Player>(null);
-  const ICON_SIZE = 28;
 
   // Edit Food Elementary
   const [doChangeFoodElementaryName] = useChangeFoodElementaryNameMutation();
@@ -567,6 +556,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
               }}
               buttonPadding=" p-[12px] "
               additionalStyles=""
+              isIttuminationDisabled={true}
             />
           </div>
         </div>
@@ -581,6 +571,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
               type="submit"
               additionalStyles=""
               isDisabled={checkIfFilledRight() ? false : true}
+              isIttuminationDisabled={true}
             />
           </span>
           <span className="flex-grow">
@@ -591,7 +582,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
               onClick={() => {
                 setIsEditMode(false);
               }}
-              buttonPadding=" p-4 "
+              isIttuminationDisabled={true}
             />
           </span>
         </div>
