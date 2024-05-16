@@ -411,7 +411,11 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                       setSelectedMealTypeOption(newValue as TSelectOption)
                     }
                     options={mealTypeOptions}
-                    placeholder={<div className="text-black">Завтрак</div>}
+                    placeholder={
+                      <div className="text-black">
+                        {selectedMealTypeOption?.label}
+                      </div>
+                    }
                     className="relative text-sm rounded-xl"
                     components={{ NoOptionsMessage }}
                     styles={selectMealTypeStyles}
