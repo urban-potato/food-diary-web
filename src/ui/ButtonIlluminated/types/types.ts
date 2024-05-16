@@ -14,4 +14,5 @@ export interface ButtonIIlluminatedProps {
   type?: "submit" | "button" | "reset" | undefined;
   buttonPadding?: string;
   isDisabled?: boolean;
+  idIttuminationDisabled?: boolean;
 }

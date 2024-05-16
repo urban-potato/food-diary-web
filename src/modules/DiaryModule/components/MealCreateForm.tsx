@@ -1,6 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
 import {
-  BREAKFAST_DEFAULT_ID,
   selectStyles,
   createValidationSchema,
   selectMealTypeStyles,
@@ -355,10 +354,10 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     <section className="flex-grow-100 w-full flex flex-col flex-wrap justify-center items-center mb-3">
       <h2 className="mt-4 mb-3">Новая запись</h2>
 
-      <div className="group relative w-full max-w-5xl">
+      <div className="outer_box_style group w-full max-w-5xl mt-5">
         <div className="box_style"></div>
         <form
-          className="box_content_transition flex flex-col flex-wrap justify-center w-full px-7 pt-5 pb-8"
+          className="box_content_transition flex flex-col flex-wrap w-full justify-center p-7"
           onSubmit={handleSubmit(onSubmit)}
         >
           {isLoadingGetAllMealTypes ? (
@@ -367,7 +366,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
             </div>
           ) : (
             <>
-              <div className="w-full flex-grow flex flex-wrap sm:flex-nowrap justify-center items-end gap-2 mb-5">
+              <div className="w-full flex-grow flex flex-wrap sm:flex-nowrap justify-center items-start gap-y-1 gap-x-3 mb-5">
                 <div className="w-full">
                   <InputIlluminated
                     id={"FoodRecipeCreateForm_creationTime"}
@@ -384,22 +383,22 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                     <div
                       className={
                         Object.keys(errors).length > 0
-                          ? " flex flex-col gap-y-2 justify-center "
-                          : " hidden "
+                          ? "flex flex-col mt-1 gap-y-1 justify-center items-start"
+                          : "hidden"
                       }
                     >
                       <p
                         className={
-                          errors.creationTime ? "text-pink-500 " : " hidden "
+                          errors.creationTime ? "text-pink-500" : "hidden"
                         }
                       >
-                        {errors.creationTime?.message}
+                        {"• Время: " + errors.creationTime?.message}
                       </p>
                     </div>
                   )}
                 </div>
 
-                <div className=" gap-x-3 flex flex-col justify-center w-full h-full gap-2 flex-grow ">
+                <div className="  flex flex-col justify-center w-full h-full gap-1 flex-grow ">
                   <span className="flex gap-x-1">
                     <h3>Тип</h3>
                     <p className="text-red">*</p>
@@ -429,10 +428,10 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                   return (
                     <div
                       key={`MealCreateForm_Div_addFoodList_${select.id}_${index}`}
-                      className="form-control flex flex-col"
+                      className="form-control flex flex-col mb-1"
                     >
-                      <div className="gap-x-3 flex mb-1">
-                        <div className="flex flex-col justify-center gap-3 flex-grow mb-3">
+                      <div className="gap-x-3 flex items-end">
+                        <div className="flex flex-col justify-center gap-1 flex-grow">
                           <span className="flex gap-x-1">
                             <h3>Блюдо</h3>
                             <p className="text-red">*</p>
@@ -502,6 +501,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                             isDisabled={
                               addFoodListFields.length > 1 ? false : true
                             }
+                            idIttuminationDisabled={true}
                           />
                         </div>
                       </div>
@@ -511,15 +511,15 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                           className={
                             Object.keys(errors).length > 0 &&
                             errors.addFoodList[index]
-                              ? "flex flex-col mb-2 px-5 gap-y-2 justify-center"
+                              ? "flex flex-col mt-1 justify-center items-start"
                               : "hidden"
                           }
                         >
                           <p
                             className={
                               errors.addFoodList[index]?.foodInfo?.value
-                                ? "text-pink-500 "
-                                : " hidden "
+                                ? "text-pink-500"
+                                : "hidden"
                             }
                           >
                             {
@@ -530,8 +530,8 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                           <p
                             className={
                               errors.addFoodList[index]?.weight
-                                ? "text-pink-500 "
-                                : " hidden "
+                                ? "text-pink-500"
+                                : "hidden"
                             }
                           >
                             {errors.addFoodList[index]?.weight?.message}
@@ -542,7 +542,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                   );
                 })}
 
-                <div className="w-full max-w-[280px]">
+                <div className="w-full max-w-[280px] mt-3">
                   <ButtonIlluminated
                     label={"Еще одно блюдо"}
                     isDarkButton={true}
@@ -556,11 +556,12 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                     }}
                     buttonPadding=" p-[14px] "
                     additionalStyles=""
+                    idIttuminationDisabled={true}
                   />
                 </div>
               </div>
 
-              <div className="mt-9">
+              <div className="mt-5">
                 <ButtonIlluminated
                   label="Сохранить"
                   isDarkButton={true}
@@ -569,6 +570,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                   type="submit"
                   additionalStyles=""
                   isDisabled={checkIfFilledRight() ? false : true}
+                  idIttuminationDisabled={true}
                 />
               </div>
             </>

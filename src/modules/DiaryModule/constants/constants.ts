@@ -9,7 +9,6 @@ export const validValues = {
   requiredErrorMessage: "Обязательное поле",
   numberTypeErrorMessage: "Требуется ввести число",
   numberMustBePositiveErrorMessage: "Число должно быть положительным",
-  alreadyInMealErrorMessage: "• Блюдо: Уже присутствует в этой записи",
   weightValue: {
     min: {
       value: 0,
@@ -27,16 +26,16 @@ export const createValidationSchema = yup.object({
     .of(
       yup.object({
         foodInfo: yup.object({
-          label: yup.string().required(validValues.requiredErrorMessage),
-          value: yup.string().required(validValues.requiredErrorMessage),
+          label: yup.string().required("• Блюдо: " + validValues.requiredErrorMessage),
+          value: yup.string().required("• Блюдо: " + validValues.requiredErrorMessage),
           isElementary: yup.boolean(),
         }),
         // .required(validValues.requiredErrorMessage),
 
         weight: yup
           .number()
-          .required(validValues.requiredErrorMessage)
-          .typeError(validValues.numberTypeErrorMessage)
+          .required("• Вес: " + validValues.requiredErrorMessage)
+          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
           .min(
             validValues.weightValue.min.value,
             validValues.weightValue.min.message(

@@ -61,8 +61,8 @@ const InputIlluminated: FC<TProps> = ({
 
   return (
     <div className=" ">
-      <div className="flex">
-        <label htmlFor={id} className="truncate">
+      <div className="flex mb-1">
+        <label htmlFor={id} className="block truncate ">
           <h3 className="flex gap-x-1 truncate">
             <p className="truncate">{placeholder}</p>
             <p className={isRequired ? "text-red" : "hidden"}>*</p>

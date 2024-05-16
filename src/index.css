@@ -25,9 +25,9 @@
     text-near_black 
     w-full;
   }
-  label {
+  /* label {
     @apply block mt-5 mb-2;
-  }
+  } */
 }
 
 @layer components {
