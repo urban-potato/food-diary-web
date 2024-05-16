@@ -478,8 +478,8 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                           />
                         </div>
 
-                        <div className="max-w-[60px] flex flex-col justify-center items-center">
-                          <h3 className="text-lg my-3"> </h3>
+                        <div className="max-w-[50px] flex flex-col justify-center items-center self-center">
+                          <h3 className="text-lg my-4"> </h3>
                           <ButtonIlluminated
                             label={
                               <span>
@@ -496,7 +496,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                             onClick={() => {
                               handleRemoveFoodToAdd(index);
                             }}
-                            buttonPadding=" p-[14px] "
+                            buttonPadding=" p-[12px] "
                             additionalStyles=" "
                             isDisabled={
                               addFoodListFields.length > 1 ? false : true
