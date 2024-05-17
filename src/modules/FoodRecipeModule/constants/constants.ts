@@ -3,17 +3,18 @@ import * as yup from "yup";
 export const validValues = {
   requiredErrorMessage: "Обязательное поле",
   numberTypeErrorMessage: "Требуется ввести число",
+  integerTypeErrorMessage: "Требуется ввести целое число",
   numberMustBePositiveErrorMessage: "Число должно быть положительным",
   foodRecipeName: {
     min: {
       value: 1,
       message: (min: number) =>
-        `• Название блюда должно составлять от ${min} символа`,
+        `• Название блюда: Должно составлять от ${min} символа`,
     },
     max: {
       value: 256,
       message: (max: number) =>
-        `• Название блюда должно составлять до ${max} символов`,
+        `• Название блюда: Должно составлять до ${max} символов`,
     },
   },
   weightValue: {
@@ -41,7 +42,7 @@ export const createFoodRecipeValidationSchema = yup.object({
         validValues.foodRecipeName.max.value
       )
     )
-    .required(validValues.requiredErrorMessage),
+    .required("• Название блюда: " + validValues.requiredErrorMessage),
   addFoodList: yup
     .array()
     .of(
@@ -64,7 +65,7 @@ export const createFoodRecipeValidationSchema = yup.object({
               validValues.weightValue.min.value
             )
           )
-          .integer(),
+          .integer("• Вес: " + validValues.integerTypeErrorMessage),
       })
     )
     .required(),
@@ -85,7 +86,7 @@ export const editFoodRecipeValidationSchema = yup.object({
         validValues.foodRecipeName.max.value
       )
     )
-    .required(validValues.requiredErrorMessage),
+    .required("• Название блюда: " + validValues.requiredErrorMessage),
   addIngredientsList: yup
     .array()
     .of(
@@ -108,7 +109,7 @@ export const editFoodRecipeValidationSchema = yup.object({
               validValues.weightValue.min.value
             )
           )
-          .integer(),
+          .integer("• Вес: " + validValues.integerTypeErrorMessage),
       })
     )
     .required(),
@@ -120,7 +121,7 @@ export const editFoodRecipeValidationSchema = yup.object({
           label: yup.string(),
           value: yup
             .string()
-            .required("• Блюдо: " + validValues.requiredErrorMessage),
+            .required("• Ингредиент: " + validValues.requiredErrorMessage),
         }),
         // .required("• Блюдо: " + validValues.requiredErrorMessage),
 
@@ -134,7 +135,7 @@ export const editFoodRecipeValidationSchema = yup.object({
               validValues.weightValue.min.value
             )
           )
-          .integer(),
+          .integer("• Вес: " + validValues.integerTypeErrorMessage),
       })
     )
     .required(),
