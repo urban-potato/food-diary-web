@@ -77,7 +77,7 @@ const AsyncSelectRowWithWeightField: FC<TProps> = ({
           />
         </div>
 
-        <div className="-mt-4 sm:max-w-[100px] max-w-[80px] flex-grow">
+        <div className="sm:max-w-[100px] max-w-[80px] flex-grow">
           <InputIlluminated
             id={`InputIlluminated_${itemId}_${itemIndex}`}
             type="number"
