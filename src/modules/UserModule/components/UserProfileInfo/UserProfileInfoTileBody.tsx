@@ -1,7 +1,5 @@
-import { FC, useRef } from "react";
+import { FC } from "react";
 import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
-import { Player } from "@lordicon/react";
-import EDIT_ICON from "../../../../global/assets/system-regular-63-settings-cog.json";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../../global/store/hooks.ts";
 import { logout } from "../../slices/userSlice.ts";
@@ -10,18 +8,9 @@ import { IUser } from "../../types/types.ts";
 
 type TProps = {
   userInfo: IUser;
-  isEditMode: boolean;
-  setIsEditMode: Function;
 };
 
-const UserProfileInfoTileBody: FC<TProps> = ({
-  userInfo,
-  isEditMode,
-  setIsEditMode,
-}) => {
-  const editIconPlayerRef = useRef<Player>(null);
-  const ICON_SIZE = 28;
-
+const UserProfileInfoTileBody: FC<TProps> = ({ userInfo }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -61,21 +50,6 @@ const UserProfileInfoTileBody: FC<TProps> = ({
         )}
       </div>
 
-      <div className="order-[-1] ml-auto gap-x-2 flex justify-center items-start">
-        <span role="button" onClick={() => setIsEditMode(!isEditMode)}>
-          <span
-            onMouseEnter={() => editIconPlayerRef.current?.playFromBeginning()}
-          >
-            <Player
-              ref={editIconPlayerRef}
-              icon={EDIT_ICON}
-              size={ICON_SIZE}
-              colorize="#0d0b26"
-            />
-          </span>
-        </span>
-      </div>
-
       <div className="mt-4 flex flex-wrap w-full gap-x-4 gap-y-1 justify-stretch items-center">
         <span className="flex-grow">
           <ButtonIlluminated
@@ -83,8 +57,7 @@ const UserProfileInfoTileBody: FC<TProps> = ({
             isDarkButton={true}
             isIlluminationFull={false}
             onClick={(): void => handleExitAccount()}
-            buttonPadding=" p-4 "
-            // additionalStyles=" min-w-[0px] "
+            isIttuminationDisabled={true}
           />
         </span>
       </div>

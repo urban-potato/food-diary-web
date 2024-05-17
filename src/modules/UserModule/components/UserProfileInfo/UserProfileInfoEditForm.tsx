@@ -1,14 +1,11 @@
-import * as yup from "yup";
 import { useChangeUserInfoMutation } from "../../api/user.api.ts";
-import { validValues } from "../../constants/constants.ts";
+import { editUserProfileInfoValidationSchema } from "../../constants/constants.ts";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm, useFormState } from "react-hook-form";
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect } from "react";
 import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
 import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated.tsx";
-import { Player } from "@lordicon/react";
 import { UserData } from "../../types/types.ts";
-import EDIT_ICON from "../../../../global/assets/system-regular-63-settings-cog.json";
 
 type TProps = {
   id: string;
@@ -27,42 +24,6 @@ const UserProfileInfoEditForm: FC<TProps> = ({
 }) => {
   const [doChangeUserInfo] = useChangeUserInfoMutation();
 
-  const editIconPlayerRef = useRef<Player>(null);
-  const ICON_SIZE = 28;
-
-  const validationSchema = yup.object().shape({
-    email: yup
-      .string()
-      .email(validValues.email.error)
-      .required(`• Почта: ${validValues.requiredErrorMessage}`)
-      .matches(
-        /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        validValues.email.error
-      ),
-    firstName: yup
-      .string()
-      .min(
-        validValues.firstName.min.value,
-        validValues.firstName.min.message(validValues.firstName.min.value)
-      )
-      .max(
-        validValues.firstName.max.value,
-        validValues.firstName.max.message(validValues.firstName.max.value)
-      )
-      .required(`• Имя: ${validValues.requiredErrorMessage}`),
-    lastName: yup
-      .string()
-      .min(
-        validValues.lastName.min.value,
-        validValues.lastName.min.message(validValues.lastName.min.value)
-      )
-      .max(
-        validValues.lastName.max.value,
-        validValues.lastName.max.message(validValues.lastName.max.value)
-      )
-      .required(`• Фамилия: ${validValues.requiredErrorMessage}`),
-  });
-
   let defaultValues = {
     email: email,
     firstName: firstName,
@@ -78,7 +39,7 @@ const UserProfileInfoEditForm: FC<TProps> = ({
     control,
     trigger,
   } = useForm({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(editUserProfileInfoValidationSchema),
     mode: "onChange",
     defaultValues: defaultValues,
   });
@@ -124,67 +85,95 @@ const UserProfileInfoEditForm: FC<TProps> = ({
   }, [dirtyFields, touchedFields]);
 
   return (
-    <div className="flex flex-col  w-full pb-3">
+    <div className="w-full max-w-5xl flex flex-col justify-center items-start -mt-5">
       <form
-        className="flex flex-col flex-wrap justify-center"
+        className="lex flex-col flex-wrap justify-center w-full"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="text-xl -mt-6">
-          <InputIlluminated
-            id="email"
-            type="email"
-            placeholder="Почта"
-            register={{ ...register("email") }}
-            isError={errors.email ? true : false}
-            isRequired={true}
-          />
+        <div className="flex flex-col w-full gap-1">
+          <div className="w-full flex-grow">
+            <InputIlluminated
+              id="email"
+              type="email"
+              placeholder="Почта"
+              disableIllumination={true}
+              additionalStyles=" h-[67px] border-0 "
+              register={{ ...register("email") }}
+              isError={errors.email ? true : false}
+              isRequired={true}
+            />
+
+            {errors && (
+              <div
+                className={
+                  Object.keys(errors).length > 0
+                    ? "flex flex-col mt-1 justify-center items-start"
+                    : "hidden"
+                }
+              >
+                <p className={errors.email ? "text-pink-500 " : "hidden"}>
+                  {errors.email?.message}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="w-full flex-grow">
+            <InputIlluminated
+              id="firstName"
+              type="text"
+              placeholder="Имя"
+              disableIllumination={true}
+              additionalStyles=" h-[67px] border-0 "
+              register={{ ...register("firstName") }}
+              isError={errors.firstName ? true : false}
+              isRequired={true}
+            />
+
+            {errors && (
+              <div
+                className={
+                  Object.keys(errors).length > 0
+                    ? "flex flex-col mt-1 justify-center items-start"
+                    : "hidden"
+                }
+              >
+                <p className={errors.firstName ? "text-pink-500" : "hidden"}>
+                  {errors.firstName?.message}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="w-full flex-grow">
+            <InputIlluminated
+              id="lastName"
+              type="text"
+              placeholder="Фамилия"
+              disableIllumination={true}
+              additionalStyles=" h-[67px] border-0 "
+              register={{ ...register("lastName") }}
+              isError={errors.lastName ? true : false}
+              isRequired={true}
+            />
+
+            {errors && (
+              <div
+                className={
+                  Object.keys(errors).length > 0
+                    ? "flex flex-col mt-1 justify-center items-start"
+                    : "hidden"
+                }
+              >
+                <p className={errors.lastName ? "text-pink-500" : "hidden"}>
+                  {errors.lastName?.message}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="text-xl">
-          <InputIlluminated
-            id="firstName"
-            type="text"
-            placeholder="Имя"
-            register={{ ...register("firstName") }}
-            isError={errors.firstName ? true : false}
-            isRequired={true}
-          />
-        </div>
-        <div className="text-xl">
-          <InputIlluminated
-            id="lastName"
-            type="text"
-            placeholder="Фамилия"
-            register={{ ...register("lastName") }}
-            isError={errors.lastName ? true : false}
-            isRequired={true}
-          />
-        </div>
-
-        <div
-          className={
-            Object.keys(errors).length > 0
-              ? "  flex flex-col mt-5 px-5 gap-y-2 justify-center "
-              : " hidden "
-          }
-        >
-          <p className={errors.email ? "text-pink-500 " : " hidden "}>
-            {errors.email?.message}
-          </p>
-          <p className={errors.firstName ? "text-pink-500 " : " hidden "}>
-            {errors.firstName?.message}
-          </p>
-          <p className={errors.lastName ? "text-pink-500 " : " hidden "}>
-            {errors.lastName?.message}
-          </p>
-        </div>
-
-        <div
-          className="mt-6 
-          flex flex-wrap w-full 
-          gap-x-4 gap-y-3
-          justify-stretch items-center"
-        >
+        <div className="mt-5 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
           <span className="flex-grow">
             <ButtonIlluminated
               label="Сохранить"
@@ -192,8 +181,8 @@ const UserProfileInfoEditForm: FC<TProps> = ({
               isIlluminationFull={false}
               isButton={true}
               type="submit"
-              buttonPadding=" p-4 "
               isDisabled={isFilledRight ? false : true}
+              isIttuminationDisabled={true}
             />
           </span>
           <span className="flex-grow">
@@ -204,26 +193,11 @@ const UserProfileInfoEditForm: FC<TProps> = ({
               onClick={() => {
                 setIsEditMode(false);
               }}
-              buttonPadding=" p-4 "
+              isIttuminationDisabled={true}
             />
           </span>
         </div>
       </form>
-
-      <div className="order-[-1] ml-auto gap-x-2 flex justify-center items-start">
-        <span role="button" onClick={() => setIsEditMode(false)}>
-          <span
-            onMouseEnter={() => editIconPlayerRef.current?.playFromBeginning()}
-          >
-            <Player
-              ref={editIconPlayerRef}
-              icon={EDIT_ICON}
-              size={ICON_SIZE}
-              colorize="#0d0b26"
-            />
-          </span>
-        </span>
-      </div>
     </div>
   );
 };

@@ -112,9 +112,9 @@ const InputIlluminated: FC<TProps> = ({
         />
       </div>
 
-      <p className={isError ? "text-pink-500 mt-3" : "hidden"}>
+      {/* <p className={isError ? "text-pink-500 mt-3" : "hidden"}>
         {errorMessage}
-      </p>
+      </p> */}
     </div>
   );
 };

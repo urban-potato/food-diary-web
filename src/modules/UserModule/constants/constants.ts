@@ -94,3 +94,36 @@ export const editFoodCharacteristicTypesValidationSchema = yup.object({
     )
     .required(),
 });
+
+export const editUserProfileInfoValidationSchema = yup.object({
+  email: yup
+    .string()
+    .email(validValues.email.error)
+    .required(`• Почта: ${validValues.requiredErrorMessage}`)
+    .matches(
+      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      validValues.email.error
+    ),
+  firstName: yup
+    .string()
+    .min(
+      validValues.firstName.min.value,
+      validValues.firstName.min.message(validValues.firstName.min.value)
+    )
+    .max(
+      validValues.firstName.max.value,
+      validValues.firstName.max.message(validValues.firstName.max.value)
+    )
+    .required(`• Имя: ${validValues.requiredErrorMessage}`),
+  lastName: yup
+    .string()
+    .min(
+      validValues.lastName.min.value,
+      validValues.lastName.min.message(validValues.lastName.min.value)
+    )
+    .max(
+      validValues.lastName.max.value,
+      validValues.lastName.max.message(validValues.lastName.max.value)
+    )
+    .required(`• Фамилия: ${validValues.requiredErrorMessage}`),
+});
