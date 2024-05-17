@@ -1,4 +1,3 @@
-import { StylesConfig } from "react-select";
 import * as yup from "yup";
 
 export const validValues = {
