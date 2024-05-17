@@ -1,8 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
-import {
-  createValidationSchema,
-  selectMealTypeStyles,
-} from "../constants/constants";
+import { createValidationSchema } from "../constants/constants";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
@@ -27,6 +24,7 @@ import {
 import { useGetAllMealTypesQuery } from "../api/mealTypes.api";
 import Preloader from "../../../components/Preloader/Preloader";
 import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
+import { SELECT_STYLES_SMALLER_HEIGHT } from "../../../global/constants/constants";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -381,7 +379,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                           errors.creationTime ? "text-pink-500" : "hidden"
                         }
                       >
-                        {"• Время: " + errors.creationTime?.message}
+                        {errors.creationTime?.message}
                       </p>
                     </div>
                   )}
@@ -406,7 +404,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                     }
                     className="relative text-sm rounded-xl"
                     components={{ NoOptionsMessage }}
-                    styles={selectMealTypeStyles}
+                    styles={SELECT_STYLES_SMALLER_HEIGHT}
                     isSearchable={false}
                   />
                 </div>

@@ -1,8 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
-import {
-  editValidationSchema,
-  selectMealTypeStyles,
-} from "../../constants/constants";
+import { editValidationSchema } from "../../constants/constants";
 import {
   useAddConsumedElementaryMutation,
   useChangeConsumedElementaryWeightMutation,
@@ -30,6 +27,7 @@ import { useGetAllMealTypesQuery } from "../../api/mealTypes.api";
 import Preloader from "../../../../components/Preloader/Preloader";
 import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField";
 import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
+import { SELECT_STYLES_SMALLER_HEIGHT } from "../../../../global/constants/constants";
 
 type TProps = {
   courseMealId: string;
@@ -553,6 +551,14 @@ const MealEditForm: FC<TProps> = ({
     }
   }, [dataGetAllMealTypes]);
 
+  const isDeleteButtonDisabled =
+    originalElementaryFields.length +
+      originalRecipeFields.length +
+      addFoodListFields.length <
+    2
+      ? true
+      : false;
+
   return (
     <div className="w-full max-w-5xl flex flex-col justify-center items-start">
       <form
@@ -585,7 +591,7 @@ const MealEditForm: FC<TProps> = ({
                   }
                   className="relative text-sm rounded-xl"
                   components={{ NoOptionsMessage }}
-                  styles={selectMealTypeStyles}
+                  styles={SELECT_STYLES_SMALLER_HEIGHT}
                   isSearchable={false}
                 />
               </div>
@@ -619,6 +625,7 @@ const MealEditForm: FC<TProps> = ({
                     errorFeild={
                       errors.originalFoodElementaryList?.[index]?.weight
                     }
+                    isDeleteButtonDisabled={isDeleteButtonDisabled}
                   />
                 );
               })}
@@ -648,6 +655,7 @@ const MealEditForm: FC<TProps> = ({
                         ?.value
                     }
                     errorFeild={errors.originalFoodRecipeList?.[index]?.weight}
+                    isDeleteButtonDisabled={isDeleteButtonDisabled}
                   />
                 );
               })}
@@ -673,6 +681,7 @@ const MealEditForm: FC<TProps> = ({
                     loadSelectOptions={loadOptions}
                     handleOnSelectInputChange={handleOnInputChange}
                     handleOnSelectValueChange={handleOnChange}
+                    isDeleteButtonDisabled={isDeleteButtonDisabled}
                   />
                 );
               })}

@@ -68,3 +68,16 @@ export const SELECT_STYLES: StylesConfig = {
     backgroundColor: state.isSelected ? "#C2BAFF" : "white",
   }),
 };
+
+export const SELECT_STYLES_SMALLER_HEIGHT: StylesConfig = {
+  ...SELECT_STYLES,
+  control: (base) => ({
+    ...base,
+    backgroundColor: "white",
+    borderRadius: "12px",
+    border: 0,
+    boxShadow: "none",
+    height: 56,
+    minHeight: 56,
+  }),
+};

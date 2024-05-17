@@ -140,20 +140,3 @@ export const editFoodRecipeValidationSchema = yup.object({
     )
     .required(),
 });
-
-export const selectStyles: StylesConfig = {
-  control: (styles) => ({
-    ...styles,
-    backgroundColor: "white",
-    borderRadius: "12px",
-    border: 0,
-    boxShadow: "none",
-  }),
-  noOptionsMessage: (base) => ({
-    ...base,
-  }),
-  option: (base, state) => ({
-    ...base,
-    backgroundColor: state.isSelected ? "#C2BAFF" : "white",
-  }),
-};
