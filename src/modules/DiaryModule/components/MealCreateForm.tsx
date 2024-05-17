@@ -16,7 +16,6 @@ import {
   useCreateCourseMealMutation,
   useLazyGetCourseMealDayByDateQuery,
 } from "../api/meals.api";
-import { Player } from "@lordicon/react";
 import { getNowTime } from "../helpers/helpers";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
 import { useGetAllFoodRecipeQuery } from "../../FoodRecipeModule/api/foodRecipe.api";
