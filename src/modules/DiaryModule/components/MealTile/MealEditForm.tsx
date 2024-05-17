@@ -2,7 +2,6 @@ import { FC, useEffect, useRef, useState } from "react";
 import {
   editValidationSchema,
   selectMealTypeStyles,
-  selectStyles,
 } from "../../constants/constants";
 import {
   useAddConsumedElementaryMutation,
@@ -14,19 +13,10 @@ import {
   useDeleteConsumedRecipeMutation,
 } from "../../api/meals.api";
 import { useGetAllFoodElementaryQuery } from "../../../FoodElementaryModule";
-import {
-  Controller,
-  SubmitHandler,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import AsyncSelect from "react-select/async";
 import NoOptionsMessage from "../../../../components/NoOptionsMessage/NoOptionsMessage";
-import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated";
 import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated";
-import { Player } from "@lordicon/react";
-import DELETE_ICON from "../../../../global/assets/system-regular-39-trash.json";
 import Select from "react-select";
 import { useGetAllFoodRecipeQuery } from "../../../FoodRecipeModule/api/foodRecipe.api";
 import {
@@ -101,12 +91,6 @@ const MealEditForm: FC<TProps> = ({
 
   const foodForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
   const newFoodForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
-
-  const deleteIconPlayerRef = useRef<Player>(null);
-  const ICON_SIZE = 28;
-
-  // const [selectedMealTypeId, setSelectedMealTypeId] =
-  //   useState(originalMealTypeId);
 
   // Elementaries to delete
   const originalElementariesToRemoveIdsRef = useRef<Array<String>>(new Array());
