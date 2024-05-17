@@ -1,5 +1,8 @@
 import * as yup from "yup";
-import { validValues } from "../constants/constants";
+import {
+  registrationValidationSchema,
+  validValues,
+} from "../constants/constants";
 import { SubmitHandler, useForm, useFormState } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, Navigate, useNavigate } from "react-router-dom";
@@ -24,40 +27,6 @@ interface FormType {
 }
 
 const RegistrationForm: FC = () => {
-  const validationSchema = yup.object<FormType>().shape({
-    email: yup
-      .string()
-      .email(validValues.email.error)
-      .required(`• Почта: ${validValues.requiredErrorMessage}`)
-      .matches(
-        /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        validValues.email.error
-      ),
-    password: yup
-      .string()
-      .min(
-        validValues.password.min.value,
-        validValues.password.min.message(validValues.password.min.value)
-      )
-      .max(
-        validValues.password.max.value,
-        validValues.password.max.message(validValues.password.max.value)
-      )
-      .required(`• Пароль: ${validValues.requiredErrorMessage}`),
-    passwordConfirmation: yup
-      .string()
-      // .min(
-      //   validValues.passwordConfirmation.min.value,
-      //   validValues.passwordConfirmation.min.message(validValues.passwordConfirmation.min.value)
-      // )
-      // .max(
-      //   validValues.passwordConfirmation.max.value,
-      //   validValues.passwordConfirmation.max.message(validValues.passwordConfirmation.max.value)
-      // )
-      .required(`• Повторите пароль: ${validValues.requiredErrorMessage}`)
-      .oneOf([yup.ref("password")], validValues.passwordsMustMatchMessage),
-  });
-
   const {
     register,
     reset,
@@ -67,7 +36,7 @@ const RegistrationForm: FC = () => {
     control,
     trigger,
   } = useForm({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver<FormType>(registrationValidationSchema),
     mode: "onChange",
   });
 
@@ -161,68 +130,96 @@ const RegistrationForm: FC = () => {
   return (
     <>
       {!isAuth ? (
-        <section
-          className=" 
-        flex-grow 
-        flex flex-col gap-y-3 
-        justify-center
-        w-full max-w-md
-     
-        "
-        >
+        <section className="flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md">
           <h2 className="">Зарегистрируйтесь в FoodDiary</h2>
 
           <form className="" onSubmit={handleSubmit(onSubmit)}>
-            <InputIlluminated
-              id="email"
-              type="email"
-              placeholder="Почта"
-              register={{ ...register("email") }}
-              // errorMessage={errors.email?.message}
-              isError={errors.email ? true : false}
-              isRequired={true}
-            />
+            <div className="w-full flex-grow">
+              <InputIlluminated
+                id="email"
+                type="email"
+                placeholder="Почта"
+                register={{ ...register("email") }}
+                // errorMessage={errors.email?.message}
+                isError={errors.email ? true : false}
+                isRequired={true}
+              />
 
-            <InputIlluminated
-              id="password"
-              type="password"
-              placeholder="Пароль"
-              register={{ ...register("password") }}
-              // errorMessage={errors.password?.message}
-              isError={errors.password ? true : false}
-              isRequired={true}
-            />
+              {errors && (
+                <div
+                  className={
+                    Object.keys(errors).length > 0
+                      ? "flex flex-col mt-1 justify-center items-start"
+                      : "hidden"
+                  }
+                >
+                  <p
+                    className={
+                      errors.email ? "text-pink-500 truncate" : "hidden"
+                    }
+                  >
+                    {errors.email?.message}
+                  </p>
+                </div>
+              )}
+            </div>
 
-            <InputIlluminated
-              id="passwordConfirmation"
-              type="password"
-              placeholder="Повторите пароль"
-              register={{ ...register("passwordConfirmation") }}
-              // errorMessage={errors.passwordConfirmation?.message}
-              isError={errors.passwordConfirmation ? true : false}
-              isRequired={true}
-            />
+            <div className="w-full flex-grow mt-3">
+              <InputIlluminated
+                id="password"
+                type="password"
+                placeholder="Пароль"
+                register={{ ...register("password") }}
+                // errorMessage={errors.password?.message}
+                isError={errors.password ? true : false}
+                isRequired={true}
+              />
 
-            <div
-              className={
-                Object.keys(errors).length > 0
-                  ? "flex flex-col mt-1 justify-center items-start"
-                  : "hidden"
-              }
-            >
-              <p className={errors.email ? "text-pink-500 truncate" : "hidden"}>
-                {errors.email?.message}
-              </p>
-              <p className={errors.password ? "text-pink-500" : "hidden"}>
-                {errors.password?.message}
-              </p>
-              <p
-                className={
-                  errors.passwordConfirmation ? "text-pink-500 " : " hidden "
-                }
-              >
-                {errors.passwordConfirmation?.message}
-              </p>
+              {errors && (
+                <div
+                  className={
+                    Object.keys(errors).length > 0
+                      ? "flex flex-col mt-1 justify-center items-start"
+                      : "hidden"
+                  }
+                >
+                  <p className={errors.password ? "text-pink-500" : "hidden"}>
+                    {errors.password?.message}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="w-full flex-grow mt-3">
+              <InputIlluminated
+                id="passwordConfirmation"
+                type="password"
+                placeholder="Повторите пароль"
+                register={{ ...register("passwordConfirmation") }}
+                // errorMessage={errors.passwordConfirmation?.message}
+                isError={errors.passwordConfirmation ? true : false}
+                isRequired={true}
+              />
+
+              {errors && (
+                <div
+                  className={
+                    Object.keys(errors).length > 0
+                      ? "flex flex-col mt-1 justify-center items-start"
+                      : "hidden"
+                  }
+                >
+                  <p
+                    className={
+                      errors.passwordConfirmation
+                        ? "text-pink-500 "
+                        : " hidden "
+                    }
+                  >
+                    {errors.passwordConfirmation?.message}
+                  </p>
+                </div>
+              )}
             </div>
 
             <button

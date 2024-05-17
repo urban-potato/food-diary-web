@@ -1,5 +1,3 @@
-import * as yup from "yup";
-import { validValues } from "../constants/constants";
 import { SubmitHandler, useForm, useFormState } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, Navigate, useNavigate } from "react-router-dom";
@@ -9,30 +7,9 @@ import { setTokenToLocalStorage } from "../../../global/helpers/local_storage.he
 import { FC, useEffect } from "react";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import { AuthorizationData } from "../types/types";
+import { authorizationValidationSchema } from "../constants/constants.ts";
 
 const AuthorizationForm: FC = () => {
-  const validationSchema = yup.object<AuthorizationData>().shape({
-    email: yup
-      .string()
-      .email(validValues.email.error)
-      .required(`• Почта: ${validValues.requiredErrorMessage}`)
-      .matches(
-        /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        validValues.email.error
-      ),
-    password: yup
-      .string()
-      .min(
-        validValues.password.min.value,
-        validValues.password.min.message(validValues.password.min.value)
-      )
-      .max(
-        validValues.password.max.value,
-        validValues.password.max.message(validValues.password.max.value)
-      )
-      .required(`• Пароль: ${validValues.requiredErrorMessage}`),
-  });
-
   const {
     register,
     reset,
@@ -42,7 +19,7 @@ const AuthorizationForm: FC = () => {
     control,
     trigger,
   } = useForm({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver<AuthorizationData>(authorizationValidationSchema),
     mode: "onChange",
   });
 
@@ -98,38 +75,52 @@ const AuthorizationForm: FC = () => {
         <section className="flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md">
           <h2 className="">Войдите в аккаунт</h2>
 
-          <form className="" onSubmit={handleSubmit(onSubmit)}>
-            <InputIlluminated
-              id="email"
-              type="email"
-              placeholder="Почта"
-              register={{ ...register("email") }}
-              isError={errors.email ? true : false}
-              isRequired={true}
-            />
-
-            <InputIlluminated
-              id="password"
-              type="password"
-              placeholder="Пароль"
-              register={{ ...register("password") }}
-              isError={errors.password ? true : false}
-              isRequired={true}
-            />
-
-            <div
-              className={
-                Object.keys(errors).length > 0
-                  ? "flex flex-col mt-1 justify-center items-start"
-                  : "hidden"
-              }
-            >
-              <p className={errors.email ? "text-pink-500" : " hidden"}>
-                {errors.email?.message}
-              </p>
-              <p className={errors.password ? "text-pink-500" : "hidden"}>
-                {errors.password?.message}
-              </p>
+          <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+            <div className="w-full flex-grow">
+              <InputIlluminated
+                id="email"
+                type="email"
+                placeholder="Почта"
+                register={{ ...register("email") }}
+                isError={errors.email ? true : false}
+                isRequired={true}
+              />
+              {errors && (
+                <div
+                  className={
+                    Object.keys(errors).length > 0
+                      ? "flex flex-col mt-1 justify-center items-start"
+                      : "hidden"
+                  }
+                >
+                  <p className={errors.email ? "text-pink-500" : " hidden"}>
+                    {errors.email?.message}
+                  </p>
+                </div>
+              )}
+            </div>
+            <div className="w-full flex-grow mt-3">
+              <InputIlluminated
+                id="password"
+                type="password"
+                placeholder="Пароль"
+                register={{ ...register("password") }}
+                isError={errors.password ? true : false}
+                isRequired={true}
+              />
+              {errors && (
+                <div
+                  className={
+                    Object.keys(errors).length > 0
+                      ? "flex flex-col mt-1 justify-center items-start"
+                      : "hidden"
+                  }
+                >
+                  <p className={errors.password ? "text-pink-500" : "hidden"}>
+                    {errors.password?.message}
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="">
@@ -139,7 +130,7 @@ const AuthorizationForm: FC = () => {
                 className={
                   isFilledRight
                     ? "btn btn_dark flex-grow"
-                    : "btn btn_disabled flex-grow "
+                    : "btn btn_disabled flex-grow"
                 }
               >
                 Войти
