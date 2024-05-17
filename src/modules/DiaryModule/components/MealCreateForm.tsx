@@ -370,7 +370,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                     <div
                       className={
                         Object.keys(errors).length > 0
-                          ? "flex flex-col mt-1 gap-y-1 justify-center items-start"
+                          ? "flex flex-col mt-1 justify-center items-start"
                           : "hidden"
                       }
                     >

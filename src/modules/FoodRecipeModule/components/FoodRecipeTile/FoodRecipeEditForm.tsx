@@ -351,12 +351,12 @@ const FoodRecipeEditForm: FC<TProps> = ({
           <div
             className={
               Object.keys(errors).length > 0
-                ? " flex flex-col gap-y-2 justify-center "
-                : " hidden "
+                ? "flex flex-col mt-1 justify-center items-start"
+                : "hidden"
             }
           >
             <p
-              className={errors.foodRecipeName ? "text-pink-500 " : " hidden "}
+              className={errors.foodRecipeName ? "text-pink-500" : "hidden"}
             >
               {errors.foodRecipeName?.message}
             </p>

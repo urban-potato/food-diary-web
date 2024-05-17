@@ -291,13 +291,13 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
             <div
               className={
                 Object.keys(errors).length > 0
-                  ? " flex flex-col gap-y-2 justify-center "
-                  : " hidden "
+                  ? "flex flex-col mt-1 justify-center items-start"
+                  : "hidden"
               }
             >
               <p
                 className={
-                  errors.foodElementaryName ? "text-pink-500 " : " hidden "
+                  errors.foodElementaryName ? "text-pink-500" : "hidden"
                 }
               >
                 {errors.foodElementaryName?.message}
@@ -305,7 +305,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
             </div>
           )}
 
-          <div className="text-xl w-full flex-grow mt-2 mb-5">
+          <div className="text-xl w-full flex-grow mt-2">
             <InputIlluminated
               id={"FoodElementaryCreateForm_caloriesValue"}
               type="number"
@@ -323,19 +323,19 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
             <div
               className={
                 Object.keys(errors).length > 0
-                  ? " flex flex-col gap-y-2 justify-center "
-                  : " hidden "
+                  ? "flex flex-col mt-1 justify-center items-start"
+                  : "hidden"
               }
             >
               <p
-                className={errors.caloriesValue ? "text-pink-500 " : " hidden "}
+                className={errors.caloriesValue ? "text-pink-500" : "hidden"}
               >
                 {errors.caloriesValue?.message}
               </p>
             </div>
           )}
 
-          <div className="flex flex-col">
+          <div className="flex flex-col  mt-5">
             {defaultCharacteristicsFields.map((item, index) => {
               return (
                 <DisabledSelectRowWithWeightField

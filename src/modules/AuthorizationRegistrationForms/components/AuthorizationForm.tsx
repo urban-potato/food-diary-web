@@ -120,14 +120,14 @@ const AuthorizationForm: FC = () => {
             <div
               className={
                 Object.keys(errors).length > 0
-                  ? "  flex flex-col mt-5 px-2 gap-y-2 justify-center "
-                  : " hidden "
+                  ? "flex flex-col mt-1 justify-center items-start"
+                  : "hidden"
               }
             >
-              <p className={errors.email ? "text-pink-500 " : " hidden "}>
+              <p className={errors.email ? "text-pink-500" : " hidden"}>
                 {errors.email?.message}
               </p>
-              <p className={errors.password ? "text-pink-500 " : " hidden "}>
+              <p className={errors.password ? "text-pink-500" : "hidden"}>
                 {errors.password?.message}
               </p>
             </div>
