@@ -73,7 +73,7 @@ const AuthorizationForm: FC = () => {
     <>
       {!isAuth ? (
         <section className="flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md">
-          <h2 className="">Войдите в аккаунт</h2>
+          <h2 className="mb-5">Войдите в аккаунт</h2>
 
           <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full flex-grow">

@@ -131,7 +131,7 @@ const RegistrationForm: FC = () => {
     <>
       {!isAuth ? (
         <section className="flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md">
-          <h2 className="">Зарегистрируйтесь в FoodDiary</h2>
+          <h2 className="mb-5">Зарегистрируйтесь в FoodDiary</h2>
 
           <form className="" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full flex-grow">
