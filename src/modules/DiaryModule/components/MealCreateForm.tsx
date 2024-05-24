@@ -9,6 +9,7 @@ import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
 import {
   useAddConsumedElementaryMutation,
   useAddConsumedRecipeMutation,
+  useChangeMealTypeMutation,
   useCreateCourseMealDayMutation,
   useCreateCourseMealMutation,
   useLazyGetCourseMealDayByDateQuery,
@@ -69,6 +70,8 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
 
   const [doAddConsumedElementary] = useAddConsumedElementaryMutation();
   const [doAddConsumedRecipe] = useAddConsumedRecipeMutation();
+
+  const [doChangeMealType] = useChangeMealTypeMutation();
 
   // Food Elementaries for Async Select
   const {
@@ -258,6 +261,16 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
 
       console.log("Add New Consumed Recipes");
     }
+
+    // Change Meal Type
+    const changeMealTypeData = {
+      courseMealId: courseMealId,
+      data: {
+        mealTypeId: mealType,
+      },
+    };
+    await doChangeMealType(changeMealTypeData).catch((e) => console.log(e));
+    console.log("Change Meal Type");
 
     reset();
 

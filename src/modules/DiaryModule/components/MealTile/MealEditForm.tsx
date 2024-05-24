@@ -289,20 +289,20 @@ const MealEditForm: FC<TProps> = ({
       console.log("Delete Consumed Recipes");
     }
 
-    // Change Meal Type
-    const mealType = selectedMealTypeOption?.value;
-    if (mealType != originalMealTypeId) {
-      const changeMealTypeData = {
-        courseMealId: courseMealId,
-        data: {
-          mealTypeId: mealType,
-        },
-      };
+    // // Change Meal Type
+    // const mealType = selectedMealTypeOption?.value;
+    // if (mealType != originalMealTypeId) {
+    //   const changeMealTypeData = {
+    //     courseMealId: courseMealId,
+    //     data: {
+    //       mealTypeId: mealType,
+    //     },
+    //   };
 
-      await doChangeMealType(changeMealTypeData).catch((e) => console.log(e));
+    //   await doChangeMealType(changeMealTypeData).catch((e) => console.log(e));
 
-      console.log("Change Meal Type");
-    }
+    //   console.log("Change Meal Type");
+    // }
 
     // Change Consumed Elementaries Weight
     const originalElementaryList = data?.originalFoodElementaryList?.map(
@@ -432,6 +432,17 @@ const MealEditForm: FC<TProps> = ({
 
       console.log("Add New Consumed Recipes");
     }
+
+    // Change Meal Type
+    const mealType = selectedMealTypeOption?.value;
+    const changeMealTypeData = {
+      courseMealId: courseMealId,
+      data: {
+        mealTypeId: mealType,
+      },
+    };
+    await doChangeMealType(changeMealTypeData).catch((e) => console.log(e));
+    console.log("Change Meal Type");
 
     reset();
 
