@@ -15,12 +15,12 @@ const foodRecipeApi = api.injectEndpoints({
       ],
     }),
 
-    getOneFoodRecipe: builder.query({
-      query: (id) => ({
-        url: `/api/foodrecipe/${id}`,
-        credentials: "same-origin",
-      }),
-    }),
+    // getOneFoodRecipe: builder.query({
+    //   query: (id) => ({
+    //     url: `/api/foodrecipe/${id}`,
+    //     credentials: "same-origin",
+    //   }),
+    // }),
 
     createFoodRecipe: builder.mutation({
       query: (data) => ({
@@ -117,7 +117,7 @@ export const {
   useCreateFoodRecipeMutation,
   useChangeFoodRecipeNameMutation,
   useDeleteFoodRecipeMutation,
-  useGetOneFoodRecipeQuery,
+  // useGetOneFoodRecipeQuery,
   useAddElementaryMutation,
   useChangeElementaryWeightMutation,
   useDeleteElementaryMutation,
