@@ -333,7 +333,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
       ) {
         changeCharacteristicsValuesList.push(originalCharacteristicOnForm);
 
-        console.log("Push to ");
+        console.log("Push in Change Characteristics Values List");
       }
     }
 

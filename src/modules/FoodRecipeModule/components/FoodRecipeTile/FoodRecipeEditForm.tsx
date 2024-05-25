@@ -259,7 +259,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
       ) {
         changeWeightsList.push(originalIngredient);
 
-        console.log("Push to Original Weghts To Change");
+        console.log("Push in Original Weghts To Change");
       }
     }
 
