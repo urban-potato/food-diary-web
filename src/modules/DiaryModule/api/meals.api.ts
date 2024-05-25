@@ -48,70 +48,90 @@ const mealsApi = api.injectEndpoints({
     }),
 
     changeMealType: builder.mutation({
-      query: ({ courseMealId, data }) => ({
+      query: ({ courseMealId, data, isInvalidationNeeded }) => ({
         body: data,
         url: `/api/coursemeal/${courseMealId}`,
         method: "PUT",
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "Diary",
-        },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "Diary" }] : [],
     }),
 
     addConsumedElementary: builder.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, data, isInvalidationNeeded }) => ({
         body: data,
         url: `/api/coursemeal/${id}/addfoodelementary`,
         method: "PUT",
         credentials: "same-origin",
       }),
+
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "Diary" }] : [],
     }),
 
     addConsumedRecipe: builder.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, data, isInvalidationNeeded }) => ({
         body: data,
         url: `/api/coursemeal/${id}/addrecipe`,
         method: "PUT",
         credentials: "same-origin",
       }),
+
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "Diary" }] : [],
     }),
 
     changeConsumedElementaryWeight: builder.mutation({
-      query: ({ courseMealId, foodElementaryId, data }) => ({
+      query: ({
+        courseMealId,
+        foodElementaryId,
+        data,
+        isInvalidationNeeded,
+      }) => ({
         body: data,
         url: `/api/coursemeal/${courseMealId}/consumedelementaries/${foodElementaryId}`,
         method: "PUT",
         credentials: "same-origin",
       }),
+
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "Diary" }] : [],
     }),
 
     changeConsumedRecipeWeight: builder.mutation({
-      query: ({ courseMealId, foodRecipeId, data }) => ({
+      query: ({ courseMealId, foodRecipeId, data, isInvalidationNeeded }) => ({
         body: data,
         url: `/api/coursemeal/${courseMealId}/consumedrecipes/${foodRecipeId}`,
         method: "PUT",
         credentials: "same-origin",
       }),
+
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "Diary" }] : [],
     }),
 
     deleteConsumedElementary: builder.mutation({
-      query: ({ courseMealId, foodElementaryId }) => ({
+      query: ({ courseMealId, foodElementaryId, isInvalidationNeeded }) => ({
         url: `/api/coursemeal/${courseMealId}/consumedelementaries/${foodElementaryId}`,
         method: "DELETE",
         credentials: "same-origin",
       }),
+
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "Diary" }] : [],
     }),
 
     deleteConsumedRecipe: builder.mutation({
-      query: ({ courseMealId, foodRecipeId }) => ({
+      query: ({ courseMealId, foodRecipeId, isInvalidationNeeded }) => ({
         url: `/api/coursemeal/${courseMealId}/consumedrecipes/${foodRecipeId}`,
         method: "DELETE",
         credentials: "same-origin",
       }),
+
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "Diary" }] : [],
     }),
   }),
 });

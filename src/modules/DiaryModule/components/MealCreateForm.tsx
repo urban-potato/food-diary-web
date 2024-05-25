@@ -9,7 +9,6 @@ import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
 import {
   useAddConsumedElementaryMutation,
   useAddConsumedRecipeMutation,
-  useChangeMealTypeMutation,
   useCreateCourseMealDayMutation,
   useCreateCourseMealMutation,
   useLazyGetCourseMealDayByDateQuery,
@@ -70,8 +69,6 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
 
   const [doAddConsumedElementary] = useAddConsumedElementaryMutation();
   const [doAddConsumedRecipe] = useAddConsumedRecipeMutation();
-
-  const [doChangeMealType] = useChangeMealTypeMutation();
 
   // Food Elementaries for Async Select
   const {
@@ -165,6 +162,26 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
   };
 
   const onSubmit: SubmitHandler<TMealCreateFormData> = async (data) => {
+    // Add Elementary List
+    const addElementaryList = data?.addFoodList
+      ?.filter((item) => item.foodInfo?.isElementary === true)
+      .map((item) => {
+        return {
+          foodElementaryId: item?.foodInfo?.value,
+          weight: item?.weight,
+        };
+      });
+
+    // Add Recipe List
+    const addRecipeList = data?.addFoodList
+      ?.filter((item) => item.foodInfo?.isElementary === false)
+      .map((item) => {
+        return {
+          foodRecipeId: item?.foodInfo?.value,
+          weight: item?.weight,
+        };
+      });
+
     // Get Course Meal Day
     let courseMealDayId: string | null = null;
 
@@ -208,22 +225,17 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
       .catch((e) => console.log(e));
 
     // Add New Consumed Elementaries
-    const addElementaryList = data?.addFoodList
-      ?.filter((item) => item.foodInfo?.isElementary === true)
-      .map((item) => {
-        return {
-          foodElementaryId: item?.foodInfo?.value,
-          weight: item?.weight,
-        };
-      });
-
-    for (const foodElementary of addElementaryList) {
+    for (const [index, foodElementary] of addElementaryList.entries()) {
       const addFoodElementaryData = {
         id: courseMealId,
         data: {
           foodElementaryId: foodElementary.foodElementaryId,
           weight: foodElementary.weight,
         },
+        isInvalidationNeeded:
+          index == addElementaryList.length - 1 && addRecipeList.length == 0
+            ? true
+            : false,
       };
 
       await doAddConsumedElementary(addFoodElementaryData).catch((e) =>
@@ -234,38 +246,20 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     }
 
     // Add New Consumed Recipes
-    const addRecipeList = data?.addFoodList
-      ?.filter((item) => item.foodInfo?.isElementary === false)
-      .map((item) => {
-        return {
-          foodRecipeId: item?.foodInfo?.value,
-          weight: item?.weight,
-        };
-      });
-
-    for (const foodRecipe of addRecipeList) {
+    for (const [index, foodRecipe] of addRecipeList.entries()) {
       const addFoodRecipeData = {
         id: courseMealId,
         data: {
           foodRecipeId: foodRecipe.foodRecipeId,
           weight: foodRecipe.weight,
         },
+        isInvalidationNeeded: index == addRecipeList.length - 1 ? true : false,
       };
 
       await doAddConsumedRecipe(addFoodRecipeData).catch((e) => console.log(e));
 
       console.log("Add New Consumed Recipes");
     }
-
-    // Change Meal Type
-    const changeMealTypeData = {
-      courseMealId: courseMealId,
-      data: {
-        mealTypeId: mealType,
-      },
-    };
-    await doChangeMealType(changeMealTypeData).catch((e) => console.log(e));
-    console.log("Change Meal Type");
 
     reset();
 

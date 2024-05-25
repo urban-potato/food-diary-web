@@ -257,54 +257,14 @@ const MealEditForm: FC<TProps> = ({
   };
 
   const onSubmit: SubmitHandler<TMealEditFormData> = async (data) => {
-    // Delete Consumed Elementaries
-    const elementariesIdsToDelete = originalElementariesToRemoveIdsRef.current;
+    // Delete Elementaries List
+    const deleteElementariesList = originalElementariesToRemoveIdsRef.current;
+    // Delete Recipes List
+    const deleteRecipesList = originalRecipesToRemoveIdsRef.current;
 
-    for (const elementaryToDeleteId of elementariesIdsToDelete) {
-      const deleteConsumedElementaryData = {
-        courseMealId: courseMealId,
-        foodElementaryId: elementaryToDeleteId,
-      };
+    // Change Elementaries List
+    let changeElementariesList = [];
 
-      await doDeleteConsumedElementary(deleteConsumedElementaryData).catch(
-        (e) => console.log(e)
-      );
-
-      console.log("Delete Consumed Elementaries");
-    }
-
-    // Delete Consumed Recipes
-    const recipesIdsToDelete = originalRecipesToRemoveIdsRef.current;
-
-    for (const recipeToDeleteId of recipesIdsToDelete) {
-      const deleteConsumedRecipeData = {
-        courseMealId: courseMealId,
-        foodRecipeId: recipeToDeleteId,
-      };
-
-      await doDeleteConsumedRecipe(deleteConsumedRecipeData).catch((e) =>
-        console.log(e)
-      );
-
-      console.log("Delete Consumed Recipes");
-    }
-
-    // // Change Meal Type
-    // const mealType = selectedMealTypeOption?.value;
-    // if (mealType != originalMealTypeId) {
-    //   const changeMealTypeData = {
-    //     courseMealId: courseMealId,
-    //     data: {
-    //       mealTypeId: mealType,
-    //     },
-    //   };
-
-    //   await doChangeMealType(changeMealTypeData).catch((e) => console.log(e));
-
-    //   console.log("Change Meal Type");
-    // }
-
-    // Change Consumed Elementaries Weight
     const originalElementaryList = data?.originalFoodElementaryList?.map(
       (item) => {
         return {
@@ -315,7 +275,7 @@ const MealEditForm: FC<TProps> = ({
     );
 
     const consumedElementariesWithoutDeleted = consumedElementaries.filter(
-      (item) => !elementariesIdsToDelete.includes(item.foodElementary.id)
+      (item) => !deleteElementariesList.includes(item.foodElementary.id)
     );
 
     for (const originalElementary of originalElementaryList) {
@@ -330,23 +290,15 @@ const MealEditForm: FC<TProps> = ({
         consumedElementaryToChange.elementaryInMealWeight !=
           originalElementary.weight
       ) {
-        const changeConsumedElementaryWeightData = {
-          courseMealId: courseMealId,
-          foodElementaryId: originalElementary.foodElementaryId,
-          data: {
-            weight: originalElementary.weight,
-          },
-        };
+        changeElementariesList.push(originalElementary);
 
-        await doChangeConsumedElementaryWeight(
-          changeConsumedElementaryWeightData
-        ).catch((e) => console.log(e));
-
-        console.log("Change Consumed Elementaries Weight");
+        console.log("Push in Change Elementaries List");
       }
     }
 
-    // Change Consumed Recipes Weight
+    // Change Recipes List
+    let changeRecipesList = [];
+
     const originalRecipeList = data?.originalFoodRecipeList?.map((item) => {
       return {
         foodRecipeId: item?.foodRecipeId?.value,
@@ -355,7 +307,7 @@ const MealEditForm: FC<TProps> = ({
     });
 
     const consumedRecipesWithoutDeleted = consumedRecipes.filter(
-      (item) => !recipesIdsToDelete.includes(item.foodRecipe.id)
+      (item) => !deleteRecipesList.includes(item.foodRecipe.id)
     );
 
     for (const originalRecipe of originalRecipeList) {
@@ -367,24 +319,14 @@ const MealEditForm: FC<TProps> = ({
         consumedRecipeToChange != undefined &&
         consumedRecipeToChange.recipeInMealWeight != originalRecipe.weight
       ) {
-        const changeConsumedRecipeWeightData = {
-          courseMealId: courseMealId,
-          foodRecipeId: originalRecipe.foodRecipeId,
-          data: {
-            weight: originalRecipe.weight,
-          },
-        };
+        changeRecipesList.push(originalRecipe);
 
-        await doChangeConsumedRecipeWeight(
-          changeConsumedRecipeWeightData
-        ).catch((e) => console.log(e));
-
-        console.log("Change Consumed Recipes Weight");
+        console.log("Push in Change Recipes List");
       }
     }
 
-    // Add New Consumed Elementaries
-    const addElementaryList = data?.addFoodList
+    // Add Elementaries List
+    const addElementariesList = data?.addFoodList
       ?.filter((item) => item.foodInfo?.isElementary === true)
       .map((item) => {
         return {
@@ -393,13 +335,153 @@ const MealEditForm: FC<TProps> = ({
         };
       });
 
-    for (const foodElementary of addElementaryList) {
+    // Add Recipes List
+    const addRecipesList = data?.addFoodList
+      ?.filter((item) => item.foodInfo?.isElementary === false)
+      .map((item) => {
+        return {
+          foodRecipeId: item?.foodInfo?.value,
+          weight: item?.weight,
+        };
+      });
+
+    // Change Meal Type
+    const mealType = selectedMealTypeOption?.value;
+    if (mealType != originalMealTypeId) {
+      const changeMealTypeData = {
+        courseMealId: courseMealId,
+        data: {
+          mealTypeId: mealType,
+        },
+        isInvalidationNeeded:
+          deleteElementariesList.length +
+            deleteRecipesList.length +
+            changeElementariesList.length +
+            changeRecipesList.length +
+            addElementariesList.length +
+            addRecipesList.length >
+          0
+            ? false
+            : true,
+      };
+
+      await doChangeMealType(changeMealTypeData).catch((e) => console.log(e));
+
+      console.log("Change Meal Type");
+    }
+
+    // Delete Consumed Elementaries
+    for (const [
+      index,
+      elementaryToDeleteId,
+    ] of deleteElementariesList.entries()) {
+      const deleteConsumedElementaryData = {
+        courseMealId: courseMealId,
+        foodElementaryId: elementaryToDeleteId,
+        isInvalidationNeeded:
+          index == deleteElementariesList.length - 1 &&
+          deleteRecipesList.length +
+            changeElementariesList.length +
+            changeRecipesList.length +
+            addElementariesList.length +
+            addRecipesList.length ==
+            0
+            ? true
+            : false,
+      };
+
+      await doDeleteConsumedElementary(deleteConsumedElementaryData).catch(
+        (e) => console.log(e)
+      );
+
+      console.log("Delete Consumed Elementaries");
+    }
+
+    // Delete Consumed Recipes
+    for (const [index, recipeToDeleteId] of deleteRecipesList.entries()) {
+      const deleteConsumedRecipeData = {
+        courseMealId: courseMealId,
+        foodRecipeId: recipeToDeleteId,
+        isInvalidationNeeded:
+          index == deleteRecipesList.length - 1 &&
+          changeElementariesList.length +
+            changeRecipesList.length +
+            addElementariesList.length +
+            addRecipesList.length ==
+            0
+            ? true
+            : false,
+      };
+
+      await doDeleteConsumedRecipe(deleteConsumedRecipeData).catch((e) =>
+        console.log(e)
+      );
+
+      console.log("Delete Consumed Recipes");
+    }
+
+    // Change Consumed Elementaries Weight
+    for (const [
+      index,
+      originalElementary,
+    ] of changeElementariesList.entries()) {
+      const changeConsumedElementaryWeightData = {
+        courseMealId: courseMealId,
+        foodElementaryId: originalElementary.foodElementaryId,
+        data: {
+          weight: originalElementary.weight,
+        },
+        isInvalidationNeeded:
+          index == changeElementariesList.length - 1 &&
+          changeRecipesList.length +
+            addElementariesList.length +
+            addRecipesList.length ==
+            0
+            ? true
+            : false,
+      };
+
+      await doChangeConsumedElementaryWeight(
+        changeConsumedElementaryWeightData
+      ).catch((e) => console.log(e));
+
+      console.log("Change Consumed Elementaries Weight");
+    }
+
+    // Change Consumed Recipes Weight
+    for (const [index, originalRecipe] of changeRecipesList.entries()) {
+      const changeConsumedRecipeWeightData = {
+        courseMealId: courseMealId,
+        foodRecipeId: originalRecipe.foodRecipeId,
+        data: {
+          weight: originalRecipe.weight,
+        },
+        isInvalidationNeeded:
+          index == changeRecipesList.length - 1 &&
+          addElementariesList.length + addRecipesList.length == 0
+            ? true
+            : false,
+      };
+
+      await doChangeConsumedRecipeWeight(changeConsumedRecipeWeightData).catch(
+        (e) => console.log(e)
+      );
+
+      console.log("Change Consumed Recipes Weight");
+    }
+
+    // Add New Consumed Elementaries
+    for (const [index, foodElementary] of addElementariesList.entries()) {
       const addFoodElementaryData = {
         id: courseMealId,
         data: {
           foodElementaryId: foodElementary.foodElementaryId,
           weight: foodElementary.weight,
         },
+        isInvalidationNeeded:
+          index == addElementariesList.length - 1 && addRecipesList.length == 0
+            ? true
+            : false,
       };
 
       await doAddConsumedElementary(addFoodElementaryData).catch((e) =>
@@ -410,39 +492,20 @@ const MealEditForm: FC<TProps> = ({
     }
 
     // Add New Consumed Recipes
-    const addRecipeList = data?.addFoodList
-      ?.filter((item) => item.foodInfo?.isElementary === false)
-      .map((item) => {
-        return {
-          foodRecipeId: item?.foodInfo?.value,
-          weight: item?.weight,
-        };
-      });
-
-    for (const foodRecipe of addRecipeList) {
+    for (const [index, foodRecipe] of addRecipesList.entries()) {
       const addFoodRecipeData = {
         id: courseMealId,
         data: {
           foodRecipeId: foodRecipe.foodRecipeId,
           weight: foodRecipe.weight,
         },
+        isInvalidationNeeded: index == addRecipesList.length - 1 ? true : false,
       };
 
       await doAddConsumedRecipe(addFoodRecipeData).catch((e) => console.log(e));
 
       console.log("Add New Consumed Recipes");
     }
-
-    // Change Meal Type
-    const mealType = selectedMealTypeOption?.value;
-    const changeMealTypeData = {
-      courseMealId: courseMealId,
-      data: {
-        mealTypeId: mealType,
-      },
-    };
-    await doChangeMealType(changeMealTypeData).catch((e) => console.log(e));
-    console.log("Change Meal Type");
 
     reset();
 
