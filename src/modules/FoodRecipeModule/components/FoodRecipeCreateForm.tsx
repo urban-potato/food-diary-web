@@ -1,4 +1,4 @@
-import { FC, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import {
   useAddElementaryMutation,
   useCreateFoodRecipeMutation,
@@ -62,15 +62,6 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     callback(filteredOptions);
   };
 
-  // defaultValues
-  let defaultValues = {
-    addFoodList: [
-      {
-        weight: 0,
-      },
-    ],
-  };
-
   // useForm
   const {
     register,
@@ -83,7 +74,6 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
   } = useForm<TFoodRecipeCreateFormData>({
     resolver: yupResolver(createFoodRecipeValidationSchema),
     mode: "onChange",
-    defaultValues: defaultValues,
   });
 
   // For Generating Add food Fields
@@ -173,6 +163,18 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     }
   };
 
+  const handleAddSelect = () => {
+    newFoodForbiddenToAddIdsRef.current.push("");
+
+    addFoodListAppend({
+      weight: 0,
+    });
+  };
+
+  useEffect(() => {
+    handleAddSelect();
+  }, []);
+
   return (
     <section className="flex-grow-100 w-full flex flex-col flex-wrap justify-center items-center mb-3">
       <h2 className="mt-4 mb-3">Новая запись</h2>
@@ -205,11 +207,7 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                   : "hidden"
               }
             >
-              <p
-                className={
-                  errors.foodRecipeName ? "text-pink-500" : "hidden"
-                }
-              >
+              <p className={errors.foodRecipeName ? "text-pink-500" : "hidden"}>
                 {errors.foodRecipeName?.message}
               </p>
             </div>
@@ -250,11 +248,7 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                 isDarkButton={true}
                 isIlluminationFull={false}
                 onClick={() => {
-                  newFoodForbiddenToAddIdsRef.current.push("");
-
-                  addFoodListAppend({
-                    weight: 0,
-                  });
+                  handleAddSelect();
                 }}
                 buttonPadding=" p-[12px] "
                 additionalStyles=""
