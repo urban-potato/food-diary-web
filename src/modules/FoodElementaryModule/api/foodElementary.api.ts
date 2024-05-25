@@ -15,41 +15,28 @@ const foodElementaryApi = api.injectEndpoints({
       ],
     }),
 
-    getOneFoodElementary: builder.query({
-      query: (foodElementaryId) => ({
-        url: `/api/foodelementary/${foodElementaryId}`,
-        credentials: "same-origin",
-      }),
-    }),
-
     createFoodElementary: builder.mutation({
-      query: (data) => ({
+      query: ({ data, isInvalidationNeeded }) => ({
         body: data,
         url: "/api/foodelementary",
         method: "POST",
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "FoodElementaryList",
-        },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "FoodElementaryList" }] : [],
     }),
 
     changeFoodElementaryName: builder.mutation({
-      query: ({ foodElementaryId, data }) => ({
+      query: ({ foodElementaryId, data, isInvalidationNeeded }) => ({
         body: data,
         url: `/api/foodelementary/${foodElementaryId}`,
         method: "PUT",
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "FoodElementaryList",
-        },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "FoodElementaryList" }] : [],
     }),
 
     deleteFoodElementary: builder.mutation({
@@ -70,7 +57,6 @@ const foodElementaryApi = api.injectEndpoints({
 
 export const {
   useGetAllFoodElementaryQuery,
-  useGetOneFoodElementaryQuery,
   useCreateFoodElementaryMutation,
   useChangeFoodElementaryNameMutation,
   useDeleteFoodElementaryMutation,

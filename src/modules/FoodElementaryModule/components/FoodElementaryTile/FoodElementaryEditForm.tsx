@@ -292,56 +292,19 @@ const FoodElementaryEditForm: FC<TProps> = ({
     console.log("\nFoodElementaryEditForm Submit\n");
     console.log("data", data);
 
-    // Change Food Elementary Name
     const foodElementaryNameOnForm = data.foodElementaryName;
-
-    if (foodElementaryNameOnForm != foodElementaryName) {
-      const changeFoodElementaryNameData = {
-        foodElementaryId: foodElementaryId,
-        data: {
-          name: foodElementaryNameOnForm,
-        },
-      };
-
-      await doChangeFoodElementaryName(changeFoodElementaryNameData);
-
-      console.log("Change Food Recipe Name");
-    }
-
-    // Change Calories Value
     const caloriesValueOnForm = data.caloriesValue;
 
-    if (caloriesValueOnForm != originalCaloriesValue) {
-      const changeCaloriesValueData = {
-        foodCharacteristicId: originalCalories?.foodCharacteristicId,
-        data: {
-          value: caloriesValueOnForm,
-        },
-      };
+    const isChangeNameNeeded = foodElementaryNameOnForm != foodElementaryName;
+    const isChangeCaloriesNeeded = caloriesValueOnForm != originalCaloriesValue;
 
-      await doChangeFoodCharacteristicValue(changeCaloriesValueData);
+    // Delete Characteristics List
+    const deleteCharacteristicsList =
+      originalCharacteristicsToRemoveRef.current;
 
-      console.log("Change Calories Value");
-    }
+    // Change Characteristics Values List
+    let changeCharacteristicsValuesList = [];
 
-    // Delete Characteristics
-    const characteristicsToDelete = originalCharacteristicsToRemoveRef.current;
-
-    for (const characteristicToDelete of characteristicsToDelete) {
-      if (
-        !BASIC_CHARACTERISTICS_IDS_LIST.includes(
-          characteristicToDelete.characteristicTypeId
-        )
-      ) {
-        await doDeleteFoodCharacteristic(characteristicToDelete.value).catch(
-          (e) => console.log(e)
-        );
-
-        console.log("Delete Characteristics");
-      }
-    }
-
-    // Change Characteristics Value
     const originalCharacteristicsOnFormList =
       data?.originalCharacteristicsList?.map((item) => {
         return {
@@ -352,7 +315,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
 
     const characteristicsWithoutDeleted = originalCharacteristics.filter(
       (item) =>
-        characteristicsToDelete.find(
+        deleteCharacteristicsList.find(
           (characteristic) => characteristic.value == item.foodCharacteristicId
         ) == undefined
     );
@@ -368,33 +331,129 @@ const FoodElementaryEditForm: FC<TProps> = ({
         characteristicToChange != undefined &&
         characteristicToChange.value != originalCharacteristicOnForm.value
       ) {
-        const changeCharacteristicValueData = {
-          foodCharacteristicId:
-            originalCharacteristicOnForm.foodCharacteristicId,
-          data: {
-            value: originalCharacteristicOnForm.value,
-          },
-        };
+        changeCharacteristicsValuesList.push(originalCharacteristicOnForm);
 
-        await doChangeFoodCharacteristicValue(
-          changeCharacteristicValueData
-        ).catch((e) => console.log(e));
-
-        console.log("Change Characteristics Value");
+        console.log("Push to ");
       }
     }
 
-    // Add New Characteristics
+    // Add Characteristics List
     const addCharacteristicsList = data?.addCharacteristicsList?.map((item) => {
       return {
-        foodElementaryId: foodElementaryId,
-        characteristicTypeId: item.characteristicInfo?.value,
-        value: item.characteristicValue,
+        data: {
+          foodElementaryId: foodElementaryId,
+          characteristicTypeId: item.characteristicInfo?.value,
+          value: item.characteristicValue,
+        },
       };
     });
 
-    for (const characteristicToAdd of addCharacteristicsList) {
-      await doAddFoodCharacteristic(characteristicToAdd).catch((e) =>
+    // Change Food Elementary Name
+    if (isChangeNameNeeded) {
+      const changeFoodElementaryNameData = {
+        foodElementaryId: foodElementaryId,
+        data: {
+          name: foodElementaryNameOnForm,
+        },
+        isInvalidationNeeded:
+          deleteCharacteristicsList.length +
+            changeCharacteristicsValuesList.length +
+            addCharacteristicsList.length >
+            0 || isChangeCaloriesNeeded
+            ? false
+            : true,
+      };
+
+      await doChangeFoodElementaryName(changeFoodElementaryNameData);
+
+      console.log("Change Food Recipe Name");
+    }
+
+    // Change Calories Value
+    if (isChangeCaloriesNeeded) {
+      const changeCaloriesValueData = {
+        foodCharacteristicId: originalCalories?.foodCharacteristicId,
+        data: {
+          value: caloriesValueOnForm,
+        },
+        isInvalidationNeeded:
+          deleteCharacteristicsList.length +
+            changeCharacteristicsValuesList.length +
+            addCharacteristicsList.length >
+          0
+            ? false
+            : true,
+      };
+
+      await doChangeFoodCharacteristicValue(changeCaloriesValueData);
+
+      console.log("Change Calories Value");
+    }
+
+    // Delete Characteristics
+    for (const [
+      index,
+      characteristicToDelete,
+    ] of deleteCharacteristicsList.entries()) {
+      if (
+        !BASIC_CHARACTERISTICS_IDS_LIST.includes(
+          characteristicToDelete.characteristicTypeId
+        )
+      ) {
+        const deleteFoodCharacteristicData = {
+          foodCharacteristicId: characteristicToDelete.value,
+          isInvalidationNeeded:
+            index == deleteCharacteristicsList.length - 1 &&
+            changeCharacteristicsValuesList.length +
+              addCharacteristicsList.length ==
+              0
+              ? true
+              : false,
+        };
+        await doDeleteFoodCharacteristic(deleteFoodCharacteristicData).catch(
+          (e) => console.log(e)
+        );
+
+        console.log("Delete Characteristics");
+      }
+    }
+
+    // Change Characteristics Value
+    for (const [
+      index,
+      originalCharacteristicOnForm,
+    ] of changeCharacteristicsValuesList.entries()) {
+      const changeCharacteristicValueData = {
+        foodCharacteristicId: originalCharacteristicOnForm.foodCharacteristicId,
+        data: {
+          value: originalCharacteristicOnForm.value,
+        },
+        isInvalidationNeeded:
+          index == changeCharacteristicsValuesList.length - 1 &&
+          addCharacteristicsList.length == 0
+            ? true
+            : false,
+      };
+
+      await doChangeFoodCharacteristicValue(
+        changeCharacteristicValueData
+      ).catch((e) => console.log(e));
+
+      console.log("Change Characteristics Value");
+    }
+
+    // Add New Characteristics
+    for (const [
+      index,
+      characteristicToAdd,
+    ] of addCharacteristicsList.entries()) {
+      const addCharacteristicData = {
+        ...characteristicToAdd,
+        isInvalidationNeeded:
+          index == addCharacteristicsList.length - 1 ? true : false,
+      };
+
+      await doAddFoodCharacteristic(addCharacteristicData).catch((e) =>
         console.log(e)
       );
 
@@ -437,9 +496,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
             }
           >
             <p
-              className={
-                errors.foodElementaryName ? "text-pink-500" : "hidden"
-              }
+              className={errors.foodElementaryName ? "text-pink-500" : "hidden"}
             >
               {errors.foodElementaryName?.message}
             </p>

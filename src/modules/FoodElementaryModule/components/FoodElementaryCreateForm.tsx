@@ -147,25 +147,28 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
 
     // Create Food Elementary
     const createFoodElementaryData = {
-      name: data.foodElementaryName,
-      proteinValue: 0,
-      fatValue: 0,
-      carbohydrateValue: 0,
-      caloriesValue: data.caloriesValue,
+      data: {
+        name: data.foodElementaryName,
+        proteinValue: 0,
+        fatValue: 0,
+        carbohydrateValue: 0,
+        caloriesValue: data.caloriesValue,
+      },
+      isInvalidationNeeded: additionalCharacteristics.length > 0 ? false : true,
     };
 
     for (const defaultCharacteristic of defaultCharacteristics) {
       switch (defaultCharacteristic.characteristicInfo?.value) {
         case PROTEIN_DEFAULT_ID:
-          createFoodElementaryData.proteinValue =
+          createFoodElementaryData.data.proteinValue =
             defaultCharacteristic.characteristicValue;
           break;
         case FAT_DEFAULT_ID:
-          createFoodElementaryData.fatValue =
+          createFoodElementaryData.data.fatValue =
             defaultCharacteristic.characteristicValue;
           break;
         case CARBOHYDRATE_DEFAULT_ID:
-          createFoodElementaryData.carbohydrateValue =
+          createFoodElementaryData.data.carbohydrateValue =
             defaultCharacteristic.characteristicValue;
           break;
         default:
@@ -178,11 +181,18 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
       .then(async (responseFoodElementaryId) => {
         console.log("Create Food Elementary");
 
-        for (const characteristic of additionalCharacteristics) {
+        for (const [
+          index,
+          characteristic,
+        ] of additionalCharacteristics.entries()) {
           const addCharacteristicData = {
-            foodElementaryId: responseFoodElementaryId,
-            characteristicTypeId: characteristic.characteristicInfo?.value,
-            value: characteristic.characteristicValue,
+            data: {
+              foodElementaryId: responseFoodElementaryId,
+              characteristicTypeId: characteristic.characteristicInfo?.value,
+              value: characteristic.characteristicValue,
+            },
+            isInvalidationNeeded:
+              index == additionalCharacteristics.length - 1 ? true : false,
           };
 
           await doAddFoodCharacteristic(addCharacteristicData).catch((e) =>
@@ -327,9 +337,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                   : "hidden"
               }
             >
-              <p
-                className={errors.caloriesValue ? "text-pink-500" : "hidden"}
-              >
+              <p className={errors.caloriesValue ? "text-pink-500" : "hidden"}>
                 {errors.caloriesValue?.message}
               </p>
             </div>
