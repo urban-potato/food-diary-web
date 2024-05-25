@@ -229,39 +229,12 @@ const FoodRecipeEditForm: FC<TProps> = ({
     console.log("\nFoodRecipeEditForm Submit\n");
     console.log("data", data);
 
-    // Change Food Recipe Name
-    const foodRecipeName = data.foodRecipeName;
+    // Delete Ingredients List
+    const deleteIngredientsList = originalIngredientsToRemoveIdsRef.current;
 
-    if (foodRecipeName != originalFoodRecipeName) {
-      const changeFoodRecipeNameData = {
-        id: foodRecipeId,
-        data: {
-          name: foodRecipeName,
-        },
-      };
+    // Change Weights List
+    let changeWeightsList = [];
 
-      await doChangeFoodRecipeName(changeFoodRecipeNameData);
-
-      console.log("Change Food Recipe Name");
-    }
-
-    // Delete Ingredients
-    const ingredientsIdsToDelete = originalIngredientsToRemoveIdsRef.current;
-
-    for (const ingredientToDeleteId of ingredientsIdsToDelete) {
-      const deleteIngredientData = {
-        foodRecipeId: foodRecipeId,
-        foodElementaryId: ingredientToDeleteId,
-      };
-
-      await doDeleteElementary(deleteIngredientData).catch((e) =>
-        console.log(e)
-      );
-
-      console.log("Delete Ingredients");
-    }
-
-    // Change Ingredients Weight
     const originalIngredientsList = data?.originalIngredientsList?.map(
       (item) => {
         return {
@@ -272,7 +245,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
     );
 
     const ingredientsWithoutDeleted = ingredients.filter(
-      (item) => !ingredientsIdsToDelete.includes(item.foodElementary.id)
+      (item) => !deleteIngredientsList.includes(item.foodElementary.id)
     );
 
     for (const originalIngredient of originalIngredientsList) {
@@ -284,23 +257,13 @@ const FoodRecipeEditForm: FC<TProps> = ({
         ingredientToChange != undefined &&
         ingredientToChange.elementaryWeight != originalIngredient.weight
       ) {
-        const changeIngredientWeightData = {
-          foodRecipeId: foodRecipeId,
-          foodElementaryId: originalIngredient.foodElementaryId,
-          data: {
-            weight: originalIngredient.weight,
-          },
-        };
+        changeWeightsList.push(originalIngredient);
 
-        await doChangeElementaryWeight(changeIngredientWeightData).catch((e) =>
-          console.log(e)
-        );
-
-        console.log("Change Ingredient Weight");
+        console.log("Push to Original Weghts To Change");
       }
     }
 
-    // Add New Ingredients
+    // Add Ingredients List
     const addIngredientsList = data?.addIngredientsList?.map((item) => {
       return {
         foodElementaryId: item?.ingredientInfo?.value,
@@ -308,13 +271,83 @@ const FoodRecipeEditForm: FC<TProps> = ({
       };
     });
 
-    for (const ingredient of addIngredientsList) {
+    // Change Food Recipe Name
+    const foodRecipeName = data.foodRecipeName;
+
+    if (foodRecipeName != originalFoodRecipeName) {
+      const changeFoodRecipeNameData = {
+        id: foodRecipeId,
+        data: {
+          name: foodRecipeName,
+        },
+        isInvalidationNeeded:
+          deleteIngredientsList.length +
+            changeWeightsList.length +
+            addIngredientsList.length >
+          0
+            ? false
+            : true,
+      };
+
+      await doChangeFoodRecipeName(changeFoodRecipeNameData);
+
+      console.log("Change Food Recipe Name");
+    }
+
+    // Delete Ingredients
+    for (const [
+      index,
+      ingredientToDeleteId,
+    ] of deleteIngredientsList.entries()) {
+      const deleteIngredientData = {
+        foodRecipeId: foodRecipeId,
+        foodElementaryId: ingredientToDeleteId,
+        isInvalidationNeeded:
+          index == deleteIngredientsList.length - 1 &&
+          changeWeightsList.length + addIngredientsList.length == 0
+            ? true
+            : false,
+      };
+
+      await doDeleteElementary(deleteIngredientData).catch((e) =>
+        console.log(e)
+      );
+
+      console.log("Delete Ingredients");
+    }
+
+    // Change Ingredients Weight
+    for (const [index, originalIngredient] of changeWeightsList.entries()) {
+      const changeIngredientWeightData = {
+        foodRecipeId: foodRecipeId,
+        foodElementaryId: originalIngredient.foodElementaryId,
+        data: {
+          weight: originalIngredient.weight,
+        },
+        isInvalidationNeeded:
+          index == changeWeightsList.length - 1 &&
+          addIngredientsList.length == 0
+            ? true
+            : false,
+      };
+
+      await doChangeElementaryWeight(changeIngredientWeightData).catch((e) =>
+        console.log(e)
+      );
+
+      console.log("Change Ingredient Weight");
+    }
+
+    // Add New Ingredients
+    for (const [index, ingredient] of addIngredientsList.entries()) {
       const addIngredientData = {
         foodRecipeId: foodRecipeId,
         data: {
           foodElementaryId: ingredient.foodElementaryId,
           weight: ingredient.weight,
         },
+        isInvalidationNeeded:
+          index == addIngredientsList.length - 1 ? true : false,
       };
 
       await doAddElementary(addIngredientData).catch((e) => console.log(e));
@@ -355,9 +388,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
                 : "hidden"
             }
           >
-            <p
-              className={errors.foodRecipeName ? "text-pink-500" : "hidden"}
-            >
+            <p className={errors.foodRecipeName ? "text-pink-500" : "hidden"}>
               {errors.foodRecipeName?.message}
             </p>
           </div>

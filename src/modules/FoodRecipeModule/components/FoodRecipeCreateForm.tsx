@@ -100,7 +100,8 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
   const onSubmit: SubmitHandler<TFoodRecipeCreateFormData> = async (data) => {
     // Create Food Recipe
     const createFoodRecipeData = {
-      name: data.foodRecipeName,
+      data: { name: data.foodRecipeName },
+      isInvalidationNeeded: false,
     };
 
     await doCreateFoodRecipe(createFoodRecipeData)
@@ -114,13 +115,15 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
           };
         });
 
-        for (const foodElementary of addElementaryList) {
+        for (const [index, foodElementary] of addElementaryList.entries()) {
           const addFoodElementaryData = {
             foodRecipeId: responseFoodRecipeId,
             data: {
               foodElementaryId: foodElementary.foodElementaryId,
               weight: foodElementary.weight,
             },
+            isInvalidationNeeded:
+              index == addElementaryList.length - 1 ? true : false,
           };
 
           await doAddElementary(addFoodElementaryData).catch((e) =>

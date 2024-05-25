@@ -15,41 +15,28 @@ const foodRecipeApi = api.injectEndpoints({
       ],
     }),
 
-    // getOneFoodRecipe: builder.query({
-    //   query: (id) => ({
-    //     url: `/api/foodrecipe/${id}`,
-    //     credentials: "same-origin",
-    //   }),
-    // }),
-
     createFoodRecipe: builder.mutation({
-      query: (data) => ({
+      query: ({ data, isInvalidationNeeded }) => ({
         body: data,
         url: "/api/foodrecipe",
         method: "POST",
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "FoodRecipesList",
-        },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "FoodRecipesList" }] : [],
     }),
 
     changeFoodRecipeName: builder.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, data, isInvalidationNeeded }) => ({
         body: data,
         url: `/api/foodrecipe/${id}`,
         method: "PUT",
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "FoodRecipesList",
-        },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "FoodRecipesList" }] : [],
     }),
 
     deleteFoodRecipe: builder.mutation({
@@ -67,47 +54,43 @@ const foodRecipeApi = api.injectEndpoints({
     }),
 
     addElementary: builder.mutation({
-      query: ({ foodRecipeId, data }) => ({
+      query: ({ foodRecipeId, data, isInvalidationNeeded }) => ({
         body: data,
         url: `/api/foodrecipe/${foodRecipeId}/ingredients`,
         method: "PUT",
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "FoodRecipesList",
-        },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "FoodRecipesList" }] : [],
     }),
 
     changeElementaryWeight: builder.mutation({
-      query: ({ foodRecipeId, foodElementaryId, data }) => ({
+      query: ({
+        foodRecipeId,
+        foodElementaryId,
+        data,
+        isInvalidationNeeded,
+      }) => ({
         body: data,
         url: `/api/foodrecipe/${foodRecipeId}/ingredients/${foodElementaryId}`,
         method: "PUT",
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "FoodRecipesList",
-        },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "FoodRecipesList" }] : [],
     }),
 
     deleteElementary: builder.mutation({
-      query: ({ foodRecipeId, foodElementaryId }) => ({
+      query: ({ foodRecipeId, foodElementaryId, isInvalidationNeeded }) => ({
         url: `/api/foodrecipe/${foodRecipeId}/ingredients/${foodElementaryId}`,
         method: "DELETE",
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "FoodRecipesList",
-        },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "FoodRecipesList" }] : [],
     }),
   }),
 });
@@ -117,7 +100,6 @@ export const {
   useCreateFoodRecipeMutation,
   useChangeFoodRecipeNameMutation,
   useDeleteFoodRecipeMutation,
-  // useGetOneFoodRecipeQuery,
   useAddElementaryMutation,
   useChangeElementaryWeightMutation,
   useDeleteElementaryMutation,
