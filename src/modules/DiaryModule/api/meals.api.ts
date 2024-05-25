@@ -2,69 +2,17 @@ import { api } from "../../../global/api/api";
 
 const mealsApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    // getCourseMealDay: builder.query({
-    //   query: (id) => ({
-    //     url: `/api/coursemealday/${id}`,
-    //     credentials: "same-origin",
-    //   }),
-    // }),
-
-    // getAllCourseMealDays: builder.query({
-    //   query: () => ({
-    //     url: `/api/coursemealday`,
-    //     credentials: "same-origin",
-    //   }),
-    // }),
-
     getCourseMealDayByDate: builder.query({
       query: (date) => ({
         url: `/api/coursemealday?CourseMealDayDate=${date}`,
         credentials: "same-origin",
       }),
 
-      // providesTags: (result, error, arg) => {
-      //   console.log("getCourseMealDayByDate result", result);
-      //   const mealTags =
-      //     result.items.length > 0
-      //       ? result.items[0].courseMeals.map((meal) => {
-      //           return { type: "Meal" as const, id: meal.id };
-      //         })
-      //       : [];
-
-      //   // return result.items.length > 0
-      //   //   ? [{ type: "Diary" as const, id: result.items[0].id }, ...mealTags]
-      //   //   : ["Diary"];
-
-      //   // return result.items.length > 0
-      //   //   ? [{ type: "Diary" as const, id: result.items[0].id }, ...mealTags]
-      //   //   : [];
-
-      //   return result.items.length > 0
-      //     ? [{ type: "Diary" as const }, ...mealTags]
-      //     : ["Diary"];
-      // },
-
-      providesTags: (result, error, arg) => [
+      providesTags: () => [
         {
           type: "Diary",
         },
-        // {
-        //   type: "Meal",
-        //   id: data.items
-        // },
       ],
-
-      // async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
-      //   const { data } = await queryFulfilled;
-
-      //   for (const meal of data.items[0].courseMeals) {
-      //     dispatch(
-      //       api.util.updateQueryData("Meal", meal.id, (draft) => {
-      //         Object.assign(draft, meal);
-      //       })
-      //     );
-      //   }
-      // },
     }),
 
     createCourseMealDay: builder.mutation({
@@ -74,24 +22,6 @@ const mealsApi = api.injectEndpoints({
         method: "POST",
         credentials: "same-origin",
       }),
-
-      // invalidatesTags: () => [
-      //   {
-      //     type: "Diary",
-      //   },
-      // ],
-
-      // invalidatesTags: (result, error, arg) => [{ type: "Diary", id: result }],
-
-      // async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
-      //   const { data } = await queryFulfilled;
-
-      //   dispatch(
-      //     api.util.updateQueryData("Diary", data, (draft) => {
-      //       Object.assign(draft, data);
-      //     })
-      //   );
-      // },
     }),
 
     deleteCourseMeal: builder.mutation({
@@ -115,12 +45,6 @@ const mealsApi = api.injectEndpoints({
         method: "POST",
         credentials: "same-origin",
       }),
-
-      // invalidatesTags: () => [
-      //   {
-      //     type: "Diary",
-      //   },
-      // ],
     }),
 
     changeMealType: builder.mutation({
@@ -135,21 +59,7 @@ const mealsApi = api.injectEndpoints({
         {
           type: "Diary",
         },
-        // {
-        //   type: "Diary",
-        //   id: courseMealId,
-        // },
       ],
-
-      // async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
-      //   const { data } = await queryFulfilled;
-
-      //   dispatch(
-      //     api.util.updateQueryData("Meal", id, (draft) => {
-      //       Object.assign(draft, data);
-      //     })
-      //   );
-      // },
     }),
 
     addConsumedElementary: builder.mutation({
@@ -159,36 +69,6 @@ const mealsApi = api.injectEndpoints({
         method: "PUT",
         credentials: "same-origin",
       }),
-
-      // invalidatesTags: () => [
-      //   {
-      //     type: "Diary",
-      //   },
-      // ],
-
-      // invalidatesTags: (result, error, arg) => {
-      //   console.log("addConsumedElementary arg", arg);
-
-      //   return [
-      //     {
-      //       type: "Meal",
-      //       id: arg.id,
-      //     },
-      //   ];
-      // },
-
-      // async onQueryStarted({ id, patch }, { dispatch, queryFulfilled }) {
-      //   console.log("id", id);
-      //   console.log("patch", patch);
-
-      //   const { data } = await queryFulfilled;
-
-      //   dispatch(
-      //     api.util.updateQueryData("Meal", id, (draft) => {
-      //       Object.assign(draft, patch);
-      //     })
-      //   );
-      // },
     }),
 
     addConsumedRecipe: builder.mutation({
@@ -198,12 +78,6 @@ const mealsApi = api.injectEndpoints({
         method: "PUT",
         credentials: "same-origin",
       }),
-
-      // invalidatesTags: () => [
-      //   {
-      //     type: "Diary",
-      //   },
-      // ],
     }),
 
     changeConsumedElementaryWeight: builder.mutation({
@@ -213,12 +87,6 @@ const mealsApi = api.injectEndpoints({
         method: "PUT",
         credentials: "same-origin",
       }),
-
-      // invalidatesTags: () => [
-      //   {
-      //     type: "Diary",
-      //   },
-      // ],
     }),
 
     changeConsumedRecipeWeight: builder.mutation({
@@ -228,12 +96,6 @@ const mealsApi = api.injectEndpoints({
         method: "PUT",
         credentials: "same-origin",
       }),
-
-      // invalidatesTags: () => [
-      //   {
-      //     type: "Diary",
-      //   },
-      // ],
     }),
 
     deleteConsumedElementary: builder.mutation({
@@ -242,12 +104,6 @@ const mealsApi = api.injectEndpoints({
         method: "DELETE",
         credentials: "same-origin",
       }),
-
-      // invalidatesTags: () => [
-      //   {
-      //     type: "Diary",
-      //   },
-      // ],
     }),
 
     deleteConsumedRecipe: builder.mutation({
@@ -256,12 +112,6 @@ const mealsApi = api.injectEndpoints({
         method: "DELETE",
         credentials: "same-origin",
       }),
-
-      // invalidatesTags: () => [
-      //   {
-      //     type: "Diary",
-      //   },
-      // ],
     }),
   }),
 });
@@ -269,8 +119,6 @@ const mealsApi = api.injectEndpoints({
 export const {
   useCreateCourseMealDayMutation,
   useCreateCourseMealMutation,
-  // useGetCourseMealDayQuery,
-  // useLazyGetCourseMealDayQuery,
   useGetCourseMealDayByDateQuery,
   useLazyGetCourseMealDayByDateQuery,
   useDeleteCourseMealMutation,
