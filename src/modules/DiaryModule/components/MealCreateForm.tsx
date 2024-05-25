@@ -125,11 +125,6 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
 
   // defaultValues
   let defaultValues = {
-    addFoodList: [
-      {
-        weight: 0,
-      },
-    ],
     creationTime: getNowTime(),
   };
 
@@ -303,6 +298,14 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     }
   };
 
+  const handleAddSelect = () => {
+    newFoodForbiddenToAddIdsRef.current.push("");
+
+    addFoodListAppend({
+      weight: 0,
+    });
+  };
+
   let checkIfFilledRight = () => {
     let emptyMeals = getValues("addFoodList")?.find(
       (item) => item.foodInfo === undefined
@@ -317,6 +320,10 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
 
     return result;
   };
+
+  useEffect(() => {
+    handleAddSelect();
+  }, []);
 
   useEffect(() => {
     if (isSuccessGetAllMealTypes) {
@@ -457,13 +464,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                     label={"Еще одно блюдо"}
                     isDarkButton={true}
                     isIlluminationFull={false}
-                    onClick={() => {
-                      newFoodForbiddenToAddIdsRef.current.push("");
-
-                      addFoodListAppend({
-                        weight: 0,
-                      });
-                    }}
+                    onClick={() => handleAddSelect()}
                     buttonPadding=" p-[14px] "
                     additionalStyles=""
                     isIttuminationDisabled={true}
