@@ -9,25 +9,31 @@ import { UserData } from "../../types/types.ts";
 
 type TProps = {
   id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
+  originalEmail: string;
+  originalFirstName: string;
+  originalLastName: string;
   setIsEditMode: Function;
+};
+
+type TSubmitData = {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
 };
 
 const UserProfileInfoEditForm: FC<TProps> = ({
   id,
-  email,
-  firstName,
-  lastName,
+  originalEmail,
+  originalFirstName,
+  originalLastName,
   setIsEditMode,
 }) => {
   const [doChangeUserInfo] = useChangeUserInfoMutation();
 
   let defaultValues = {
-    email: email,
-    firstName: firstName,
-    lastName: lastName,
+    email: originalEmail,
+    firstName: originalFirstName,
+    lastName: originalLastName,
   };
 
   const {
@@ -47,11 +53,12 @@ const UserProfileInfoEditForm: FC<TProps> = ({
   const { dirtyFields, touchedFields } = useFormState({ control });
 
   const onSubmit: SubmitHandler<UserData> = async (data) => {
-    let submitData = {
-      email: data.email,
-      firstName: data.firstName,
-      lastName: data.lastName,
-    };
+    let submitData: TSubmitData = {};
+
+    if (data.email != originalEmail) submitData.email = data.email;
+    if (data.firstName != originalFirstName)
+      submitData.firstName = data.firstName;
+    if (data.lastName != originalLastName) submitData.lastName = data.lastName;
 
     try {
       await doChangeUserInfo({

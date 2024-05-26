@@ -39,9 +39,9 @@ const UserProfileInfoTile: FC<TProps> = ({ userInfo }) => {
         {isEditMode ? (
           <UserProfileInfoEditForm
             id={userInfo?.id}
-            email={userInfo?.email}
-            firstName={userInfo?.firstName ? userInfo?.firstName : ""}
-            lastName={userInfo?.lastName ? userInfo?.lastName : ""}
+            originalEmail={userInfo?.email}
+            originalFirstName={userInfo?.firstName ? userInfo?.firstName : ""}
+            originalLastName={userInfo?.lastName ? userInfo?.lastName : ""}
             setIsEditMode={setIsEditMode}
           />
         ) : (
