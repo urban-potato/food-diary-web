@@ -1,9 +1,7 @@
-import { FC, useEffect, useRef } from "react";
+import { FC } from "react";
 import { useGetAllFoodElementaryQuery } from "../api/foodElementary.api";
 import FoodElementaryTile from "./FoodElementaryTile/FoodElementaryTile.tsx";
 import { ILocalFoodCharacteristic } from "../types/types";
-import { Player } from "@lordicon/react";
-import PRELOADER from "../../../global/assets/system-regular-18-autorenew.json";
 import { IFoodElementary } from "../../../global/types/types.ts";
 import {
   CALORIES_DEFAULT_ID,
@@ -11,6 +9,7 @@ import {
   FAT_DEFAULT_ID,
   PROTEIN_DEFAULT_ID,
 } from "../../../global/constants/constants.ts";
+import Preloader from "../../../components/Preloader/Preloader.tsx";
 
 const FoodElementaryList: FC = () => {
   const {
@@ -84,7 +83,7 @@ const FoodElementaryList: FC = () => {
   );
   // foodItems?.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 
-  let foodItemsSorted = foodItems?.map((item: IFoodElementary) => {
+  let foodElementariesTiles = foodItems?.map((item: IFoodElementary) => {
     return (
       <FoodElementaryTile
         key={`${item.id}_foodItemsSorted`}
@@ -95,31 +94,25 @@ const FoodElementaryList: FC = () => {
     );
   });
 
-  const preloaderPlayerRef = useRef<Player>(null);
-
-  useEffect(() => {
-    preloaderPlayerRef.current?.playFromBeginning();
-  });
-
   return (
     <div className="w-full max-w-full flex flex-col justify-center items-center mt-3">
       <div className="text-2xl font-bold  ">
         Всего простых блюд: {totalFoodCount}
       </div>
 
-      {foodItemsSorted}
-
       {isLoadingGetAllFoodElementary ? (
         <span className="m-10">
-          <Player
-            ref={preloaderPlayerRef}
-            icon={PRELOADER}
-            size={100}
-            colorize="#0d0b26"
-            onComplete={() => preloaderPlayerRef.current?.playFromBeginning()}
-          />
+          <Preloader />
         </span>
-      ) : null}
+      ) : !foodElementariesTiles || foodElementariesTiles.length == 0 ? (
+        <div className="w-full  flex flex-col justify-center items-center mt-10 text-xl">
+          Простых блюд нет
+        </div>
+      ) : (
+        <div className="w-full flex flex-col justify-center items-center">
+          {foodElementariesTiles}
+        </div>
+      )}
     </div>
   );
 };

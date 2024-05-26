@@ -37,7 +37,7 @@ const FoodRecipesList: FC = () => {
         <span className="m-10">
           <Preloader />
         </span>
-      ) : foodRecipesTiles == null || foodRecipesTiles.length == 0 ? (
+      ) : !foodRecipesTiles || foodRecipesTiles.length == 0 ? (
         <div className="w-full  flex flex-col justify-center items-center mt-10 text-xl">
           Составных блюд нет
         </div>
