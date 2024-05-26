@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, ReactElement } from "react";
 import Preloader from "../../../components/Preloader/Preloader";
 import MealTile from "./MealTile/MealTile";
 import { ICourseMeal } from "../../../global/types/types";
@@ -26,7 +26,8 @@ const MealsList: FC<TProps> = ({
       ) {
         return <MealTile key={`courseMeals_${meal.id}`} {...meal} />;
       }
-    });
+    })
+    .filter((item: ReactElement | undefined) => item != undefined);
 
   return (
     <div className="w-full max-w-full flex flex-col justify-center items-center mt-3">
@@ -40,7 +41,7 @@ const MealsList: FC<TProps> = ({
         <span className="m-10">
           <Preloader />
         </span>
-      ) : mealTiles == null || mealTiles.length == 0 ? (
+      ) : !mealTiles || mealTiles.length == 0 ? (
         <div className="w-full  flex flex-col justify-center items-center mt-10 text-xl">
           Записей нет
         </div>
