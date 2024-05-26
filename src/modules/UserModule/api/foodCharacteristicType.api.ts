@@ -1,14 +1,7 @@
 import { api } from "../../../global/api/api";
 
-const userApi = api.injectEndpoints({
+const foodCharacteristicTypeApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getOneFoodCharacteristicType: builder.query({
-      query: (foodCharacteristicTypeId) => ({
-        url: `/api/foodcharacteristictype/${foodCharacteristicTypeId}`,
-        credentials: "same-origin",
-      }),
-    }),
-
     getAllFoodCharacteristicTypes: builder.query({
       query: () => ({
         url: `/api/foodcharacteristictype`,
@@ -23,55 +16,45 @@ const userApi = api.injectEndpoints({
     }),
 
     createFoodCharacteristicType: builder.mutation({
-      query: (data) => ({
+      query: ({ data, isInvalidationNeeded }) => ({
         body: data,
         url: "/api/foodcharacteristictype",
         method: "POST",
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "FoodCharacteristicTypes",
-        },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "FoodCharacteristicTypes" }] : [],
     }),
 
     changeFoodCharacteristicTypeName: builder.mutation({
-      query: ({ foodCharacteristicTypeId, data }) => ({
+      query: ({ foodCharacteristicTypeId, data, isInvalidationNeeded }) => ({
         body: data,
         url: `/api/foodcharacteristictype/${foodCharacteristicTypeId}`,
         method: "PUT",
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "FoodCharacteristicTypes",
-        },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "FoodCharacteristicTypes" }] : [],
     }),
 
     deleteFoodCharacteristicType: builder.mutation({
-      query: (foodCharacteristicTypeId) => ({
+      query: ({ foodCharacteristicTypeId, isInvalidationNeeded }) => ({
         url: `/api/foodcharacteristictype/${foodCharacteristicTypeId}`,
         method: "DELETE",
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "FoodCharacteristicTypes",
-        },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        arg.isInvalidationNeeded ? [{ type: "FoodCharacteristicTypes" }] : [],
     }),
   }),
 });
 
 export const {
-  useGetOneFoodCharacteristicTypeQuery,
   useGetAllFoodCharacteristicTypesQuery,
   useCreateFoodCharacteristicTypeMutation,
   useChangeFoodCharacteristicTypeNameMutation,
   useDeleteFoodCharacteristicTypeMutation,
-} = userApi;
+} = foodCharacteristicTypeApi;

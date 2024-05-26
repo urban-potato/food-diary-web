@@ -140,18 +140,12 @@ const FoodCharacteristicTypeInfoEditForm: FC<TProps> = ({
     console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
     console.log("data", data);
 
-    // Delete Food Characteristic Types
-    const itemsToDelete = originalIdsToRemoveRef.current;
+    // Delete Nutrients List
+    const deleteNutrientsList = originalIdsToRemoveRef.current;
 
-    for (const itemToDeleteId of itemsToDelete) {
-      await doDeleteFoodCharacteristicType(itemToDeleteId).catch((e) =>
-        console.log(e)
-      );
+    // Change Nutrients List
+    let changeNutrientsList = [];
 
-      console.log("Delete Food Characteristic Types");
-    }
-
-    // Change Food Characteristic Types Name
     const originalItemsFromFormList =
       data?.originalFoodCharacteristicTypesList?.map((item) => {
         return {
@@ -161,7 +155,7 @@ const FoodCharacteristicTypeInfoEditForm: FC<TProps> = ({
       });
 
     const itemsWithoutDeleted = originalFoodCharacteristicTypes.filter(
-      (item) => !itemsToDelete.includes(item.id)
+      (item) => !deleteNutrientsList.includes(item.id)
     );
 
     for (const originalItem of originalItemsFromFormList) {
@@ -170,31 +164,67 @@ const FoodCharacteristicTypeInfoEditForm: FC<TProps> = ({
       );
 
       if (itemToChange != undefined && itemToChange.name != originalItem.name) {
-        const changeItemNameData = {
-          foodCharacteristicTypeId: originalItem.id,
-          data: {
-            name: originalItem.name,
-          },
-        };
+        changeNutrientsList.push(originalItem);
 
-        await doChangeFoodCharacteristicTypeName(changeItemNameData).catch(
-          (e) => console.log(e)
-        );
-
-        console.log("Change Food Characteristic Types Name");
+        console.log("Push in Change Nutrients List");
       }
     }
 
-    // Add New Food Characteristic Types
-    const addItemsList = data?.addFoodCharacteristicTypesList?.map((item) => {
-      return {
-        name: item?.foodCharacteristicTypeName,
-      };
-    });
+    // Add Nutrients List
+    const addNutrientsList = data?.addFoodCharacteristicTypesList?.map(
+      (item) => {
+        return {
+          name: item?.foodCharacteristicTypeName,
+        };
+      }
+    );
 
-    for (const itemToAdd of addItemsList) {
+    // Delete Food Characteristic Types
+    for (const [index, itemToDeleteId] of deleteNutrientsList.entries()) {
+      const deteleItemData = {
+        foodCharacteristicTypeId: itemToDeleteId,
+        isInvalidationNeeded:
+          index == deleteNutrientsList.length - 1 &&
+          changeNutrientsList.length + addNutrientsList.length == 0
+            ? true
+            : false,
+      };
+      await doDeleteFoodCharacteristicType(deteleItemData).catch((e) =>
+        console.log(e)
+      );
+
+      console.log("Delete Food Characteristic Types");
+    }
+
+    // Change Food Characteristic Types Name
+    for (const [index, originalItem] of changeNutrientsList.entries()) {
+      const changeItemNameData = {
+        foodCharacteristicTypeId: originalItem.id,
+        data: {
+          name: originalItem.name,
+        },
+        isInvalidationNeeded:
+          index == changeNutrientsList.length - 1 &&
+          addNutrientsList.length == 0
+            ? true
+            : false,
+      };
+
+      await doChangeFoodCharacteristicTypeName(changeItemNameData).catch((e) =>
+        console.log(e)
+      );
+
+      console.log("Change Food Characteristic Types Name");
+    }
+
+    // Add New Food Characteristic Types
+    for (const [index, itemToAdd] of addNutrientsList.entries()) {
       const addItemData = {
-        name: itemToAdd.name,
+        data: {
+          name: itemToAdd.name,
+        },
+        isInvalidationNeeded:
+          index == addNutrientsList.length - 1 ? true : false,
       };
 
       await doCreateFoodCharacteristicType(addItemData).catch((e) =>
