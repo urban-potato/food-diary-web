@@ -81,6 +81,10 @@ export default {
         near_white_dark: "#FFE0B2",
 
         red: "#FF7777CC",
+
+        main_pink: "#EC4899",
+        main_violet: "#8B5CF6",
+        main_green: "#ACBC5B",
       },
     },
   },
