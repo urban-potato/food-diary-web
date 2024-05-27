@@ -44,7 +44,7 @@ const FoodRecipeInfo: FC<TProps> = ({
 
       <div className="flex flex-col w-full">
         <div className="font-semibold mb-1 text-[17px] truncate">
-          Калорийность на 100г:
+          Калорийность:
         </div>
         <div className="flex flex-wrap gap-3 w-full">
           <CharacteristicTilesList characteristicsList={calories} />
@@ -53,7 +53,7 @@ const FoodRecipeInfo: FC<TProps> = ({
 
       <div className="flex flex-col w-full">
         <div className="font-semibold mb-1 text-[17px] truncate">
-          Нутриенты на 100г:
+          Нутриенты:
         </div>
         <div className="flex flex-wrap gap-3 w-full">
           <CharacteristicTilesList characteristicsList={nutrients} />
