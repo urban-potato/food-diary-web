@@ -1,11 +1,10 @@
 import * as yup from "yup";
+import { DECIMAL_REGEX } from "../../../global/constants/constants";
 
 export const validValues = {
-  decimalRegex: /^(?:\d+[\,\.]{1}\d{1,3}|\d+)$/,
   requiredErrorMessage: "Обязательное поле",
-  numberTypeErrorMessage: "Требуется ввести число",
   decimalTypeErrorMessage:
-    "Требуется ввести положительное число, содержащее не больше 3-х знаков после запятой или точки",
+    "Требуется ввести положительное число, содержащее не больше 3-х знаков после запятой (или точки)",
   foodElementaryName: {
     min: {
       value: 1,
@@ -57,7 +56,7 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
     .string()
     .required("• Калорийность: " + validValues.requiredErrorMessage)
     .matches(
-      validValues.decimalRegex,
+      DECIMAL_REGEX,
       "• Калорийность: " + validValues.decimalTypeErrorMessage
     )
     .test(
@@ -75,7 +74,8 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
 
         return result;
       }
-    ),
+    )
+    .transform((value) => value.replace(",", ".")),
   addCharacteristicsList: yup
     .array()
     .of(
@@ -91,7 +91,7 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
           .string()
           .required("• Вес: " + validValues.requiredErrorMessage)
           .matches(
-            validValues.decimalRegex,
+            DECIMAL_REGEX,
             "• Вес: " + validValues.decimalTypeErrorMessage
           )
           .test(
@@ -109,7 +109,8 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
 
               return result;
             }
-          ),
+          )
+          .transform((value) => value.replace(",", ".")),
       })
     )
     .required(),
@@ -130,7 +131,7 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
           .string()
           .required("• Вес: " + validValues.requiredErrorMessage)
           .matches(
-            validValues.decimalRegex,
+            DECIMAL_REGEX,
             "• Вес: " + validValues.decimalTypeErrorMessage
           )
           .test(
@@ -148,7 +149,8 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
 
               return result;
             }
-          ),
+          )
+          .transform((value) => value.replace(",", ".")),
       })
     )
     .required(),
@@ -171,16 +173,29 @@ export const editFoodElementaryValidationSchema = yup.object().shape({
     )
     .required("• Название блюда: " + validValues.requiredErrorMessage),
   caloriesValue: yup
-    .number()
+    .string()
     .required("• Калорийность: " + validValues.requiredErrorMessage)
-    .typeError("• Калорийность: " + validValues.numberTypeErrorMessage)
-    .min(
-      validValues.nutrientValue.min.value,
+    .matches(
+      DECIMAL_REGEX,
+      "• Калорийность: " + validValues.decimalTypeErrorMessage
+    )
+    .test(
+      "max",
       "• Калорийность: " +
-        validValues.nutrientValue.min.message(
-          validValues.nutrientValue.min.value
-        )
-    ),
+        validValues.caloriesValue.max.message(
+          validValues.caloriesValue.max.value
+        ),
+      (value) => {
+        const valueWithDot = value.replace(",", ".");
+        const valueFloat = parseFloat(valueWithDot);
+        if (Number.isNaN(valueFloat)) return false;
+
+        const result = valueFloat <= validValues.caloriesValue.max.value;
+
+        return result;
+      }
+    )
+    .transform((value) => value.replace(",", ".")),
   addCharacteristicsList: yup
     .array()
     .of(
@@ -193,16 +208,29 @@ export const editFoodElementaryValidationSchema = yup.object().shape({
         }),
 
         characteristicValue: yup
-          .number()
+          .string()
           .required("• Вес: " + validValues.requiredErrorMessage)
-          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
-          .min(
-            validValues.nutrientValue.min.value,
+          .matches(
+            DECIMAL_REGEX,
+            "• Вес: " + validValues.decimalTypeErrorMessage
+          )
+          .test(
+            "max",
             "• Вес: " +
-              validValues.nutrientValue.min.message(
-                validValues.nutrientValue.min.value
-              )
-          ),
+              validValues.nutrientValue.max.message(
+                validValues.nutrientValue.max.value
+              ),
+            (value) => {
+              const valueWithDot = value.replace(",", ".");
+              const valueFloat = parseFloat(valueWithDot);
+              if (Number.isNaN(valueFloat)) return false;
+
+              const result = valueFloat <= validValues.nutrientValue.max.value;
+
+              return result;
+            }
+          )
+          .transform((value) => value.replace(",", ".")),
       })
     )
     .required(),
@@ -221,16 +249,29 @@ export const editFoodElementaryValidationSchema = yup.object().shape({
         }),
 
         characteristicValue: yup
-          .number()
+          .string()
           .required("• Вес: " + validValues.requiredErrorMessage)
-          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
-          .min(
-            validValues.nutrientValue.min.value,
+          .matches(
+            DECIMAL_REGEX,
+            "• Вес: " + validValues.decimalTypeErrorMessage
+          )
+          .test(
+            "max",
             "• Вес: " +
-              validValues.nutrientValue.min.message(
-                validValues.nutrientValue.min.value
-              )
-          ),
+              validValues.nutrientValue.max.message(
+                validValues.nutrientValue.max.value
+              ),
+            (value) => {
+              const valueWithDot = value.replace(",", ".");
+              const valueFloat = parseFloat(valueWithDot);
+              if (Number.isNaN(valueFloat)) return false;
+
+              const result = valueFloat <= validValues.nutrientValue.max.value;
+
+              return result;
+            }
+          )
+          .transform((value) => value.replace(",", ".")),
       })
     )
     .required(),

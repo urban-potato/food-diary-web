@@ -1,6 +1,6 @@
 import { Controller } from "react-hook-form";
 import Select from "react-select";
-import { SELECT_STYLES } from "../../global/constants/constants";
+import { DECIMAL_REGEX, SELECT_STYLES } from "../../global/constants/constants";
 import ButtonIlluminated from "../../ui/ButtonIlluminated/ButtonIlluminated";
 import { ChangeEvent, FC, useRef } from "react";
 import { Player } from "@lordicon/react";
@@ -75,9 +75,7 @@ const DisabledSelectRowWithWeightField: FC<TProps> = ({
             register={{ ...register }}
             isRequired={true}
             onInput={(event: ChangeEvent<HTMLInputElement>) => {
-              const isValidInput = /^(?:\d+[\,\.]{1}\d{1,2}|\d+)$/.test(
-                event.target.value
-              );
+              const isValidInput = DECIMAL_REGEX.test(event.target.value);
 
               if (!isValidInput) {
                 event.target.value = replaceIncorrectDecimalInput(

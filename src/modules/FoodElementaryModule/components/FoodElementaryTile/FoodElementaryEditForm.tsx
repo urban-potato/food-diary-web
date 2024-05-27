@@ -7,7 +7,7 @@ import {
   useFormState,
 } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FC, useEffect, useRef } from "react";
+import { ChangeEvent, FC, useEffect, useRef } from "react";
 import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
 import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated.tsx";
 import {
@@ -23,9 +23,11 @@ import { useGetAllFoodCharacteristicTypesQuery } from "../../../UserModule/api/f
 import {
   BASIC_CHARACTERISTICS_IDS_LIST,
   CALORIES_DEFAULT_ID,
+  DECIMAL_REGEX,
 } from "../../../../global/constants/constants.ts";
 import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField.tsx";
 import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField.tsx";
+import { replaceIncorrectDecimalInput } from "../../../../global/helpers/replace_incorrect_decimal_input.ts";
 
 type TProps = {
   foodElementaryId: string;
@@ -36,17 +38,17 @@ type TProps = {
 
 type TFoodElementaryEditFormData = {
   foodElementaryName: string;
-  caloriesValue: number;
+  caloriesValue: string;
   addCharacteristicsList: {
     characteristicInfo?: {
       label?: string | undefined;
       value: string;
     };
-    characteristicValue: number;
+    characteristicValue: string;
   }[];
   originalCharacteristicsList: {
     characteristicInfo: TOriginalCharacteristic;
-    characteristicValue: number;
+    characteristicValue: string;
   }[];
 };
 
@@ -92,7 +94,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
     (item) => item.characteristicTypeId === CALORIES_DEFAULT_ID
   );
 
-  const originalCaloriesValue = originalCalories?.value ?? 0;
+  const originalCaloriesValue = originalCalories?.value.toString() ?? "0";
 
   // Food Characteristics Types for Async Select
   const {
@@ -263,7 +265,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
             value: characteristic.foodCharacteristicId,
             characteristicTypeId: characteristic.characteristicTypeId,
           },
-          characteristicValue: characteristic.value,
+          characteristicValue: characteristic.value.toString(),
         };
       }
     );
@@ -329,7 +331,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
 
       if (
         characteristicToChange != undefined &&
-        characteristicToChange.value != originalCharacteristicOnForm.value
+        characteristicToChange.value.toString() !=
+          originalCharacteristicOnForm.value
       ) {
         changeCharacteristicsValuesList.push(originalCharacteristicOnForm);
 
@@ -506,7 +509,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
         <div className="text-xl w-full flex-grow mt-2">
           <InputIlluminated
             id={"FoodElementaryEditForm_caloriesValue"}
-            type="number"
+            type="text"
             inputLabel="Калорийность (ккал.)"
             disableIllumination={true}
             additionalStyles=" h-[67px] border-0 "
@@ -515,6 +518,15 @@ const FoodElementaryEditForm: FC<TProps> = ({
             }}
             isRequired={true}
             labelSize={"text-lg"}
+            onInput={(event: ChangeEvent<HTMLInputElement>) => {
+              const isValidInput = DECIMAL_REGEX.test(event.target.value);
+
+              if (!isValidInput) {
+                event.target.value = replaceIncorrectDecimalInput(
+                  event.target.value
+                );
+              }
+            }}
           />
         </div>
         {errors.caloriesValue && (
@@ -608,7 +620,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
                 newCharacteristicsForbiddenToAddIdsRef.current.push("");
 
                 addCharacteristicListAppend({
-                  characteristicValue: 0,
+                  characteristicValue: "0",
                 });
               }}
               buttonPadding=" p-[12px] "

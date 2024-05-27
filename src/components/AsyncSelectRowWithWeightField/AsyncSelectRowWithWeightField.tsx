@@ -1,7 +1,7 @@
 import { Controller } from "react-hook-form";
 import AsyncSelect from "react-select/async";
 import NoOptionsMessage from "../NoOptionsMessage/NoOptionsMessage";
-import { SELECT_STYLES } from "../../global/constants/constants";
+import { DECIMAL_REGEX, SELECT_STYLES } from "../../global/constants/constants";
 import InputIlluminated from "../../ui/InputIlluminated/InputIlluminated";
 import ButtonIlluminated from "../../ui/ButtonIlluminated/ButtonIlluminated";
 import { Player } from "@lordicon/react";
@@ -88,9 +88,7 @@ const AsyncSelectRowWithWeightField: FC<TProps> = ({
             register={{ ...register }}
             isRequired={true}
             onInput={(event: ChangeEvent<HTMLInputElement>) => {
-              const isValidInput = /^(?:\d+[\,\.]{1}\d{1,2}|\d+)$/.test(
-                event.target.value
-              );
+              const isValidInput = DECIMAL_REGEX.test(event.target.value);
 
               if (!isValidInput) {
                 event.target.value = replaceIncorrectDecimalInput(

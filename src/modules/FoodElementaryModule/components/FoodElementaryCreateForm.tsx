@@ -12,6 +12,7 @@ import {
   BASIC_CHARACTERISTICS_IDS_LIST,
   CALORIES_DEFAULT_ID,
   CARBOHYDRATE_DEFAULT_ID,
+  DECIMAL_REGEX,
   FAT_DEFAULT_ID,
   PROTEIN_DEFAULT_ID,
 } from "../../../global/constants/constants.ts";
@@ -329,9 +330,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
               isRequired={true}
               labelSize={"text-lg"}
               onInput={(event: ChangeEvent<HTMLInputElement>) => {
-                const isValidInput = /^(?:\d+[\,\.]{1}\d{1,2}|\d+)$/.test(
-                  event.target.value
-                );
+                const isValidInput = DECIMAL_REGEX.test(event.target.value);
 
                 if (!isValidInput) {
                   event.target.value = replaceIncorrectDecimalInput(
