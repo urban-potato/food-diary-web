@@ -29,14 +29,14 @@ type TFoodRecipeEditFormData = {
       label?: string | undefined;
       value: string;
     };
-    weight: number;
+    weight: string;
   }[];
   originalIngredientsList: {
     ingredientInfo: {
       label: string;
       value: string;
     };
-    weight: number;
+    weight: string;
   }[];
 };
 
@@ -213,7 +213,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
           label: ingredient.foodElementary.name,
           value: ingredient.foodElementary.id,
         },
-        weight: ingredient.elementaryWeight,
+        weight: ingredient.elementaryWeight.toString(),
       };
     });
 
@@ -255,7 +255,8 @@ const FoodRecipeEditForm: FC<TProps> = ({
 
       if (
         ingredientToChange != undefined &&
-        ingredientToChange.elementaryWeight != originalIngredient.weight
+        ingredientToChange.elementaryWeight.toString() !=
+          originalIngredient.weight
       ) {
         changeWeightsList.push(originalIngredient);
 
@@ -475,7 +476,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
                 newIngredientsForbiddenToAddIdsRef.current.push("");
 
                 addIngredientsListAppend({
-                  weight: 0,
+                  weight: "0",
                 });
               }}
               buttonPadding=" p-[12px] "

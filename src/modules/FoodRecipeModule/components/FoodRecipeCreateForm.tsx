@@ -23,7 +23,7 @@ type TFoodRecipeCreateFormData = {
       label?: string | undefined;
       value: string;
     };
-    weight: number;
+    weight: string;
   }[];
 };
 
@@ -142,7 +142,7 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     if (addFoodListFields.length === 1) {
       addFoodListRemove(0);
       addFoodListAppend({
-        weight: 0,
+        weight: "0",
       });
     }
 
@@ -170,7 +170,7 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     newFoodForbiddenToAddIdsRef.current.push("");
 
     addFoodListAppend({
-      weight: 0,
+      weight: "0",
     });
   };
 
