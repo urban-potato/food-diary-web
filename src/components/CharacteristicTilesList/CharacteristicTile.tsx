@@ -10,7 +10,7 @@ const CharacteristicTile: FC<TProps> = ({ name, value }) => {
     <div className="truncate flex gap-4 w-full bg-near_white shadow-md rounded-xl p-3 justify-between max-w-max">
       <p className="truncate">{name}:</p>
       <div className="flex gap-x-1">
-        <p className="">{Number(value.toFixed(2))}</p>
+        <p className="">{Number(value.toFixed(3))}</p>
         {name.toLowerCase() === "калории" ? <p>ккал.</p> : <p>г.</p>}
       </div>
     </div>

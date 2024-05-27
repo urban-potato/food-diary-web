@@ -1,10 +1,11 @@
 import * as yup from "yup";
 
 export const validValues = {
+  decimalRegex: /^(?:\d+[\,\.]{1}\d{1,3}|\d+)$/,
   requiredErrorMessage: "Обязательное поле",
   numberTypeErrorMessage: "Требуется ввести число",
   decimalTypeErrorMessage:
-    "Требуется ввести положительное число, содержащее не больше 2-х знаков после запятой или точки",
+    "Требуется ввести положительное число, содержащее не больше 3-х знаков после запятой или точки",
   foodElementaryName: {
     min: {
       value: 1,
@@ -19,7 +20,7 @@ export const validValues = {
   },
   caloriesValue: {
     max: {
-      value: 10000,
+      value: 20000,
       message: (max: number) => `Число должно быть не больше ${max}`,
     },
   },
@@ -29,7 +30,7 @@ export const validValues = {
       message: (min: number) => `Число должно быть больше или равно ${min}`,
     },
     max: {
-      value: 100,
+      value: 1000,
       message: (max: number) => `Число должно быть не больше ${max}`,
     },
     error: "Введены некорректные данные",
@@ -56,7 +57,7 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
     .string()
     .required("• Калорийность: " + validValues.requiredErrorMessage)
     .matches(
-      /^(?:\d+[\,\.]{1}\d{1,2}|\d+)$/,
+      validValues.decimalRegex,
       "• Калорийность: " + validValues.decimalTypeErrorMessage
     )
     .test(
@@ -87,15 +88,27 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
         }),
 
         characteristicValue: yup
-          .number()
+          .string()
           .required("• Вес: " + validValues.requiredErrorMessage)
-          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
-          .min(
-            validValues.nutrientValue.min.value,
+          .matches(
+            validValues.decimalRegex,
+            "• Вес: " + validValues.decimalTypeErrorMessage
+          )
+          .test(
+            "max",
             "• Вес: " +
-              validValues.nutrientValue.min.message(
-                validValues.nutrientValue.min.value
-              )
+              validValues.nutrientValue.max.message(
+                validValues.nutrientValue.max.value
+              ),
+            (value) => {
+              const valueWithDot = value.replace(",", ".");
+              const valueFloat = parseFloat(valueWithDot);
+              if (Number.isNaN(valueFloat)) return false;
+
+              const result = valueFloat <= validValues.nutrientValue.max.value;
+
+              return result;
+            }
           ),
       })
     )
@@ -114,15 +127,27 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
         }),
 
         characteristicValue: yup
-          .number()
+          .string()
           .required("• Вес: " + validValues.requiredErrorMessage)
-          .typeError("• Вес: " + validValues.numberTypeErrorMessage)
-          .min(
-            validValues.nutrientValue.min.value,
+          .matches(
+            validValues.decimalRegex,
+            "• Вес: " + validValues.decimalTypeErrorMessage
+          )
+          .test(
+            "max",
             "• Вес: " +
-              validValues.nutrientValue.min.message(
-                validValues.nutrientValue.min.value
-              )
+              validValues.nutrientValue.max.message(
+                validValues.nutrientValue.max.value
+              ),
+            (value) => {
+              const valueWithDot = value.replace(",", ".");
+              const valueFloat = parseFloat(valueWithDot);
+              if (Number.isNaN(valueFloat)) return false;
+
+              const result = valueFloat <= validValues.nutrientValue.max.value;
+
+              return result;
+            }
           ),
       })
     )

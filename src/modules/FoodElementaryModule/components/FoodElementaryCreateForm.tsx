@@ -1,11 +1,6 @@
 import { ChangeEvent, FC, useEffect, useRef } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Controller,
-  SubmitHandler,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { useCreateFoodElementaryMutation } from "../api/foodElementary.api";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
@@ -37,14 +32,14 @@ type TFoodElementaryCreateFormData = {
       label?: string | undefined;
       value: string;
     };
-    characteristicValue: number;
+    characteristicValue: string;
   }[];
   defaultCharacteristicsList: {
     characteristicInfo: {
       label: string;
       value: string;
     };
-    characteristicValue: number;
+    characteristicValue: string;
   }[];
 };
 
@@ -155,9 +150,9 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     const createFoodElementaryData = {
       data: {
         name: data.foodElementaryName,
-        proteinValue: 0,
-        fatValue: 0,
-        carbohydrateValue: 0,
+        proteinValue: "0",
+        fatValue: "0",
+        carbohydrateValue: "0",
         caloriesValue: data.caloriesValue,
       },
       isInvalidationNeeded: additionalCharacteristics.length > 0 ? false : true,
@@ -217,7 +212,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     if (addCharacteristicListFields.length === 1) {
       addCharacteristicListRemove(0);
       addCharacteristicListAppend({
-        characteristicValue: 0,
+        characteristicValue: "0",
       });
     }
 
@@ -260,7 +255,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
               label: characteristic.name,
               value: characteristic.id,
             },
-            characteristicValue: 0,
+            characteristicValue: "0",
           };
         }
       );
@@ -275,7 +270,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     newCharacteristicsForbiddenToAddIdsRef.current.push("");
 
     addCharacteristicListAppend({
-      characteristicValue: 0,
+      characteristicValue: "0",
     });
   };
 
@@ -369,7 +364,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                   itemIndex={index}
                   label={"Нутриент"}
                   selectPlaceholder={"Введите название нутриента"}
-                  handleRemoveItem={(_) => {}}
+                  handleRemoveItem={() => {}}
                   controllerName={
                     `defaultCharacteristicsList.${index}.characteristicInfo` as const
                   }
