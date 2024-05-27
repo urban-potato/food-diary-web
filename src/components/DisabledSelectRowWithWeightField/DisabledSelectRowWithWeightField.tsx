@@ -2,10 +2,11 @@ import { Controller } from "react-hook-form";
 import Select from "react-select";
 import { SELECT_STYLES } from "../../global/constants/constants";
 import ButtonIlluminated from "../../ui/ButtonIlluminated/ButtonIlluminated";
-import { FC, useRef } from "react";
+import { ChangeEvent, FC, useRef } from "react";
 import { Player } from "@lordicon/react";
 import DELETE_ICON from "../../global/assets/system-regular-39-trash.json";
 import InputIlluminated from "../../ui/InputIlluminated/InputIlluminated";
+import { replaceIncorrectDecimalInput } from "../../global/helpers/replace_incorrect_decimal_input";
 
 type TProps = {
   itemId: any;
@@ -67,12 +68,23 @@ const DisabledSelectRowWithWeightField: FC<TProps> = ({
         <div className="sm:max-w-[100px] max-w-[80px] flex-grow">
           <InputIlluminated
             id={`InputIlluminated_${itemId}_${itemIndex}`}
-            type="number"
+            type="text"
             inputLabel="Вес (г)"
             disableIllumination={true}
             additionalStyles=" h-[67px] border-0 "
             register={{ ...register }}
             isRequired={true}
+            onInput={(event: ChangeEvent<HTMLInputElement>) => {
+              const isValidInput = /^(?:\d+[\,\.]{1}\d{1,2}|\d+)$/.test(
+                event.target.value
+              );
+
+              if (!isValidInput) {
+                event.target.value = replaceIncorrectDecimalInput(
+                  event.target.value
+                );
+              }
+            }}
           />
         </div>
 
