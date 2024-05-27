@@ -39,7 +39,7 @@ type TMealCreateFormData = {
       value: string;
       isElementary: boolean;
     };
-    weight: number;
+    weight: string;
   }[];
 };
 
@@ -268,7 +268,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     if (addFoodListFields.length === 1) {
       addFoodListRemove(0);
       addFoodListAppend({
-        weight: 0,
+        weight: "0",
       });
     }
 
@@ -296,7 +296,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     newFoodForbiddenToAddIdsRef.current.push("");
 
     addFoodListAppend({
-      weight: 0,
+      weight: "0",
     });
   };
 

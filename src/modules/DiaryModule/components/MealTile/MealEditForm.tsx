@@ -44,21 +44,21 @@ type TMealEditFormData = {
       value: string;
       isElementary: boolean;
     };
-    weight: number;
+    weight: string;
   }[];
   originalFoodElementaryList: {
     foodElementaryId: {
       label: string;
       value: string;
     };
-    weight: number;
+    weight: string;
   }[];
   originalFoodRecipeList: {
     foodRecipeId: {
       label: string;
       value: string;
     };
-    weight: number;
+    weight: string;
   }[];
 };
 
@@ -287,7 +287,7 @@ const MealEditForm: FC<TProps> = ({
 
       if (
         consumedElementaryToChange != undefined &&
-        consumedElementaryToChange.elementaryInMealWeight !=
+        consumedElementaryToChange.elementaryInMealWeight.toString() !=
           originalElementary.weight
       ) {
         changeElementariesList.push(originalElementary);
@@ -317,7 +317,8 @@ const MealEditForm: FC<TProps> = ({
 
       if (
         consumedRecipeToChange != undefined &&
-        consumedRecipeToChange.recipeInMealWeight != originalRecipe.weight
+        consumedRecipeToChange.recipeInMealWeight.toString() !=
+          originalRecipe.weight
       ) {
         changeRecipesList.push(originalRecipe);
 
@@ -563,7 +564,7 @@ const MealEditForm: FC<TProps> = ({
             label: elementary.foodElementary.name,
             value: elementary.foodElementary.id,
           },
-          weight: elementary.elementaryInMealWeight,
+          weight: elementary.elementaryInMealWeight.toString(),
         };
       }
     );
@@ -581,7 +582,7 @@ const MealEditForm: FC<TProps> = ({
           label: recipe.foodRecipe.name,
           value: recipe.foodRecipe.id,
         },
-        weight: recipe.recipeInMealWeight,
+        weight: recipe.recipeInMealWeight.toString(),
       };
     });
 
@@ -769,7 +770,7 @@ const MealEditForm: FC<TProps> = ({
                     newFoodForbiddenToAddIdsRef.current.push("");
 
                     addFoodListAppend({
-                      weight: 0,
+                      weight: "0",
                     });
                   }}
                   buttonPadding=" p-[12px] "
