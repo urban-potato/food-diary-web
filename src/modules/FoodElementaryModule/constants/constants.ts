@@ -23,11 +23,7 @@ export const validValues = {
       message: (max: number) => `Число должно быть не больше ${max}`,
     },
   },
-  nutrientValue: {
-    min: {
-      value: 0,
-      message: (min: number) => `Число должно быть больше или равно ${min}`,
-    },
+  nutrientWeightValue: {
     max: {
       value: 1000,
       message: (max: number) => `Число должно быть не больше ${max}`,
@@ -97,15 +93,15 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
           .test(
             "max",
             "• Вес: " +
-              validValues.nutrientValue.max.message(
-                validValues.nutrientValue.max.value
+              validValues.nutrientWeightValue.max.message(
+                validValues.nutrientWeightValue.max.value
               ),
             (value) => {
               const valueWithDot = value.replace(",", ".");
               const valueFloat = parseFloat(valueWithDot);
               if (Number.isNaN(valueFloat)) return false;
 
-              const result = valueFloat <= validValues.nutrientValue.max.value;
+              const result = valueFloat <= validValues.nutrientWeightValue.max.value;
 
               return result;
             }
@@ -137,15 +133,15 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
           .test(
             "max",
             "• Вес: " +
-              validValues.nutrientValue.max.message(
-                validValues.nutrientValue.max.value
+              validValues.nutrientWeightValue.max.message(
+                validValues.nutrientWeightValue.max.value
               ),
             (value) => {
               const valueWithDot = value.replace(",", ".");
               const valueFloat = parseFloat(valueWithDot);
               if (Number.isNaN(valueFloat)) return false;
 
-              const result = valueFloat <= validValues.nutrientValue.max.value;
+              const result = valueFloat <= validValues.nutrientWeightValue.max.value;
 
               return result;
             }
@@ -217,15 +213,15 @@ export const editFoodElementaryValidationSchema = yup.object().shape({
           .test(
             "max",
             "• Вес: " +
-              validValues.nutrientValue.max.message(
-                validValues.nutrientValue.max.value
+              validValues.nutrientWeightValue.max.message(
+                validValues.nutrientWeightValue.max.value
               ),
             (value) => {
               const valueWithDot = value.replace(",", ".");
               const valueFloat = parseFloat(valueWithDot);
               if (Number.isNaN(valueFloat)) return false;
 
-              const result = valueFloat <= validValues.nutrientValue.max.value;
+              const result = valueFloat <= validValues.nutrientWeightValue.max.value;
 
               return result;
             }
@@ -258,15 +254,15 @@ export const editFoodElementaryValidationSchema = yup.object().shape({
           .test(
             "max",
             "• Вес: " +
-              validValues.nutrientValue.max.message(
-                validValues.nutrientValue.max.value
+              validValues.nutrientWeightValue.max.message(
+                validValues.nutrientWeightValue.max.value
               ),
             (value) => {
               const valueWithDot = value.replace(",", ".");
               const valueFloat = parseFloat(valueWithDot);
               if (Number.isNaN(valueFloat)) return false;
 
-              const result = valueFloat <= validValues.nutrientValue.max.value;
+              const result = valueFloat <= validValues.nutrientWeightValue.max.value;
 
               return result;
             }
