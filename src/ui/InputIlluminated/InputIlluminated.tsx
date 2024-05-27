@@ -1,10 +1,10 @@
-import { FC } from "react";
+import React, { FC } from "react";
 
-type TProps = {
+interface TProps extends React.InputHTMLAttributes<HTMLInputElement> {
   ref?: any;
   id: string;
   type: string;
-  placeholder?: string | number;
+  inputLabel?: string | number;
   register: any;
   errorMessage?: any;
   isError?: boolean;
@@ -17,13 +17,13 @@ type TProps = {
   isDisabled?: boolean;
   addSpaceAfterLabel?: boolean;
   labelSize?: string;
-};
+}
 
 const InputIlluminated: FC<TProps> = ({
   ref = undefined,
   id,
   type,
-  placeholder,
+  inputLabel,
   register,
   errorMessage = null,
   isError = false,
@@ -66,7 +66,7 @@ const InputIlluminated: FC<TProps> = ({
       <div className="flex mb-1">
         <label htmlFor={id} className={`block truncate ${labelSize}`}>
           <h3 className="flex gap-x-1 truncate">
-            <p className="truncate">{placeholder}</p>
+            <p className="truncate">{inputLabel}</p>
             <p className={isRequired ? "text-red" : "hidden"}>*</p>
           </h3>
         </label>

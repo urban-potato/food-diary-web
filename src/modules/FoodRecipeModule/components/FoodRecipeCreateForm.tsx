@@ -192,7 +192,7 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
             <InputIlluminated
               id={"FoodRecipeCreateForm_foodRecipeName"}
               type="text"
-              placeholder="Название блюда"
+              inputLabel="Название блюда"
               disableIllumination={true}
               additionalStyles=" h-[67px] border-0 "
               register={{

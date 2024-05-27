@@ -138,7 +138,7 @@ const RegistrationForm: FC = () => {
               <InputIlluminated
                 id="email"
                 type="email"
-                placeholder="Почта"
+                inputLabel="Почта"
                 register={{ ...register("email") }}
                 // errorMessage={errors.email?.message}
                 isError={errors.email ? true : false}
@@ -168,7 +168,7 @@ const RegistrationForm: FC = () => {
               <InputIlluminated
                 id="password"
                 type="password"
-                placeholder="Пароль"
+                inputLabel="Пароль"
                 register={{ ...register("password") }}
                 // errorMessage={errors.password?.message}
                 isError={errors.password ? true : false}
@@ -194,7 +194,7 @@ const RegistrationForm: FC = () => {
               <InputIlluminated
                 id="passwordConfirmation"
                 type="password"
-                placeholder="Повторите пароль"
+                inputLabel="Повторите пароль"
                 register={{ ...register("passwordConfirmation") }}
                 // errorMessage={errors.passwordConfirmation?.message}
                 isError={errors.passwordConfirmation ? true : false}

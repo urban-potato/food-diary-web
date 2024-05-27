@@ -102,7 +102,7 @@ const UserProfileInfoEditForm: FC<TProps> = ({
             <InputIlluminated
               id="email"
               type="email"
-              placeholder="Почта"
+              inputLabel="Почта"
               disableIllumination={true}
               additionalStyles=" h-[67px] border-0 "
               register={{ ...register("email") }}
@@ -129,7 +129,7 @@ const UserProfileInfoEditForm: FC<TProps> = ({
             <InputIlluminated
               id="firstName"
               type="text"
-              placeholder="Имя"
+              inputLabel="Имя"
               disableIllumination={true}
               additionalStyles=" h-[67px] border-0 "
               register={{ ...register("firstName") }}
@@ -156,7 +156,7 @@ const UserProfileInfoEditForm: FC<TProps> = ({
             <InputIlluminated
               id="lastName"
               type="text"
-              placeholder="Фамилия"
+              inputLabel="Фамилия"
               disableIllumination={true}
               additionalStyles=" h-[67px] border-0 "
               register={{ ...register("lastName") }}

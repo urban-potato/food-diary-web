@@ -68,7 +68,7 @@ const DisabledSelectRowWithWeightField: FC<TProps> = ({
           <InputIlluminated
             id={`InputIlluminated_${itemId}_${itemIndex}`}
             type="number"
-            placeholder="Вес (г)"
+            inputLabel="Вес (г)"
             disableIllumination={true}
             additionalStyles=" h-[67px] border-0 "
             register={{ ...register }}

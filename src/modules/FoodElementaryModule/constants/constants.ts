@@ -3,8 +3,8 @@ import * as yup from "yup";
 export const validValues = {
   requiredErrorMessage: "Обязательное поле",
   numberTypeErrorMessage: "Требуется ввести число",
-  integerTypeErrorMessage: "Требуется ввести целое число",
-  numberMustBePositiveErrorMessage: "Число должно быть положительным",
+  decimalTypeErrorMessage:
+    "Требуется ввести положительное число, содержащее не больше 2-х знаков после запятой или точки",
   foodElementaryName: {
     min: {
       value: 1,
@@ -17,10 +17,20 @@ export const validValues = {
         `• Название блюда: Должно составлять до ${max} символов`,
     },
   },
-  characteristicValue: {
+  caloriesValue: {
+    max: {
+      value: 10000,
+      message: (max: number) => `Число должно быть не больше ${max}`,
+    },
+  },
+  nutrientValue: {
     min: {
       value: 0,
       message: (min: number) => `Число должно быть больше или равно ${min}`,
+    },
+    max: {
+      value: 100,
+      message: (max: number) => `Число должно быть не больше ${max}`,
     },
     error: "Введены некорректные данные",
   },
@@ -43,17 +53,28 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
     )
     .required("• Название блюда: " + validValues.requiredErrorMessage),
   caloriesValue: yup
-    .number()
+    .string()
     .required("• Калорийность: " + validValues.requiredErrorMessage)
-    .typeError("• Калорийность: " + validValues.numberTypeErrorMessage)
-    .min(
-      validValues.characteristicValue.min.value,
-      "• Калорийность: " +
-        validValues.characteristicValue.min.message(
-          validValues.characteristicValue.min.value
-        )
+    .matches(
+      /^(?:\d+[\,\.]{1}\d{1,2}|\d+)$/,
+      "• Калорийность: " + validValues.decimalTypeErrorMessage
     )
-    .integer("• Калорийность: " + validValues.integerTypeErrorMessage),
+    .test(
+      "max",
+      "• Калорийность: " +
+        validValues.caloriesValue.max.message(
+          validValues.caloriesValue.max.value
+        ),
+      (value) => {
+        const valueWithDot = value.replace(",", ".");
+        const valueFloat = parseFloat(valueWithDot);
+        if (Number.isNaN(valueFloat)) return false;
+
+        const result = valueFloat <= validValues.caloriesValue.max.value;
+
+        return result;
+      }
+    ),
   addCharacteristicsList: yup
     .array()
     .of(
@@ -64,20 +85,18 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
             .string()
             .required("• Нутриент: " + validValues.requiredErrorMessage),
         }),
-        // .required("• Ингредиент: " + validValues.requiredErrorMessage),
 
         characteristicValue: yup
           .number()
           .required("• Вес: " + validValues.requiredErrorMessage)
           .typeError("• Вес: " + validValues.numberTypeErrorMessage)
           .min(
-            validValues.characteristicValue.min.value,
+            validValues.nutrientValue.min.value,
             "• Вес: " +
-              validValues.characteristicValue.min.message(
-                validValues.characteristicValue.min.value
+              validValues.nutrientValue.min.message(
+                validValues.nutrientValue.min.value
               )
-          )
-          .integer("• Вес: " + validValues.integerTypeErrorMessage),
+          ),
       })
     )
     .required(),
@@ -93,20 +112,18 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
             .string()
             .required("• Нутриент: " + validValues.requiredErrorMessage),
         }),
-        // .required("• Ингредиент: " + validValues.requiredErrorMessage),
 
         characteristicValue: yup
           .number()
           .required("• Вес: " + validValues.requiredErrorMessage)
           .typeError("• Вес: " + validValues.numberTypeErrorMessage)
           .min(
-            validValues.characteristicValue.min.value,
+            validValues.nutrientValue.min.value,
             "• Вес: " +
-              validValues.characteristicValue.min.message(
-                validValues.characteristicValue.min.value
+              validValues.nutrientValue.min.message(
+                validValues.nutrientValue.min.value
               )
-          )
-          .integer("• Вес: " + validValues.integerTypeErrorMessage),
+          ),
       })
     )
     .required(),
@@ -133,13 +150,12 @@ export const editFoodElementaryValidationSchema = yup.object().shape({
     .required("• Калорийность: " + validValues.requiredErrorMessage)
     .typeError("• Калорийность: " + validValues.numberTypeErrorMessage)
     .min(
-      validValues.characteristicValue.min.value,
+      validValues.nutrientValue.min.value,
       "• Калорийность: " +
-        validValues.characteristicValue.min.message(
-          validValues.characteristicValue.min.value
+        validValues.nutrientValue.min.message(
+          validValues.nutrientValue.min.value
         )
-    )
-    .integer("• Калорийность: " + validValues.integerTypeErrorMessage),
+    ),
   addCharacteristicsList: yup
     .array()
     .of(
@@ -150,20 +166,18 @@ export const editFoodElementaryValidationSchema = yup.object().shape({
             .string()
             .required("• Нутриент: " + validValues.requiredErrorMessage),
         }),
-        // .required("• Ингредиент: " + validValues.requiredErrorMessage),
 
         characteristicValue: yup
           .number()
           .required("• Вес: " + validValues.requiredErrorMessage)
           .typeError("• Вес: " + validValues.numberTypeErrorMessage)
           .min(
-            validValues.characteristicValue.min.value,
+            validValues.nutrientValue.min.value,
             "• Вес: " +
-              validValues.characteristicValue.min.message(
-                validValues.characteristicValue.min.value
+              validValues.nutrientValue.min.message(
+                validValues.nutrientValue.min.value
               )
-          )
-          .integer("• Вес: " + validValues.integerTypeErrorMessage),
+          ),
       })
     )
     .required(),
@@ -180,20 +194,18 @@ export const editFoodElementaryValidationSchema = yup.object().shape({
             .string()
             .required("• Нутриент: " + validValues.requiredErrorMessage),
         }),
-        // .required("• Ингредиент: " + validValues.requiredErrorMessage),
 
         characteristicValue: yup
           .number()
           .required("• Вес: " + validValues.requiredErrorMessage)
           .typeError("• Вес: " + validValues.numberTypeErrorMessage)
           .min(
-            validValues.characteristicValue.min.value,
+            validValues.nutrientValue.min.value,
             "• Вес: " +
-              validValues.characteristicValue.min.message(
-                validValues.characteristicValue.min.value
+              validValues.nutrientValue.min.message(
+                validValues.nutrientValue.min.value
               )
-          )
-          .integer("• Вес: " + validValues.integerTypeErrorMessage),
+          ),
       })
     )
     .required(),

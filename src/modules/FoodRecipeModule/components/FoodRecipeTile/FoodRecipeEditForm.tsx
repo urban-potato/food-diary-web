@@ -370,7 +370,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
           <InputIlluminated
             id={"FoodRecipeEditForm_foodRecipeName"}
             type="text"
-            placeholder="Название блюда"
+            inputLabel="Название блюда"
             disableIllumination={true}
             additionalStyles=" h-[67px] border-0 "
             register={{

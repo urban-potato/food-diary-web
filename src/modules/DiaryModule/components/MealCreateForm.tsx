@@ -372,7 +372,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                   <InputIlluminated
                     id={"FoodRecipeCreateForm_creationTime"}
                     type="time"
-                    placeholder="Время"
+                    inputLabel="Время"
                     disableIllumination={true}
                     additionalStyles=" h-[56px] border-0 "
                     register={{

@@ -475,7 +475,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
           <InputIlluminated
             id={"FoodElementaryEditForm_foodElementaryName"}
             type="text"
-            placeholder="Название блюда"
+            inputLabel="Название блюда"
             disableIllumination={true}
             additionalStyles=" h-[67px] border-0 "
             register={{
@@ -507,7 +507,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
           <InputIlluminated
             id={"FoodElementaryEditForm_caloriesValue"}
             type="number"
-            placeholder="Калорийность (ккал.)"
+            inputLabel="Калорийность (ккал.)"
             disableIllumination={true}
             additionalStyles=" h-[67px] border-0 "
             register={{

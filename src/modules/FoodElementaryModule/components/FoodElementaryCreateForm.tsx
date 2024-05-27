@@ -1,6 +1,11 @@
-import { FC, useEffect, useRef } from "react";
+import { ChangeEvent, FC, useEffect, useRef } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import {
+  Controller,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
 import { useCreateFoodElementaryMutation } from "../api/foodElementary.api";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
@@ -18,6 +23,7 @@ import {
 import { sortConsumedCharacteristics } from "../../../global/helpers/sort_characteristics.helper.ts";
 import DisabledSelectRowWithWeightField from "../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField.tsx";
 import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField.tsx";
+import { replaceIncorrectDecimalInput } from "../../../global/helpers/replace_incorrect_decimal_input.ts";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -25,7 +31,7 @@ type TProps = {
 
 type TFoodElementaryCreateFormData = {
   foodElementaryName: string;
-  caloriesValue: number;
+  caloriesValue: string;
   addCharacteristicsList: {
     characteristicInfo?: {
       label?: string | undefined;
@@ -87,7 +93,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
 
   // defaultValues
   let defaultValues = {
-    caloriesValue: 0,
+    caloriesValue: "0",
   };
 
   // useForm
@@ -287,7 +293,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
             <InputIlluminated
               id={"FoodElementaryCreateForm_foodElementaryName"}
               type="text"
-              placeholder="Название блюда"
+              inputLabel="Название блюда"
               disableIllumination={true}
               additionalStyles=" h-[67px] border-0 "
               register={{
@@ -318,8 +324,8 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
           <div className="text-xl w-full flex-grow mt-2">
             <InputIlluminated
               id={"FoodElementaryCreateForm_caloriesValue"}
-              type="number"
-              placeholder="Калорийность (ккал.)"
+              type="text"
+              inputLabel="Калорийность (ккал.)"
               disableIllumination={true}
               additionalStyles=" h-[67px] border-0 "
               register={{
@@ -327,6 +333,17 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
               }}
               isRequired={true}
               labelSize={"text-lg"}
+              onInput={(event: ChangeEvent<HTMLInputElement>) => {
+                const isValidInput = /^(?:\d+[\,\.]{1}\d{1,2}|\d+)$/.test(
+                  event.target.value
+                );
+
+                if (!isValidInput) {
+                  event.target.value = replaceIncorrectDecimalInput(
+                    event.target.value
+                  );
+                }
+              }}
             />
           </div>
           {errors.caloriesValue && (

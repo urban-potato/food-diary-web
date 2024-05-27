@@ -80,7 +80,7 @@ const AuthorizationForm: FC = () => {
               <InputIlluminated
                 id="email"
                 type="email"
-                placeholder="Почта"
+                inputLabel="Почта"
                 register={{ ...register("email") }}
                 isError={errors.email ? true : false}
                 isRequired={true}
@@ -103,7 +103,7 @@ const AuthorizationForm: FC = () => {
               <InputIlluminated
                 id="password"
                 type="password"
-                placeholder="Пароль"
+                inputLabel="Пароль"
                 register={{ ...register("password") }}
                 isError={errors.password ? true : false}
                 isRequired={true}
