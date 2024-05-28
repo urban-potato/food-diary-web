@@ -10,12 +10,12 @@ export const validValues = {
     min: {
       value: 1,
       message: (min: number) =>
-        `• Название блюда: Должно составлять от ${min} символа`,
+        `• Название блюда: Минимальная длина - ${min} символ`,
     },
     max: {
       value: 256,
       message: (max: number) =>
-        `• Название блюда: Должно составлять до ${max} символов`,
+        `• Название блюда: Максимальная длина - ${max} символов`,
     },
   },
   ingredientWeightValue: {
@@ -37,7 +37,8 @@ const foodNameSchema = yup
     validValues.foodRecipeName.max.value,
     validValues.foodRecipeName.max.message(validValues.foodRecipeName.max.value)
   )
-  .required("• Название блюда: " + validValues.requiredErrorMessage);
+  .required("• Название блюда: " + validValues.requiredErrorMessage)
+  .transform((value) => value.trim());
 
 const weightFieldSchema = yup
   .string()
@@ -59,7 +60,7 @@ const weightFieldSchema = yup
       return result;
     }
   )
-  .transform((value) => value.replace(",", "."));
+  .transform((value) => value.replace(",", ".").trim());
 
 const ingredientsListSchema = yup
   .array()
