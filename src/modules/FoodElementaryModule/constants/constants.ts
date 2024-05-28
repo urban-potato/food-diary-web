@@ -9,12 +9,12 @@ export const validValues = {
     min: {
       value: 1,
       message: (min: number) =>
-        `• Название блюда: Должно составлять от ${min} символа`,
+        `• Название блюда: Минимальная длина - ${min} символ`,
     },
     max: {
       value: 256,
       message: (max: number) =>
-        `• Название блюда: Должно составлять до ${max} символов`,
+        `• Название блюда: Максимальная длина - ${max} символов`,
     },
   },
   caloriesValue: {
@@ -47,7 +47,8 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
         validValues.foodElementaryName.max.value
       )
     )
-    .required("• Название блюда: " + validValues.requiredErrorMessage),
+    .required("• Название блюда: " + validValues.requiredErrorMessage)
+    .transform((value) => value.trim()),
   caloriesValue: yup
     .string()
     .required("• Калорийность: " + validValues.requiredErrorMessage)
@@ -71,7 +72,7 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
         return result;
       }
     )
-    .transform((value) => value.replace(",", ".")),
+    .transform((value) => value.replace(",", ".").trim()),
   addCharacteristicsList: yup
     .array()
     .of(
@@ -101,12 +102,13 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
               const valueFloat = parseFloat(valueWithDot);
               if (Number.isNaN(valueFloat)) return false;
 
-              const result = valueFloat <= validValues.nutrientWeightValue.max.value;
+              const result =
+                valueFloat <= validValues.nutrientWeightValue.max.value;
 
               return result;
             }
           )
-          .transform((value) => value.replace(",", ".")),
+          .transform((value) => value.replace(",", ".").trim()),
       })
     )
     .required(),
@@ -141,12 +143,13 @@ export const createFoodElementaryValidationSchema = yup.object().shape({
               const valueFloat = parseFloat(valueWithDot);
               if (Number.isNaN(valueFloat)) return false;
 
-              const result = valueFloat <= validValues.nutrientWeightValue.max.value;
+              const result =
+                valueFloat <= validValues.nutrientWeightValue.max.value;
 
               return result;
             }
           )
-          .transform((value) => value.replace(",", ".")),
+          .transform((value) => value.replace(",", ".").trim()),
       })
     )
     .required(),
@@ -167,7 +170,8 @@ export const editFoodElementaryValidationSchema = yup.object().shape({
         validValues.foodElementaryName.max.value
       )
     )
-    .required("• Название блюда: " + validValues.requiredErrorMessage),
+    .required("• Название блюда: " + validValues.requiredErrorMessage)
+    .transform((value) => value.trim()),
   caloriesValue: yup
     .string()
     .required("• Калорийность: " + validValues.requiredErrorMessage)
@@ -191,7 +195,7 @@ export const editFoodElementaryValidationSchema = yup.object().shape({
         return result;
       }
     )
-    .transform((value) => value.replace(",", ".")),
+    .transform((value) => value.replace(",", ".").trim()),
   addCharacteristicsList: yup
     .array()
     .of(
@@ -221,12 +225,13 @@ export const editFoodElementaryValidationSchema = yup.object().shape({
               const valueFloat = parseFloat(valueWithDot);
               if (Number.isNaN(valueFloat)) return false;
 
-              const result = valueFloat <= validValues.nutrientWeightValue.max.value;
+              const result =
+                valueFloat <= validValues.nutrientWeightValue.max.value;
 
               return result;
             }
           )
-          .transform((value) => value.replace(",", ".")),
+          .transform((value) => value.replace(",", ".").trim()),
       })
     )
     .required(),
@@ -262,12 +267,13 @@ export const editFoodElementaryValidationSchema = yup.object().shape({
               const valueFloat = parseFloat(valueWithDot);
               if (Number.isNaN(valueFloat)) return false;
 
-              const result = valueFloat <= validValues.nutrientWeightValue.max.value;
+              const result =
+                valueFloat <= validValues.nutrientWeightValue.max.value;
 
               return result;
             }
           )
-          .transform((value) => value.replace(",", ".")),
+          .transform((value) => value.replace(",", ".").trim()),
       })
     )
     .required(),
