@@ -99,7 +99,8 @@ const InputIlluminated: FC<TProps> = ({
           type={type}
           {...register}
           style={{
-            backgroundColor: errorMessage || isError ? bgError : bg,
+            // backgroundColor: errorMessage || isError ? bgError : bg,
+            backgroundColor: bg,
             color: isDisabled ? "gray" : "black",
           }}
           className={
