@@ -2,13 +2,14 @@ import * as yup from "yup";
 
 export const validValues = {
   requiredErrorMessage: "Обязательное поле",
+  basicErrorMessage: "Введены некорректные данные",
   email: {
     error: "• Почта: Введены некорректные данные",
   },
   firstName: {
     min: {
-      value: 3,
-      message: (min: number) => `• Имя: Минимальная длина - ${min} символа`,
+      value: 1,
+      message: (min: number) => `• Имя: Минимальная длина - ${min} символ`,
     },
     max: {
       value: 256,
@@ -18,8 +19,8 @@ export const validValues = {
   },
   lastName: {
     min: {
-      value: 3,
-      message: (min: number) => `• Фамилия: Минимальная длина - ${min} символа`,
+      value: 1,
+      message: (min: number) => `• Фамилия: Минимальная длина - ${min} символ`,
     },
     max: {
       value: 256,
@@ -103,7 +104,8 @@ export const editUserProfileInfoValidationSchema = yup.object({
     .matches(
       /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
       validValues.email.error
-    ),
+    )
+    .transform((value) => value.trim()),
   firstName: yup
     .string()
     .min(
@@ -114,7 +116,8 @@ export const editUserProfileInfoValidationSchema = yup.object({
       validValues.firstName.max.value,
       validValues.firstName.max.message(validValues.firstName.max.value)
     )
-    .required(`• Имя: ${validValues.requiredErrorMessage}`),
+    .required(`• Имя: ${validValues.requiredErrorMessage}`)
+    .transform((value) => value.trim()),
   lastName: yup
     .string()
     .min(
@@ -125,5 +128,6 @@ export const editUserProfileInfoValidationSchema = yup.object({
       validValues.lastName.max.value,
       validValues.lastName.max.message(validValues.lastName.max.value)
     )
-    .required(`• Фамилия: ${validValues.requiredErrorMessage}`),
+    .required(`• Фамилия: ${validValues.requiredErrorMessage}`)
+    .transform((value) => value.trim()),
 });
