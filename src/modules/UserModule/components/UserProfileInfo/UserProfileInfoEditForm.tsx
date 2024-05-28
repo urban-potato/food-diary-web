@@ -107,7 +107,6 @@ const UserProfileInfoEditForm: FC<TProps> = ({
               disableIllumination={true}
               additionalStyles=" h-[67px] border-0 "
               register={{ ...register("email") }}
-              isError={errors.email ? true : false}
               isRequired={true}
             />
 
@@ -134,7 +133,6 @@ const UserProfileInfoEditForm: FC<TProps> = ({
               disableIllumination={true}
               additionalStyles=" h-[67px] border-0 "
               register={{ ...register("firstName") }}
-              isError={errors.firstName ? true : false}
               isRequired={true}
             />
 
@@ -161,7 +159,6 @@ const UserProfileInfoEditForm: FC<TProps> = ({
               disableIllumination={true}
               additionalStyles=" h-[67px] border-0 "
               register={{ ...register("lastName") }}
-              isError={errors.lastName ? true : false}
               isRequired={true}
             />
 
