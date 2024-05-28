@@ -360,6 +360,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
         <form
           className="box_content_transition flex flex-col flex-wrap w-full justify-center p-7"
           onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
         >
           {isLoadingGetAllMealTypes ? (
             <div className="flex justify-center items-center">

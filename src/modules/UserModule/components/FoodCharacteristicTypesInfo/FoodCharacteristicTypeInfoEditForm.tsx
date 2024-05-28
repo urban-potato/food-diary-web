@@ -243,6 +243,7 @@ const FoodCharacteristicTypeInfoEditForm: FC<TProps> = ({
       <form
         className="flex flex-col flex-wrap justify-center w-full"
         onSubmit={handleSubmit(onSubmit)}
+        autoComplete="off"
       >
         <div className="flex flex-col">
           {originalFields.map((item, index) => {

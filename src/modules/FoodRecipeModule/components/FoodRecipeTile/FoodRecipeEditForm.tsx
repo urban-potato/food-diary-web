@@ -366,6 +366,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
       <form
         className="flex flex-col flex-wrap justify-center w-full"
         onSubmit={handleSubmit(onSubmit)}
+        autoComplete="off"
       >
         <div className="text-xl w-full flex-grow">
           <InputIlluminated

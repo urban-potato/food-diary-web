@@ -96,6 +96,7 @@ const UserProfileInfoEditForm: FC<TProps> = ({
       <form
         className="lex flex-col flex-wrap justify-center w-full"
         onSubmit={handleSubmit(onSubmit)}
+        autoComplete="off"
       >
         <div className="flex flex-col w-full gap-1">
           <div className="w-full flex-grow">

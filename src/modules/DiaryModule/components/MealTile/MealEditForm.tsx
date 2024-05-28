@@ -639,6 +639,7 @@ const MealEditForm: FC<TProps> = ({
       <form
         className="flex flex-col flex-wrap justify-center w-full"
         onSubmit={handleSubmit(onSubmit)}
+        autoComplete="off"
       >
         {isLoadingGetAllMealTypes ? (
           <div className="flex justify-center items-center">

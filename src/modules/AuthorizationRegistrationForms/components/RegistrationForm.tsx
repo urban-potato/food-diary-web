@@ -173,6 +173,7 @@ const RegistrationForm: FC = () => {
                 // errorMessage={errors.password?.message}
                 isError={errors.password ? true : false}
                 isRequired={true}
+                autoComplete="new-password"
               />
 
               {errors && (
@@ -199,6 +200,7 @@ const RegistrationForm: FC = () => {
                 // errorMessage={errors.passwordConfirmation?.message}
                 isError={errors.passwordConfirmation ? true : false}
                 isRequired={true}
+                autoComplete="new-password"
               />
 
               {errors && (

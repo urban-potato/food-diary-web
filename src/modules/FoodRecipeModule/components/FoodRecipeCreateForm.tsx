@@ -187,6 +187,7 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
         <form
           className="box_content_transition flex flex-col flex-wrap w-full justify-center p-7"
           onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
         >
           <div className="text-xl w-full flex-grow">
             <InputIlluminated
