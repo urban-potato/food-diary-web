@@ -62,7 +62,8 @@ export const editFoodCharacteristicTypesValidationSchema = yup.object({
               validValues.foodCharacteristicTypeName.max.value
             )
           )
-          .required("• Нутриент: " + validValues.requiredErrorMessage),
+          .required("• Нутриент: " + validValues.requiredErrorMessage)
+          .transform((value) => value.trim()),
       })
     )
     .required(),
@@ -88,9 +89,9 @@ export const editFoodCharacteristicTypesValidationSchema = yup.object({
                 validValues.foodCharacteristicTypeName.max.value
               )
             )
-            .required("• Нутриент: " + validValues.requiredErrorMessage),
+            .required("• Нутриент: " + validValues.requiredErrorMessage)
+            .transform((value) => value.trim()),
         }),
-        // .required("• Нутриент: " + validValues.requiredErrorMessage),
       })
     )
     .required(),
