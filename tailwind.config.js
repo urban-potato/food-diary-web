@@ -100,6 +100,9 @@ export default {
         main_pink: "#EC4899",
         main_violet: "#8B5CF6",
         main_green: "#ACBC5B",
+
+        calories: "#F2EAFF",
+        illuminationCalories: "#B5F74B",
       },
     },
   },
