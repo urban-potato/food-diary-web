@@ -38,7 +38,7 @@ const weightFieldSchema = yup
       return result;
     }
   )
-  .transform((value) => value.replace(",", "."));
+  .transform((value) => value.replace(",", ".").trim());
 
 export const createValidationSchema = yup.object({
   creationTime: yup
