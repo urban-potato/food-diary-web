@@ -2,29 +2,31 @@ import { FC } from "react";
 import {
   ICharacteristicsSum,
   IFoodCharacteristic,
+  IFoodCharacteristicType,
 } from "../../global/types/types";
 import { sortConsumedCharacteristics } from "../../global/helpers/sort_characteristics.helper";
 import CharacteristicTile from "./CharacteristicTile";
-import { ZERO_CHARACTERISTICS_SUM_DATA } from "../../global/constants/constants";
 
 type TProps = {
-  characteristicsList: ICharacteristicsSum[] | IFoodCharacteristic[];
+  characteristicsList:
+    | ICharacteristicsSum[]
+    | IFoodCharacteristic[]
+    | IFoodCharacteristicType[];
 };
 
 const CharacteristicTilesList: FC<TProps> = ({
   characteristicsList: characteristicsSum,
 }) => {
-  const characteristicsSumList =
-    characteristicsSum.length == 0
-      ? ZERO_CHARACTERISTICS_SUM_DATA
-      : characteristicsSum;
-
-  const sortedConsumedCharacteristics = sortConsumedCharacteristics(
-    characteristicsSumList
-  );
+  const sortedConsumedCharacteristics =
+    sortConsumedCharacteristics(characteristicsSum);
 
   const mappedCharacteristicsSum = sortedConsumedCharacteristics.map(
-    (characteristic: ICharacteristicsSum | IFoodCharacteristic) => {
+    (
+      characteristic:
+        | ICharacteristicsSum
+        | IFoodCharacteristic
+        | IFoodCharacteristicType
+    ) => {
       let id = null;
       let name = null;
       let value = null;
@@ -33,10 +35,14 @@ const CharacteristicTilesList: FC<TProps> = ({
         id = characteristic.foodCharacteristicType.id;
         name = characteristic.foodCharacteristicType.name;
         value = characteristic.characteristicSumValue;
-      } else {
+      } else if ("characteristicTypeId" in characteristic) {
         id = characteristic.characteristicTypeId;
         name = characteristic.characteristicName;
         value = characteristic.value;
+      } else {
+        id = characteristic.id;
+        name = characteristic.name;
+        value = 0;
       }
 
       return (
