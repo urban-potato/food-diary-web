@@ -1,12 +1,7 @@
 import { FC } from "react";
 
 type TProps = {
-  label:
-    | string
-    | React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLSpanElement>,
-        HTMLSpanElement
-      >;
+  label: string | JSX.Element;
   isDarkButton: boolean;
   isIlluminationFull?: boolean;
   inset?: string;
