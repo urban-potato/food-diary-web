@@ -232,15 +232,18 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                   register={{
                     ...register(`addFoodList.${index}.weight` as const),
                   }}
-                  errors={errors}
-                  errorsGroup={errors.addFoodList}
-                  errorSelect={errors.addFoodList?.[index]?.foodInfo?.value}
-                  errorFeild={errors.addFoodList?.[index]?.weight}
                   loadSelectOptions={loadOptions}
                   handleOnSelectInputChange={handleOnInputChange}
                   handleOnSelectValueChange={handleOnChange}
                   isDeleteButtonDisabled={
                     addFoodListFields.length < 2 ? true : false
+                  }
+                  hasErrors={!!errors?.addFoodList}
+                  errorMessagesList={
+                    [
+                      errors?.addFoodList?.[index]?.foodInfo?.value?.message,
+                      errors?.addFoodList?.[index]?.weight?.message,
+                    ].filter((item) => !!item) as string[]
                   }
                 />
               );

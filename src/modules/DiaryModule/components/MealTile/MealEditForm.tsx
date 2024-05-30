@@ -692,16 +692,16 @@ const MealEditForm: FC<TProps> = ({
                         `originalFoodElementaryList.${index}.weight` as const
                       ),
                     }}
-                    errors={errors}
-                    errorsGroup={errors.originalFoodElementaryList}
-                    errorSelect={
-                      errors.originalFoodElementaryList?.[index]
-                        ?.foodElementaryId?.value
-                    }
-                    errorFeild={
-                      errors.originalFoodElementaryList?.[index]?.weight
-                    }
                     isDeleteButtonDisabled={isDeleteButtonDisabled}
+                    hasErrors={!!errors?.originalFoodElementaryList}
+                    errorMessagesList={
+                      [
+                        errors?.originalFoodElementaryList?.[index]
+                          ?.foodElementaryId?.value?.message,
+                        errors?.originalFoodElementaryList?.[index]?.weight
+                          ?.message,
+                      ].filter((item) => !!item) as string[]
+                    }
                   />
                 );
               })}
@@ -724,14 +724,16 @@ const MealEditForm: FC<TProps> = ({
                         `originalFoodRecipeList.${index}.weight` as const
                       ),
                     }}
-                    errors={errors}
-                    errorsGroup={errors.originalFoodRecipeList}
-                    errorSelect={
-                      errors.originalFoodRecipeList?.[index]?.foodRecipeId
-                        ?.value
-                    }
-                    errorFeild={errors.originalFoodRecipeList?.[index]?.weight}
                     isDeleteButtonDisabled={isDeleteButtonDisabled}
+                    hasErrors={!!errors?.originalFoodRecipeList}
+                    errorMessagesList={
+                      [
+                        errors?.originalFoodRecipeList?.[index]
+                          ?.foodRecipeId?.value?.message,
+                        errors?.originalFoodRecipeList?.[index]?.weight
+                          ?.message,
+                      ].filter((item) => !!item) as string[]
+                    }
                   />
                 );
               })}
@@ -750,14 +752,17 @@ const MealEditForm: FC<TProps> = ({
                     register={{
                       ...register(`addFoodList.${index}.weight` as const),
                     }}
-                    errors={errors}
-                    errorsGroup={errors.addFoodList}
-                    errorSelect={errors.addFoodList?.[index]?.foodInfo?.value}
-                    errorFeild={errors.addFoodList?.[index]?.weight}
                     loadSelectOptions={loadOptions}
                     handleOnSelectInputChange={handleOnInputChange}
                     handleOnSelectValueChange={handleOnChange}
                     isDeleteButtonDisabled={isDeleteButtonDisabled}
+                    hasErrors={!!errors?.addFoodList}
+                    errorMessagesList={
+                      [
+                        errors?.addFoodList?.[index]?.foodInfo?.value?.message,
+                        errors?.addFoodList?.[index]?.weight?.message,
+                      ].filter((item) => !!item) as string[]
+                    }
                   />
                 );
               })}

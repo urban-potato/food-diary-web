@@ -418,18 +418,20 @@ const FoodRecipeEditForm: FC<TProps> = ({
                     `originalIngredientsList.${index}.weight` as const
                   ),
                 }}
-                errors={errors}
-                errorsGroup={errors.originalIngredientsList}
-                errorSelect={
-                  errors.originalIngredientsList?.[index]?.ingredientInfo?.value
-                }
-                errorFeild={errors.originalIngredientsList?.[index]?.weight}
                 isDeleteButtonDisabled={
                   originalIngredientsFields.length +
                     addIngredientsListFields.length <
                   2
                     ? true
                     : false
+                }
+                hasErrors={!!errors?.originalIngredientsList}
+                errorMessagesList={
+                  [
+                    errors?.originalIngredientsList?.[index]?.ingredientInfo
+                      ?.value?.message,
+                    errors?.originalIngredientsList?.[index]?.weight?.message,
+                  ].filter((item) => !!item) as string[]
                 }
               />
             );
@@ -451,12 +453,6 @@ const FoodRecipeEditForm: FC<TProps> = ({
                 register={{
                   ...register(`addIngredientsList.${index}.weight` as const),
                 }}
-                errors={errors}
-                errorsGroup={errors.addIngredientsList}
-                errorSelect={
-                  errors.addIngredientsList?.[index]?.ingredientInfo?.value
-                }
-                errorFeild={errors.addIngredientsList?.[index]?.weight}
                 loadSelectOptions={loadOptions}
                 handleOnSelectInputChange={handleOnInputChange}
                 handleOnSelectValueChange={handleOnChange}
@@ -466,6 +462,14 @@ const FoodRecipeEditForm: FC<TProps> = ({
                   2
                     ? true
                     : false
+                }
+                hasErrors={!!errors?.addIngredientsList}
+                errorMessagesList={
+                  [
+                    errors?.addIngredientsList?.[index]?.ingredientInfo?.value
+                      ?.message,
+                    errors?.addIngredientsList?.[index]?.weight?.message,
+                  ].filter((item) => !!item) as string[]
                 }
               />
             );

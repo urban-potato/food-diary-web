@@ -8,6 +8,7 @@ import { Player } from "@lordicon/react";
 import DELETE_ICON from "../../global/assets/trash.json";
 import { ChangeEvent, FC, useRef } from "react";
 import { replaceIncorrectDecimal } from "../../global/helpers/replace-incorrect-decimal.helper";
+import Errors from "../../ui/Errors/Errors";
 
 type TProps = {
   itemId: any;
@@ -18,14 +19,12 @@ type TProps = {
   controllerName: any;
   control: any;
   register: any;
-  errors: any;
-  errorsGroup: any;
-  errorSelect: any;
-  errorFeild: any;
   loadSelectOptions: any;
   handleOnSelectInputChange: any;
   handleOnSelectValueChange: any;
   isDeleteButtonDisabled?: boolean;
+  hasErrors: boolean;
+  errorMessagesList: Array<string>;
 };
 
 const AsyncSelectRowWithWeightField: FC<TProps> = ({
@@ -37,14 +36,12 @@ const AsyncSelectRowWithWeightField: FC<TProps> = ({
   controllerName,
   control,
   register,
-  errors,
-  errorsGroup,
-  errorSelect,
-  errorFeild,
   loadSelectOptions,
   handleOnSelectInputChange,
   handleOnSelectValueChange,
   isDeleteButtonDisabled = false,
+  hasErrors,
+  errorMessagesList,
 }) => {
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
@@ -125,22 +122,7 @@ const AsyncSelectRowWithWeightField: FC<TProps> = ({
         </div>
       </div>
 
-      {errorsGroup && (
-        <div
-          className={
-            Object.keys(errors).length > 0 && errorsGroup[itemIndex]
-              ? "flex flex-col mt-1 justify-center items-start"
-              : "hidden"
-          }
-        >
-          <p className={errorSelect ? "text-pink-500" : "hidden"}>
-            {errorSelect?.message}
-          </p>
-          <p className={errorFeild ? "text-pink-500" : "hidden"}>
-            {errorFeild?.message}
-          </p>
-        </div>
-      )}
+      {hasErrors && <Errors errorMessagesList={errorMessagesList} />}
     </div>
   );
 };

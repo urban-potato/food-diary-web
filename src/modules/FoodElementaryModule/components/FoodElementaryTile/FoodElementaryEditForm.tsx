@@ -563,17 +563,16 @@ const FoodElementaryEditForm: FC<TProps> = ({
                     `originalCharacteristicsList.${index}.characteristicValue` as const
                   ),
                 }}
-                errors={errors}
-                errorsGroup={errors.originalCharacteristicsList}
-                errorSelect={
-                  errors.originalCharacteristicsList?.[index]
-                    ?.characteristicInfo?.value
-                }
-                errorFeild={
-                  errors.originalCharacteristicsList?.[index]
-                    ?.characteristicValue
-                }
                 isDeleteButtonDisabled={index < 3 ? true : false}
+                hasErrors={!!errors?.originalCharacteristicsList}
+                errorMessagesList={
+                  [
+                    errors?.originalCharacteristicsList?.[index]
+                      ?.characteristicInfo?.value?.message,
+                    errors?.originalCharacteristicsList?.[index]
+                      ?.characteristicValue?.message,
+                  ].filter((item) => !!item) as string[]
+                }
               />
             );
           })}
@@ -596,18 +595,18 @@ const FoodElementaryEditForm: FC<TProps> = ({
                     `addCharacteristicsList.${index}.characteristicValue` as const
                   ),
                 }}
-                errors={errors}
-                errorsGroup={errors.addCharacteristicsList}
-                errorSelect={
-                  errors.addCharacteristicsList?.[index]?.characteristicInfo
-                    ?.value
-                }
-                errorFeild={
-                  errors.addCharacteristicsList?.[index]?.characteristicValue
-                }
                 loadSelectOptions={loadOptions}
                 handleOnSelectInputChange={handleOnInputChange}
                 handleOnSelectValueChange={handleOnChange}
+                hasErrors={!!errors?.addCharacteristicsList}
+                errorMessagesList={
+                  [
+                    errors?.addCharacteristicsList?.[index]?.characteristicInfo
+                      ?.value?.message,
+                    errors?.addCharacteristicsList?.[index]?.characteristicValue
+                      ?.message,
+                  ].filter((item) => !!item) as string[]
+                }
               />
             );
           })}
