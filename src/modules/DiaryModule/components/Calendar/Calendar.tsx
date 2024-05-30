@@ -3,7 +3,7 @@ import type { FC } from "react";
 import CalendarUI from "react-calendar";
 import type { CalendarProps } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import "../../styles/Calendar.scss";
+import "./Calendar.scss";
 
 export type TCalendarValue = Date;
 
