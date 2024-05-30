@@ -1,16 +1,13 @@
 import { RouterProvider } from "react-router-dom";
-import { router } from "./global/routes/routes";
-import { useAppDispatch } from "./global/store/hooks";
-import { useGetMeQuery } from "./modules/AuthorizationRegistrationForms";
-import { login, logout, useGetUserInfoQuery } from "./modules/UserModule";
-import { useEffect, useRef } from "react";
-import { getTokenFromLocalStorage } from "./global/helpers/local_storage.helper";
-import { Player } from "@lordicon/react";
-
-import PRELOADER from "./global/assets/system-regular-18-autorenew.json";
+import { useAppDispatch } from "./global/store/store-hooks";
+import { useGetMeQuery } from "./modules/AuthorizationForm";
+import { login, logout, useGetUserInfoQuery } from "./modules/UserInfoTile";
+import { useEffect } from "react";
+import { getTokenFromLocalStorage } from "./global/helpers/local-storage.helper";
+import { router } from "./global/router/router";
+import Preloader from "./components/Preloader/Preloader";
 
 function App() {
-  const preloaderPlayerRef = useRef<Player>(null);
   const dispatch = useAppDispatch();
 
   const {
@@ -36,10 +33,6 @@ function App() {
     };
 
     if (token && isSuccessGetUserInfo) {
-      // console.log("isSuccessGetUserInfo");
-      // console.log("loginData", loginData);
-      // console.log("token", token);
-
       dispatch(login(loginData));
     }
 
@@ -49,7 +42,6 @@ function App() {
   };
 
   useEffect(() => {
-    preloaderPlayerRef.current?.playFromBeginning();
     loginLocally();
   }, [dataGetMeQuery, dataGetUserInfo]);
 
@@ -57,13 +49,7 @@ function App() {
     <>
       {isLoadingGetMeQuery || isLoadingGetUserInfo ? (
         <span className="flex justify-center items-center h-screen w-full">
-          <Player
-            ref={preloaderPlayerRef}
-            icon={PRELOADER}
-            size={100}
-            colorize="#0d0b26"
-            onComplete={() => preloaderPlayerRef.current?.playFromBeginning()}
-          />
+          <Preloader />
         </span>
       ) : (
         <RouterProvider router={router} />

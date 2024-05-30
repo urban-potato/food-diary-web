@@ -3,7 +3,7 @@ import ConsumedDishTile from "./ConsumedDishTile";
 import {
   IConsumedElementary,
   IConsumedRecipe,
-} from "../../../../global/types/types";
+} from "../../../../global/types/entities-types";
 
 type TProps = {
   consumedDishes: IConsumedElementary[] | IConsumedRecipe[];

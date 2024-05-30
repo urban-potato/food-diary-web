@@ -4,21 +4,12 @@ import Header from "../../components/Header/Header";
 
 const ErrorPage: FC = () => {
   return (
-    <section
-      className=" min-h-screen h-full  flex flex-col 
-    text-near_black bg-near_white "
-    >
-      <section className=" h-max ">
+    <section className="min-h-screen h-full  flex flex-col text-near_black bg-near_white">
+      <section className="h-max">
         <Header />
       </section>
-      <section
-        className=" h-full flex-grow 
-      flex flex-col 
-      justify-center items-center 
-      py-5 px-5 
-      gap-y-1 "
-      >
-        <div className="flex justify-center items-center w-full ">
+      <section className="h-full flex-grow flex flex-col justify-center items-center py-5 px-5 gap-y-1">
+        <div className="flex justify-center items-center w-full">
           <h2 className="text-ellipsis overflow-hidden">Ой! Здесь пусто...</h2>
         </div>
 
@@ -29,8 +20,7 @@ const ErrorPage: FC = () => {
         <div className="flex justify-center items-center w-full">
           <Link
             to="/"
-            className="text-ellipsis overflow-hidden 
-        underline hover:text-light_near_black transition duration-1000 hover:duration-500"
+            className="text-ellipsis overflow-hidden underline hover:text-light_near_black transition duration-1000 hover:duration-500"
           >
             Вернитесь на главную страницу
           </Link>

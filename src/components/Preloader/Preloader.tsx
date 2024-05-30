@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Player } from "@lordicon/react";
-import PRELOADER from "../../global/assets/system-regular-18-autorenew.json";
+import PRELOADER from "../../global/assets/autorenew.json";
 
 const Preloader = () => {
   const preloaderPlayerRef = useRef<Player>(null);

@@ -1,5 +1,5 @@
-import { useChangeFoodElementaryNameMutation } from "../../api/foodElementary.api.ts";
-import { editFoodElementaryValidationSchema } from "../../constants/constants.ts";
+import { useChangeFoodElementaryNameMutation } from "../../api/food-elementary.api.ts";
+import { editFoodElementaryValidationSchema } from "../../constants/FoodElementaryModule.constants.ts";
 import {
   SubmitHandler,
   useFieldArray,
@@ -14,12 +14,12 @@ import {
   useAddFoodCharacteristicMutation,
   useChangeFoodCharacteristicValueMutation,
   useDeleteFoodCharacteristicMutation,
-} from "../../api/foodCharacteristic.api.ts";
+} from "../../api/food-characteristic.api.ts";
 import {
   IFoodCharacteristic,
   IFoodCharacteristicType,
-} from "../../../../global/types/types.ts";
-import { useGetAllFoodCharacteristicTypesQuery } from "../../../UserModule/api/foodCharacteristicType.api.ts";
+} from "../../../../global/types/entities-types.ts";
+import { useGetAllFoodCharacteristicTypesQuery } from "../../../FoodCharacteristicTypesInfoTile/api/food-characteristic-type.api.ts";
 import {
   BASIC_CHARACTERISTICS_IDS_LIST,
   CALORIES_DEFAULT_ID,
@@ -27,7 +27,7 @@ import {
 } from "../../../../global/constants/constants.ts";
 import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField.tsx";
 import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField.tsx";
-import { replaceIncorrectDecimalInput } from "../../../../global/helpers/replace_incorrect_decimal_input.ts";
+import { replaceIncorrectDecimal } from "../../../../global/helpers/replace-incorrect-decimal.helper.ts";
 
 type TProps = {
   foodElementaryId: string;
@@ -523,7 +523,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
               const isValidInput = DECIMAL_REGEX.test(event.target.value);
 
               if (!isValidInput) {
-                event.target.value = replaceIncorrectDecimalInput(
+                event.target.value = replaceIncorrectDecimal(
                   event.target.value
                 );
               }

@@ -3,8 +3,8 @@ import {
   ICharacteristicsSum,
   IFoodCharacteristic,
   IFoodCharacteristicType,
-} from "../../global/types/types";
-import { sortConsumedCharacteristics } from "../../global/helpers/sort_characteristics.helper";
+} from "../../global/types/entities-types";
+import { sortCharacteristics } from "../../global/helpers/sort-characteristics.helper";
 import CharacteristicTile from "./CharacteristicTile";
 
 type TProps = {
@@ -17,8 +17,7 @@ type TProps = {
 const CharacteristicTilesList: FC<TProps> = ({
   characteristicsList: characteristicsSum,
 }) => {
-  const sortedConsumedCharacteristics =
-    sortConsumedCharacteristics(characteristicsSum);
+  const sortedConsumedCharacteristics = sortCharacteristics(characteristicsSum);
 
   const mappedCharacteristicsSum = sortedConsumedCharacteristics.map(
     (

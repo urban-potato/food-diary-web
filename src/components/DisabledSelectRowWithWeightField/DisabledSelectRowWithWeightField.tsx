@@ -4,9 +4,9 @@ import { DECIMAL_REGEX, SELECT_STYLES } from "../../global/constants/constants";
 import ButtonIlluminated from "../../ui/ButtonIlluminated/ButtonIlluminated";
 import { ChangeEvent, FC, useRef } from "react";
 import { Player } from "@lordicon/react";
-import DELETE_ICON from "../../global/assets/system-regular-39-trash.json";
+import DELETE_ICON from "../../global/assets/trash.json";
 import InputIlluminated from "../../ui/InputIlluminated/InputIlluminated";
-import { replaceIncorrectDecimalInput } from "../../global/helpers/replace_incorrect_decimal_input";
+import { replaceIncorrectDecimal } from "../../global/helpers/replace-incorrect-decimal.helper";
 
 type TProps = {
   itemId: any;
@@ -78,7 +78,7 @@ const DisabledSelectRowWithWeightField: FC<TProps> = ({
               const isValidInput = DECIMAL_REGEX.test(event.target.value);
 
               if (!isValidInput) {
-                event.target.value = replaceIncorrectDecimalInput(
+                event.target.value = replaceIncorrectDecimal(
                   event.target.value
                 );
               }

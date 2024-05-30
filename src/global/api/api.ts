@@ -1,11 +1,17 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getTokenFromLocalStorage } from "../helpers/local_storage.helper";
+import { getTokenFromLocalStorage } from "../helpers/local-storage.helper";
 
 const baseURL = "http://localhost:5000/";
 
 export const api = createApi({
   reducerPath: "api",
-  tagTypes: ["Profile", "FoodElementaryList", "Diary", "FoodRecipesList", "FoodCharacteristicTypes"],
+  tagTypes: [
+    "Profile",
+    "FoodElementaryList",
+    "Diary",
+    "FoodRecipesList",
+    "FoodCharacteristicTypes",
+  ],
   baseQuery: fetchBaseQuery({
     baseUrl: baseURL,
     prepareHeaders: (headers) => {

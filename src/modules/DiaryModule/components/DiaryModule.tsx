@@ -2,12 +2,11 @@ import { useState } from "react";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
 import MealCreateForm from "./MealCreateForm";
 import MealsList from "./MealsList";
-import { TCalendarValue } from "../types/types";
 import { ru } from "date-fns/locale";
-import { Calendar } from "./widgets/Calendar";
+import { Calendar, TCalendarValue } from "./Calendar/Calendar";
 import { format } from "date-fns";
-import { useGetCourseMealDayByDateQuery } from "../api/meals.api";
-import DaysCharacteristicsSum from "./widgets/DaysCharacteristicsSum";
+import { useGetCourseMealDayByDateQuery } from "../api/meal.api";
+import DayCharacteristicsSumTile from "./DayCharacteristicsSumTile/DayCharacteristicsSumTile";
 
 const DiaryModule = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -33,7 +32,7 @@ const DiaryModule = () => {
         />
 
         <div className="flex-grow-1 lg:hidden max-w-max flex flex-wrap gap-3 w-full">
-          <DaysCharacteristicsSum
+          <DayCharacteristicsSumTile
             characteristicsSum={
               dataCourseMealDay?.items?.length > 0
                 ? dataCourseMealDay?.items[0]?.characteristicsSum
@@ -69,7 +68,7 @@ const DiaryModule = () => {
       </section>
 
       <section className="lg:w-[30%] lg:order-3 order-2 hidden lg:block">
-        <DaysCharacteristicsSum
+        <DayCharacteristicsSumTile
           characteristicsSum={
             dataCourseMealDay?.items?.length > 0
               ? dataCourseMealDay?.items[0]?.characteristicsSum

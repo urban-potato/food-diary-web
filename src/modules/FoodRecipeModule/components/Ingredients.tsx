@@ -1,6 +1,6 @@
 import { FC } from "react";
 import IngredientTile from "./IngredientTile";
-import { IIngredient } from "../../../global/types/types";
+import { IIngredient } from "../../../global/types/entities-types";
 
 type TProps = {
   ingredients: IIngredient[];

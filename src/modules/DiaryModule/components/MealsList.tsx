@@ -1,7 +1,7 @@
 import { FC, ReactElement } from "react";
 import Preloader from "../../../components/Preloader/Preloader";
 import MealTile from "./MealTile/MealTile";
-import { ICourseMeal } from "../../../global/types/types";
+import { ICourseMeal } from "../../../global/types/entities-types";
 
 type TProps = {
   date: string;

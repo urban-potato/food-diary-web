@@ -1,1 +1,0 @@
-export type TCalendarValue = Date;

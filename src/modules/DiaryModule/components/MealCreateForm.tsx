@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { createValidationSchema } from "../constants/constants";
+import { createValidationSchema } from "../constants/DiaryModule.constants";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
@@ -11,17 +11,18 @@ import {
   useAddConsumedRecipeMutation,
   useCreateCourseMealDayMutation,
   useCreateCourseMealMutation,
+  useGetAllMealTypesQuery,
   useLazyGetCourseMealDayByDateQuery,
-} from "../api/meals.api";
-import { getNowTime } from "../helpers/helpers";
+} from "../api/meal.api";
+import { getNowTime } from "../helpers/DiaryModule.helpers";
 import NoOptionsMessage from "../../../components/NoOptionsMessage/NoOptionsMessage";
-import { useGetAllFoodRecipeQuery } from "../../FoodRecipeModule/api/foodRecipe.api";
+import { useGetAllFoodRecipeQuery } from "../../FoodRecipeModule/api/food-recipe.api";
 import {
   IFoodElementary,
   IFoodRecipe,
   IMealType,
-} from "../../../global/types/types";
-import { useGetAllMealTypesQuery } from "../api/mealTypes.api";
+} from "../../../global/types/entities-types";
+
 import Preloader from "../../../components/Preloader/Preloader";
 import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
 import { SELECT_STYLES_SMALLER_HEIGHT } from "../../../global/constants/constants";

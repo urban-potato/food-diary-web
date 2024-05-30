@@ -1,8 +1,10 @@
 import { FC } from "react";
-import { useGetAllFoodElementaryQuery } from "../api/foodElementary.api";
+import { useGetAllFoodElementaryQuery } from "../api/food-elementary.api.ts";
 import FoodElementaryTile from "./FoodElementaryTile/FoodElementaryTile.tsx";
-import { ILocalFoodCharacteristic } from "../types/types";
-import { IFoodElementary } from "../../../global/types/types.ts";
+import {
+  IFoodCharacteristic,
+  IFoodElementary,
+} from "../../../global/types/entities-types.ts";
 import {
   CALORIES_DEFAULT_ID,
   CARBOHYDRATE_DEFAULT_ID,
@@ -10,6 +12,10 @@ import {
   PROTEIN_DEFAULT_ID,
 } from "../../../global/constants/constants.ts";
 import Preloader from "../../../components/Preloader/Preloader.tsx";
+
+export interface ILocalFoodCharacteristic extends IFoodCharacteristic {
+  localId: number;
+}
 
 const FoodElementaryList: FC = () => {
   const {

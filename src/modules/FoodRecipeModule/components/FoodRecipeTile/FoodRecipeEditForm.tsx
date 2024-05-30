@@ -1,15 +1,18 @@
 import { FC, useEffect, useRef } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { IFoodElementary, IIngredient } from "../../../../global/types/types";
+import {
+  IFoodElementary,
+  IIngredient,
+} from "../../../../global/types/entities-types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   useAddElementaryMutation,
   useChangeElementaryWeightMutation,
   useChangeFoodRecipeNameMutation,
   useDeleteElementaryMutation,
-} from "../../api/foodRecipe.api";
+} from "../../api/food-recipe.api";
 import { useGetAllFoodElementaryQuery } from "../../../FoodElementaryModule";
-import { editFoodRecipeValidationSchema } from "../../constants/constants";
+import { editFoodRecipeValidationSchema } from "../../constants/FoodRecipeModule.constants";
 import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated";
 import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated";
 import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField";

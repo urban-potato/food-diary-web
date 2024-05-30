@@ -1,7 +1,10 @@
 import { FC, useState } from "react";
-import { useDeleteFoodRecipeMutation } from "../../api/foodRecipe.api";
+import { useDeleteFoodRecipeMutation } from "../../api/food-recipe.api";
 import FoodRecipeEditForm from "./FoodRecipeEditForm";
-import { IFoodRecipe, IIngredient } from "../../../../global/types/types";
+import {
+  IFoodRecipe,
+  IIngredient,
+} from "../../../../global/types/entities-types";
 import TileIcons from "../../../../components/TileIcons/TileIcons";
 import FoodRecipeInfo from "./FoodRecipeInfo";
 

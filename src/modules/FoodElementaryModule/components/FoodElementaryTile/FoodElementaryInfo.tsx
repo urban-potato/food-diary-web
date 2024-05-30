@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { IFoodCharacteristic } from "../../../../global/types/types";
+import { IFoodCharacteristic } from "../../../../global/types/entities-types";
 import CharacteristicTilesList from "../../../../components/CharacteristicTilesList/CharacteristicTilesList";
 import { CALORIES_DEFAULT_ID } from "../../../../global/constants/constants";
 

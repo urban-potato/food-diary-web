@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Link } from "react-router-dom";
-import { useIsAuth } from "../../modules/AuthorizationRegistrationForms";
+import { useIsAuth } from "../../modules/AuthorizationForm";
 import { BiSolidFoodMenu } from "react-icons/bi";
 
 const Header: FC = () => {

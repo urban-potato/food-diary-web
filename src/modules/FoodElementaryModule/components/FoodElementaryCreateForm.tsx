@@ -1,13 +1,13 @@
 import { ChangeEvent, FC, useEffect, useRef } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { useCreateFoodElementaryMutation } from "../api/foodElementary.api";
+import { useCreateFoodElementaryMutation } from "../api/food-elementary.api.ts";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
-import { createFoodElementaryValidationSchema } from "../constants/constants.ts";
-import { useAddFoodCharacteristicMutation } from "../api/foodCharacteristic.api.ts";
-import { useGetAllFoodCharacteristicTypesQuery } from "../../UserModule/api/foodCharacteristicType.api.ts";
-import { IFoodCharacteristicType } from "../../../global/types/types.ts";
+import { createFoodElementaryValidationSchema } from "../constants/FoodElementaryModule.constants.ts";
+import { useAddFoodCharacteristicMutation } from "../api/food-characteristic.api.ts";
+import { useGetAllFoodCharacteristicTypesQuery } from "../../FoodCharacteristicTypesInfoTile/api/food-characteristic-type.api.ts";
+import { IFoodCharacteristicType } from "../../../global/types/entities-types.ts";
 import {
   BASIC_CHARACTERISTICS_IDS_LIST,
   CALORIES_DEFAULT_ID,
@@ -16,10 +16,10 @@ import {
   FAT_DEFAULT_ID,
   PROTEIN_DEFAULT_ID,
 } from "../../../global/constants/constants.ts";
-import { sortConsumedCharacteristics } from "../../../global/helpers/sort_characteristics.helper.ts";
+import { sortCharacteristics } from "../../../global/helpers/sort-characteristics.helper.ts";
 import DisabledSelectRowWithWeightField from "../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField.tsx";
 import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField.tsx";
-import { replaceIncorrectDecimalInput } from "../../../global/helpers/replace_incorrect_decimal_input.ts";
+import { replaceIncorrectDecimal } from "../../../global/helpers/replace-incorrect-decimal.helper.ts";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -247,7 +247,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
         );
 
       const sortedDefaultCharacteristics: IFoodCharacteristicType[] =
-        sortConsumedCharacteristics(defaultCharacteristics);
+        sortCharacteristics(defaultCharacteristics);
 
       const defaultCharacteristicsOnForm = sortedDefaultCharacteristics?.map(
         (characteristic: IFoodCharacteristicType) => {
@@ -334,7 +334,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                 const isValidInput = DECIMAL_REGEX.test(event.target.value);
 
                 if (!isValidInput) {
-                  event.target.value = replaceIncorrectDecimalInput(
+                  event.target.value = replaceIncorrectDecimal(
                     event.target.value
                   );
                 }

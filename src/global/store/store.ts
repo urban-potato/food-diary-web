@@ -1,6 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { api } from "../api/api";
-import { userReducer } from "../../modules/UserModule";
+import { userReducer } from "../../modules/UserInfoTile";
 
 const reducers = combineReducers({
   user: userReducer,

@@ -1,8 +1,8 @@
 import { FC, useState } from "react";
-import { useDeleteFoodElementaryMutation } from "../../api/foodElementary.api";
+import { useDeleteFoodElementaryMutation } from "../../api/food-elementary.api";
 import FoodElementaryEditForm from "./FoodElementaryEditForm";
 import FoodElementaryInfo from "./FoodElementaryInfo";
-import { IFoodCharacteristic } from "../../../../global/types/types";
+import { IFoodCharacteristic } from "../../../../global/types/entities-types";
 import TileIcons from "../../../../components/TileIcons/TileIcons";
 
 type TProps = {

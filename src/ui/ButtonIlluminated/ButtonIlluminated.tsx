@@ -1,5 +1,23 @@
 import { FC } from "react";
-import { ButtonIIlluminatedProps } from "./types/types";
+
+type TProps = {
+  label:
+    | string
+    | React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLSpanElement>,
+        HTMLSpanElement
+      >;
+  isDarkButton: boolean;
+  isIlluminationFull?: boolean;
+  inset?: string;
+  onClick?: any;
+  additionalStyles?: string;
+  isButton?: boolean;
+  type?: "submit" | "button" | "reset" | undefined;
+  buttonPadding?: string;
+  isDisabled?: boolean;
+  isIttuminationDisabled?: boolean;
+};
 
 const illumination = {
   light:
@@ -55,7 +73,7 @@ const buttonStyle = {
     " hover:duration-500 ",
 };
 
-const ButtonIlluminated: FC<ButtonIIlluminatedProps> = ({
+const ButtonIlluminated: FC<TProps> = ({
   label,
   isDarkButton,
   isIlluminationFull = false,

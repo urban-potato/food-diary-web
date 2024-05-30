@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { editValidationSchema } from "../../constants/constants";
+import { editValidationSchema } from "../../constants/DiaryModule.constants";
 import {
   useAddConsumedElementaryMutation,
   useChangeConsumedElementaryWeightMutation,
@@ -8,22 +8,22 @@ import {
   useAddConsumedRecipeMutation,
   useChangeConsumedRecipeWeightMutation,
   useDeleteConsumedRecipeMutation,
-} from "../../api/meals.api";
+  useGetAllMealTypesQuery,
+} from "../../api/meal.api";
 import { useGetAllFoodElementaryQuery } from "../../../FoodElementaryModule";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import NoOptionsMessage from "../../../../components/NoOptionsMessage/NoOptionsMessage";
 import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated";
 import Select from "react-select";
-import { useGetAllFoodRecipeQuery } from "../../../FoodRecipeModule/api/foodRecipe.api";
+import { useGetAllFoodRecipeQuery } from "../../../FoodRecipeModule/api/food-recipe.api";
 import {
   IConsumedElementary,
   IConsumedRecipe,
   IFoodElementary,
   IFoodRecipe,
   IMealType,
-} from "../../../../global/types/types";
-import { useGetAllMealTypesQuery } from "../../api/mealTypes.api";
+} from "../../../../global/types/entities-types";
 import Preloader from "../../../../components/Preloader/Preloader";
 import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField";
 import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";

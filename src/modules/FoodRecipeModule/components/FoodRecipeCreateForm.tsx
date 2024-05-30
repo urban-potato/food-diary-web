@@ -2,14 +2,14 @@ import { FC, useEffect, useRef } from "react";
 import {
   useAddElementaryMutation,
   useCreateFoodRecipeMutation,
-} from "../api/foodRecipe.api";
+} from "../api/food-recipe.api";
 import { useGetAllFoodElementaryQuery } from "../../FoodElementaryModule";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { createFoodRecipeValidationSchema } from "../constants/constants";
+import { createFoodRecipeValidationSchema } from "../constants/FoodRecipeModule.constants";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
-import { IFoodElementary } from "../../../global/types/types";
+import { IFoodElementary } from "../../../global/types/entities-types";
 import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
 
 type TProps = {

@@ -1,8 +1,8 @@
 import { FC, useState } from "react";
-import { useDeleteCourseMealMutation } from "../../api/meals.api";
+import { useDeleteCourseMealMutation } from "../../api/meal.api";
 import MealEditForm from "./MealEditForm";
-import { ICourseMeal } from "../../../../global/types/types";
-import MealInfo from "./MealInfo";
+import { ICourseMeal } from "../../../../global/types/entities-types";
+import MealTileBody from "./MealTileBody";
 import TileIcons from "../../../../components/TileIcons/TileIcons";
 
 const MealTile: FC<ICourseMeal> = ({
@@ -41,7 +41,7 @@ const MealTile: FC<ICourseMeal> = ({
             setIsEditMode={setIsEditMode}
           />
         ) : (
-          <MealInfo
+          <MealTileBody
             creationTime={creationTime}
             mealTypeName={mealTypeName}
             consumedElementaries={consumedElementaries}

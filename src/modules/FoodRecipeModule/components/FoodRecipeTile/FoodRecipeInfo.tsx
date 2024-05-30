@@ -3,7 +3,7 @@ import CharacteristicTilesList from "../../../../components/CharacteristicTilesL
 import {
   ICharacteristicsSum,
   IIngredient,
-} from "../../../../global/types/types";
+} from "../../../../global/types/entities-types";
 import Ingredients from "../Ingredients";
 import { CALORIES_DEFAULT_ID } from "../../../../global/constants/constants";
 

@@ -1,5 +1,5 @@
 import { Player } from "@lordicon/react";
-import DELETE_ICON from "../../global/assets/system-regular-39-trash.json";
+import DELETE_ICON from "../../global/assets/trash.json";
 import ButtonIlluminated from "../../ui/ButtonIlluminated/ButtonIlluminated";
 import InputIlluminated from "../../ui/InputIlluminated/InputIlluminated";
 import { Controller } from "react-hook-form";

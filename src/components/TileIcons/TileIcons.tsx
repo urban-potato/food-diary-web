@@ -1,7 +1,7 @@
 import { FC, useRef } from "react";
 import { Player } from "@lordicon/react";
-import EDIT_ICON from "../../global/assets/system-regular-63-settings-cog.json";
-import DELETE_ICON from "../../global/assets/system-regular-39-trash.json";
+import EDIT_ICON from "../../global/assets/settings.json";
+import DELETE_ICON from "../../global/assets/trash.json";
 
 type TProps = {
   isEditMode: boolean;
