@@ -99,7 +99,7 @@ const AsyncSelectRowWithWeightField: FC<TProps> = ({
         <div className="max-w-[50px] flex flex-col justify-center items-center self-center">
           <h3 className="text-lg my-4"> </h3>
           <ButtonIlluminated
-            label={
+            children={
               <span>
                 <Player
                   ref={deleteIconPlayerRef}
@@ -109,15 +109,12 @@ const AsyncSelectRowWithWeightField: FC<TProps> = ({
                 />
               </span>
             }
-            isDarkButton={true}
-            isIlluminationFull={false}
+            type="button"
             onClick={() => {
               handleRemoveItem(itemIndex);
             }}
-            buttonPadding=" p-[12px] "
-            additionalStyles=" "
-            isIttuminationDisabled={true}
             isDisabled={isDeleteButtonDisabled}
+            className="p-[12px]"
           />
         </div>
       </div>

@@ -461,27 +461,19 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
 
                 <div className="w-full max-w-[280px] mt-3">
                   <ButtonIlluminated
-                    label={"Еще одно блюдо"}
-                    isDarkButton={true}
-                    isIlluminationFull={false}
+                    children={"Еще одно блюдо"}
+                    type="button"
                     onClick={() => handleAddSelect()}
-                    buttonPadding=" p-[14px] "
-                    additionalStyles=""
-                    isIttuminationDisabled={true}
+                    className="p-[12px]"
                   />
                 </div>
               </div>
 
               <div className="mt-5">
                 <ButtonIlluminated
-                  label="Сохранить"
-                  isDarkButton={true}
-                  isIlluminationFull={false}
-                  isButton={true}
+                  children={"Сохранить"}
                   type="submit"
-                  additionalStyles=""
                   isDisabled={checkIfFilledRight() ? false : true}
-                  isIttuminationDisabled={true}
                 />
               </div>
             </>

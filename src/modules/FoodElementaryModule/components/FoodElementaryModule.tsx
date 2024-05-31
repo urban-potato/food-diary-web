@@ -15,13 +15,11 @@ const FoodElementaryModule: FC = () => {
     >
       <span className=" my-3 w-full max-w-[280px] ">
         <ButtonIlluminated
-          label={showCreateForm ? "Скрыть" : "Создать блюдо"}
-          isDarkButton={showCreateForm}
-          isIlluminationFull={showCreateForm ? true : false}
+          children={showCreateForm ? "Скрыть" : "Создать блюдо"}
+          type="button"
           onClick={() => setShowCreateForm(!showCreateForm)}
-          //   additionalStyles=" w-[280px] "
-          //   additionalStyles=" max-w-[280px] "
-          buttonPadding=" p-[14px] "
+          illuminationVariant={showCreateForm ? "full" : "light"}
+          buttonVariant={showCreateForm ? "dark" : "light"}
         />
       </span>
 

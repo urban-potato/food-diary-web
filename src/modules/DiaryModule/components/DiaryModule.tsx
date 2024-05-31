@@ -45,11 +45,11 @@ const DiaryModule = () => {
       <section className="flex flex-col justify-start items-center py-3 w-full max-w-5xl lg:order-2 order-3">
         <span className="my-3 w-full max-w-[280px]">
           <ButtonIlluminated
-            label={showCreateForm ? "Скрыть" : "Новая запись"}
-            isDarkButton={showCreateForm}
-            isIlluminationFull={showCreateForm ? true : false}
+            children={showCreateForm ? "Скрыть" : "Новая запись"}
+            type="button"
             onClick={() => setShowCreateForm(!showCreateForm)}
-            buttonPadding=" p-[14px] "
+            illuminationVariant={showCreateForm ? "full" : "light"}
+            buttonVariant={showCreateForm ? "dark" : "light"}
           />
         </span>
 

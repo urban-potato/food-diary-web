@@ -11,30 +11,27 @@ const FoodPageHeader: FC<FoodPageHeaderProps> = ({
   setSelectedValue,
 }) => {
   return (
-    <div
-      className="flex flex-wrap 
-    justify-center items-center 
-    text-center 
-    gap-x-5
-    gap-y-3
-    "
-    >
-      <span className=" w-full  max-w-[280px] ">
+    <div className="flex flex-wrap justify-center items-center text-center gap-x-5 gap-y-3">
+      <span className="w-full  max-w-[280px]">
         <ButtonIlluminated
-          label="Простые блюда"
-          isDarkButton={selectedValue === "foodElementary"}
-          isIlluminationFull={selectedValue === "foodElementary" ? true : false}
+          children={"Простые блюда"}
+          type="button"
           onClick={() => setSelectedValue("foodElementary")}
-          buttonPadding=" p-[14px] "
+          illuminationVariant={
+            selectedValue === "foodElementary" ? "full" : "light"
+          }
+          buttonVariant={selectedValue === "foodElementary" ? "dark" : "light"}
         />
       </span>
-      <span className=" w-full  max-w-[280px] ">
+      <span className="w-full  max-w-[280px]">
         <ButtonIlluminated
-          label="Составные блюда"
-          isDarkButton={selectedValue === "foodRecipe"}
-          isIlluminationFull={selectedValue === "foodRecipe" ? true : false}
+          children={"Составные блюда"}
+          type="button"
           onClick={() => setSelectedValue("foodRecipe")}
-          buttonPadding=" p-[14px] "
+          illuminationVariant={
+            selectedValue === "foodRecipe" ? "full" : "light"
+          }
+          buttonVariant={selectedValue === "foodRecipe" ? "dark" : "light"}
         />
       </span>
     </div>

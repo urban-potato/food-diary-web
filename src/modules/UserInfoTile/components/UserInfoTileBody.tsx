@@ -53,11 +53,10 @@ const UserInfoTileBody: FC<TProps> = ({ userInfo }) => {
       <div className="mt-4 flex flex-wrap w-full gap-x-4 gap-y-1 justify-stretch items-center">
         <span className="flex-grow">
           <ButtonIlluminated
-            label="Выйти"
-            isDarkButton={true}
-            isIlluminationFull={false}
+            children={"Выйти"}
+            type="button"
             onClick={(): void => handleExitAccount()}
-            isIttuminationDisabled={true}
+            buttonVariant={"dark"}
           />
         </span>
       </div>

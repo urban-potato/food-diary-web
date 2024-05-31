@@ -613,9 +613,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
 
           <div className="w-full max-w-[280px] mt-3">
             <ButtonIlluminated
-              label={"Добавить нутриент"}
-              isDarkButton={true}
-              isIlluminationFull={false}
+              children={"Добавить нутриент"}
+              type="button"
               onClick={() => {
                 newCharacteristicsForbiddenToAddIdsRef.current.push("");
 
@@ -623,9 +622,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
                   characteristicValue: "0",
                 });
               }}
-              buttonPadding=" p-[12px] "
-              additionalStyles=""
-              isIttuminationDisabled={true}
+              className="p-[12px]"
             />
           </div>
         </div>
@@ -633,25 +630,19 @@ const FoodElementaryEditForm: FC<TProps> = ({
         <div className="mt-5 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
           <span className="flex-grow">
             <ButtonIlluminated
-              label="Сохранить"
-              isDarkButton={true}
-              isIlluminationFull={false}
-              isButton={true}
+              children={"Сохранить"}
               type="submit"
-              additionalStyles=""
               isDisabled={checkIfFilledRight() ? false : true}
-              isIttuminationDisabled={true}
             />
           </span>
           <span className="flex-grow">
             <ButtonIlluminated
-              label="Отменить"
-              isDarkButton={false}
-              isIlluminationFull={false}
+              children={"Отменить"}
+              type="button"
               onClick={() => {
                 setIsEditMode(false);
               }}
-              isIttuminationDisabled={true}
+              buttonVariant={"light"}
             />
           </span>
         </div>
