@@ -17,7 +17,6 @@ type TProps = {
   >["illuminationVariant"];
   labelClassName?: string;
   illuminationClassName?: string;
-  // showErrors?: boolean;
   errorMessagesList?: Array<string>;
 } & React.InputHTMLAttributes<HTMLInputElement> &
   React.ClassAttributes<HTMLInputElement>;
@@ -50,7 +49,6 @@ const InputIlluminated: FC<TProps> = ({
   illuminationVariant,
   labelClassName,
   illuminationClassName,
-  // showErrors = false,
   className,
   errorMessagesList = [],
   ...rest
