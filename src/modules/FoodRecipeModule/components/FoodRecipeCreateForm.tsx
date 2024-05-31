@@ -200,21 +200,14 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
               isRequired={true}
               className="h-[67px]"
               labelClassName="text-lg"
+              isError={!!errors?.foodRecipeName}
+              errorMessagesList={
+                [errors?.foodRecipeName?.message].filter(
+                  (item) => !!item
+                ) as string[]
+              }
             />
           </div>
-          {errors.foodRecipeName && (
-            <div
-              className={
-                Object.keys(errors).length > 0
-                  ? "flex flex-col mt-1 justify-center items-start"
-                  : "hidden"
-              }
-            >
-              <p className={errors.foodRecipeName ? "text-pink-500" : "hidden"}>
-                {errors.foodRecipeName?.message}
-              </p>
-            </div>
-          )}
 
           <div className="flex flex-col mt-5">
             {addFoodListFields.map((item, index) => {

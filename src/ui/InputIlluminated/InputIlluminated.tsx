@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "../../global/helpers/cn.helper";
+import Errors from "../Errors/Errors";
 
 type TProps = {
   id: string;
@@ -16,6 +17,8 @@ type TProps = {
   >["illuminationVariant"];
   labelClassName?: string;
   illuminationClassName?: string;
+  // showErrors?: boolean;
+  errorMessagesList?: Array<string>;
 } & React.InputHTMLAttributes<HTMLInputElement> &
   React.ClassAttributes<HTMLInputElement>;
 
@@ -47,11 +50,13 @@ const InputIlluminated: FC<TProps> = ({
   illuminationVariant,
   labelClassName,
   illuminationClassName,
+  // showErrors = false,
   className,
+  errorMessagesList = [],
   ...rest
 }) => {
   return (
-    <section>
+    <section className="flex flex-col">
       <div className="flex mb-1">
         <label htmlFor={id} className={cn("block truncate", labelClassName)}>
           <h3 className="flex gap-x-1 truncate">
@@ -88,6 +93,10 @@ const InputIlluminated: FC<TProps> = ({
           disabled={isDisabled}
         />
       </div>
+
+      {isError && errorMessagesList.length > 0 && (
+        <Errors errorMessagesList={errorMessagesList} />
+      )}
     </section>
   );
 };

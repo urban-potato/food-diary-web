@@ -26,6 +26,7 @@ import {
 import Preloader from "../../../components/Preloader/Preloader";
 import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
 import { SELECT_STYLES_SMALLER_HEIGHT } from "../../../global/constants/constants";
+import Errors from "../../../ui/Errors/Errors";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -380,24 +381,13 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                     }}
                     isRequired={true}
                     className="h-[56px]"
+                    isError={!!errors?.creationTime}
+                    errorMessagesList={
+                      [errors?.creationTime?.message].filter(
+                        (item) => !!item
+                      ) as string[]
+                    }
                   />
-                  {errors.creationTime && (
-                    <div
-                      className={
-                        Object.keys(errors).length > 0
-                          ? "flex flex-col mt-1 justify-center items-start"
-                          : "hidden"
-                      }
-                    >
-                      <p
-                        className={
-                          errors.creationTime ? "text-pink-500" : "hidden"
-                        }
-                      >
-                        {errors.creationTime?.message}
-                      </p>
-                    </div>
-                  )}
                 </div>
 
                 <div className="flex flex-col justify-center w-full h-full gap-1 flex-grow">

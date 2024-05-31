@@ -297,25 +297,14 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
               isRequired={true}
               className="h-[67px]"
               labelClassName="text-lg"
+              isError={!!errors?.foodElementaryName}
+              errorMessagesList={
+                [errors?.foodElementaryName?.message].filter(
+                  (item) => !!item
+                ) as string[]
+              }
             />
           </div>
-          {errors.foodElementaryName && (
-            <div
-              className={
-                Object.keys(errors).length > 0
-                  ? "flex flex-col mt-1 justify-center items-start"
-                  : "hidden"
-              }
-            >
-              <p
-                className={
-                  errors.foodElementaryName ? "text-pink-500" : "hidden"
-                }
-              >
-                {errors.foodElementaryName?.message}
-              </p>
-            </div>
-          )}
 
           <div className="text-xl w-full flex-grow mt-2">
             <InputIlluminated
@@ -337,21 +326,14 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
               }}
               className="h-[67px]"
               labelClassName="text-lg"
+              isError={!!errors?.caloriesValue}
+              errorMessagesList={
+                [errors?.caloriesValue?.message].filter(
+                  (item) => !!item
+                ) as string[]
+              }
             />
           </div>
-          {errors.caloriesValue && (
-            <div
-              className={
-                Object.keys(errors).length > 0
-                  ? "flex flex-col mt-1 justify-center items-start"
-                  : "hidden"
-              }
-            >
-              <p className={errors.caloriesValue ? "text-pink-500" : "hidden"}>
-                {errors.caloriesValue?.message}
-              </p>
-            </div>
-          )}
 
           <div className="flex flex-col  mt-5">
             {defaultCharacteristicsFields.map((item, index) => {

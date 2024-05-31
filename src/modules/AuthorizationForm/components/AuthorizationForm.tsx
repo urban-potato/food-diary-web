@@ -83,22 +83,12 @@ const AuthorizationForm: FC = () => {
                 inputLabel="Почта"
                 register={{ ...register("email") }}
                 isRequired={true}
-                isError={errors.email ? true : false}
                 illuminationVariant={"base"}
+                isError={!!errors?.email}
+                errorMessagesList={
+                  [errors?.email?.message].filter((item) => !!item) as string[]
+                }
               />
-              {errors && (
-                <div
-                  className={
-                    Object.keys(errors).length > 0
-                      ? "flex flex-col mt-1 justify-center items-start"
-                      : "hidden"
-                  }
-                >
-                  <p className={errors.email ? "text-pink-500" : " hidden"}>
-                    {errors.email?.message}
-                  </p>
-                </div>
-              )}
             </div>
             <div className="w-full flex-grow mt-3">
               <InputIlluminated
@@ -107,22 +97,14 @@ const AuthorizationForm: FC = () => {
                 inputLabel="Пароль"
                 register={{ ...register("password") }}
                 isRequired={true}
-                isError={errors.password ? true : false}
                 illuminationVariant={"base"}
+                isError={!!errors?.password}
+                errorMessagesList={
+                  [errors?.password?.message].filter(
+                    (item) => !!item
+                  ) as string[]
+                }
               />
-              {errors && (
-                <div
-                  className={
-                    Object.keys(errors).length > 0
-                      ? "flex flex-col mt-1 justify-center items-start"
-                      : "hidden"
-                  }
-                >
-                  <p className={errors.password ? "text-pink-500" : "hidden"}>
-                    {errors.password?.message}
-                  </p>
-                </div>
-              )}
             </div>
 
             <div className="">

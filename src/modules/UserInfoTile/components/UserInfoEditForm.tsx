@@ -106,21 +106,11 @@ const UserInfoEditForm: FC<TProps> = ({
               register={{ ...register("email") }}
               isRequired={true}
               className="h-[67px]"
+              isError={!!errors?.email}
+              errorMessagesList={
+                [errors?.email?.message].filter((item) => !!item) as string[]
+              }
             />
-
-            {errors && (
-              <div
-                className={
-                  Object.keys(errors).length > 0
-                    ? "flex flex-col mt-1 justify-center items-start"
-                    : "hidden"
-                }
-              >
-                <p className={errors.email ? "text-pink-500 " : "hidden"}>
-                  {errors.email?.message}
-                </p>
-              </div>
-            )}
           </div>
 
           <div className="w-full flex-grow">
@@ -131,21 +121,13 @@ const UserInfoEditForm: FC<TProps> = ({
               register={{ ...register("firstName") }}
               isRequired={true}
               className="h-[67px]"
+              isError={!!errors?.firstName}
+              errorMessagesList={
+                [errors?.firstName?.message].filter(
+                  (item) => !!item
+                ) as string[]
+              }
             />
-
-            {errors && (
-              <div
-                className={
-                  Object.keys(errors).length > 0
-                    ? "flex flex-col mt-1 justify-center items-start"
-                    : "hidden"
-                }
-              >
-                <p className={errors.firstName ? "text-pink-500" : "hidden"}>
-                  {errors.firstName?.message}
-                </p>
-              </div>
-            )}
           </div>
 
           <div className="w-full flex-grow">
@@ -156,21 +138,11 @@ const UserInfoEditForm: FC<TProps> = ({
               register={{ ...register("lastName") }}
               isRequired={true}
               className="h-[67px]"
+              isError={!!errors?.lastName}
+              errorMessagesList={
+                [errors?.lastName?.message].filter((item) => !!item) as string[]
+              }
             />
-
-            {errors && (
-              <div
-                className={
-                  Object.keys(errors).length > 0
-                    ? "flex flex-col mt-1 justify-center items-start"
-                    : "hidden"
-                }
-              >
-                <p className={errors.lastName ? "text-pink-500" : "hidden"}>
-                  {errors.lastName?.message}
-                </p>
-              </div>
-            )}
           </div>
         </div>
 
