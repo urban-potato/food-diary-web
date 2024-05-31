@@ -82,8 +82,9 @@ const AuthorizationForm: FC = () => {
                 type="email"
                 inputLabel="Почта"
                 register={{ ...register("email") }}
-                isError={errors.email ? true : false}
                 isRequired={true}
+                isError={errors.email ? true : false}
+                illuminationVariant={"base"}
               />
               {errors && (
                 <div
@@ -105,8 +106,9 @@ const AuthorizationForm: FC = () => {
                 type="password"
                 inputLabel="Пароль"
                 register={{ ...register("password") }}
-                isError={errors.password ? true : false}
                 isRequired={true}
+                isError={errors.password ? true : false}
+                illuminationVariant={"base"}
               />
               {errors && (
                 <div

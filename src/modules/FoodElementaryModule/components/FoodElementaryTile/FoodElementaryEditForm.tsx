@@ -480,14 +480,13 @@ const FoodElementaryEditForm: FC<TProps> = ({
             id={"FoodElementaryEditForm_foodElementaryName"}
             type="text"
             inputLabel="Название блюда"
-            disableIllumination={true}
-            additionalStyles=" h-[67px] border-0 "
             register={{
               ...register("foodElementaryName"),
             }}
             isRequired={true}
-            addSpaceAfterLabel={true}
-            labelSize={"text-lg"}
+            className="h-[67px]"
+            labelClassName="text-lg"
+            isSpaceAfterLabelNeeded={true}
           />
         </div>
 
@@ -512,13 +511,10 @@ const FoodElementaryEditForm: FC<TProps> = ({
             id={"FoodElementaryEditForm_caloriesValue"}
             type="text"
             inputLabel="Калорийность (ккал.)"
-            disableIllumination={true}
-            additionalStyles=" h-[67px] border-0 "
             register={{
               ...register("caloriesValue"),
             }}
             isRequired={true}
-            labelSize={"text-lg"}
             onInput={(event: ChangeEvent<HTMLInputElement>) => {
               const isValidInput = DECIMAL_REGEX.test(event.target.value);
 
@@ -528,6 +524,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
                 );
               }
             }}
+            className="h-[67px]"
+            labelClassName="text-lg"
           />
         </div>
         {errors.caloriesValue && (

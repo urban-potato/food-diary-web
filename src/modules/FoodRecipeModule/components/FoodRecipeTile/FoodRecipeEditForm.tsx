@@ -376,13 +376,12 @@ const FoodRecipeEditForm: FC<TProps> = ({
             id={"FoodRecipeEditForm_foodRecipeName"}
             type="text"
             inputLabel="Название блюда"
-            disableIllumination={true}
-            additionalStyles=" h-[67px] border-0 "
             register={{
               ...register("foodRecipeName"),
             }}
             isRequired={true}
-            labelSize={"text-lg"}
+            className="h-[67px]"
+            labelClassName="text-lg"
           />
         </div>
         {errors.foodRecipeName && (

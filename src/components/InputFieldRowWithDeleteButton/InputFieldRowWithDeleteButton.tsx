@@ -51,11 +51,10 @@ const InputFieldRowWithDeleteButton: FC<TProps> = ({
                 id={`InputIlluminated_${itemId}_${itemIndex}`}
                 type="text"
                 inputLabel={label}
-                disableIllumination={true}
-                additionalStyles=" h-[67px] border-0 "
                 register={{ ...register }}
                 isRequired={true}
                 isDisabled={isInputFieldDisabled}
+                className="h-[67px]"
               />
             )}
           />

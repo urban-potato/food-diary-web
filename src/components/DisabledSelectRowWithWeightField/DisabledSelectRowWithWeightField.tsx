@@ -67,8 +67,6 @@ const DisabledSelectRowWithWeightField: FC<TProps> = ({
             id={`InputIlluminated_${itemId}_${itemIndex}`}
             type="text"
             inputLabel="Вес (г)"
-            disableIllumination={true}
-            additionalStyles=" h-[67px] border-0 "
             register={{ ...register }}
             isRequired={true}
             onInput={(event: ChangeEvent<HTMLInputElement>) => {
@@ -80,6 +78,7 @@ const DisabledSelectRowWithWeightField: FC<TProps> = ({
                 );
               }
             }}
+            className="h-[67px]"
           />
         </div>
 

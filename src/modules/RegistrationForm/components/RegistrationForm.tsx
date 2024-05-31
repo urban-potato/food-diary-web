@@ -136,9 +136,9 @@ const RegistrationForm: FC = () => {
                 type="email"
                 inputLabel="Почта"
                 register={{ ...register("email") }}
-                // errorMessage={errors.email?.message}
-                isError={errors.email ? true : false}
                 isRequired={true}
+                isError={errors.email ? true : false}
+                illuminationVariant={"base"}
               />
 
               {errors && (
@@ -166,9 +166,9 @@ const RegistrationForm: FC = () => {
                 type="password"
                 inputLabel="Пароль"
                 register={{ ...register("password") }}
-                // errorMessage={errors.password?.message}
-                isError={errors.password ? true : false}
                 isRequired={true}
+                isError={errors.password ? true : false}
+                illuminationVariant={"base"}
                 autoComplete="new-password"
               />
 
@@ -193,9 +193,9 @@ const RegistrationForm: FC = () => {
                 type="password"
                 inputLabel="Повторите пароль"
                 register={{ ...register("passwordConfirmation") }}
-                // errorMessage={errors.passwordConfirmation?.message}
-                isError={errors.passwordConfirmation ? true : false}
                 isRequired={true}
+                isError={errors.passwordConfirmation ? true : false}
+                illuminationVariant={"base"}
                 autoComplete="new-password"
               />
 

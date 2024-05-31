@@ -103,10 +103,9 @@ const UserInfoEditForm: FC<TProps> = ({
               id="email"
               type="email"
               inputLabel="Почта"
-              disableIllumination={true}
-              additionalStyles=" h-[67px] border-0 "
               register={{ ...register("email") }}
               isRequired={true}
+              className="h-[67px]"
             />
 
             {errors && (
@@ -129,10 +128,9 @@ const UserInfoEditForm: FC<TProps> = ({
               id="firstName"
               type="text"
               inputLabel="Имя"
-              disableIllumination={true}
-              additionalStyles=" h-[67px] border-0 "
               register={{ ...register("firstName") }}
               isRequired={true}
+              className="h-[67px]"
             />
 
             {errors && (
@@ -155,10 +153,9 @@ const UserInfoEditForm: FC<TProps> = ({
               id="lastName"
               type="text"
               inputLabel="Фамилия"
-              disableIllumination={true}
-              additionalStyles=" h-[67px] border-0 "
               register={{ ...register("lastName") }}
               isRequired={true}
+              className="h-[67px]"
             />
 
             {errors && (

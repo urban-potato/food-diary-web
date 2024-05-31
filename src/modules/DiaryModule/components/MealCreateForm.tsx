@@ -375,12 +375,11 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                     id={"FoodRecipeCreateForm_creationTime"}
                     type="time"
                     inputLabel="Время"
-                    disableIllumination={true}
-                    additionalStyles=" h-[56px] border-0 "
                     register={{
                       ...register("creationTime"),
                     }}
                     isRequired={true}
+                    className="h-[56px]"
                   />
                   {errors.creationTime && (
                     <div
