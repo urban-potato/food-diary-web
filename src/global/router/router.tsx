@@ -17,40 +17,34 @@ export const router = createBrowserRouter(
       errorElement: <ErrorPage />,
       children: [
         {
-          index: true,
+          path: "/",
           element: <Homepage />,
+          index: true,
         },
         {
-          path: "login",
+          path: "/login",
           element: <AuthorizationPage />,
         },
         {
-          path: "register",
+          path: "/register",
           element: <RegistrationPage />,
         },
         {
-          path: "profile",
-          element: (
-            <ProtectedPage>
-              <ProfilePage />
-            </ProtectedPage>
-          ),
-        },
-        {
-          path: "diary",
-          element: (
-            <ProtectedPage>
-              <DiaryPage />
-            </ProtectedPage>
-          ),
-        },
-        {
-          path: "food",
-          element: (
-            <ProtectedPage>
-              <FoodPage />
-            </ProtectedPage>
-          ),
+          element: <ProtectedPage />,
+          children: [
+            {
+              path: "/profile",
+              element: <ProfilePage />,
+            },
+            {
+              path: "/diary/:date?",
+              element: <DiaryPage />,
+            },
+            {
+              path: "/food",
+              element: <FoodPage />,
+            },
+          ],
         },
       ],
     },

@@ -28,12 +28,16 @@ import {
 import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField.tsx";
 import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField.tsx";
 import { replaceIncorrectDecimal } from "../../../../global/helpers/replace-incorrect-decimal.helper.ts";
+import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper.ts";
+import { useAppDispatch } from "../../../../global/store/store-hooks.ts";
+import { useNavigate } from "react-router-dom";
 
 type TProps = {
   foodElementaryId: string;
   foodElementaryName: string;
   originalCharacteristics: IFoodCharacteristic[];
   setIsEditMode: Function;
+  isEditMode: boolean;
 };
 
 type TFoodElementaryEditFormData = {
@@ -68,6 +72,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
   foodElementaryName,
   originalCharacteristics,
   setIsEditMode,
+  isEditMode,
 }) => {
   // Characteristics forbidden to add
   const characteristicsForbiddenToAddIdsRef = useRef<Array<String>>(
@@ -80,6 +85,9 @@ const FoodElementaryEditForm: FC<TProps> = ({
   const originalCharacteristicsToRemoveRef = useRef<
     Array<TOriginalCharacteristic>
   >(new Array());
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   // Edit Food Elementary
   const [doChangeFoodElementaryName] = useChangeFoodElementaryNameMutation();
@@ -114,7 +122,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
     register,
     reset,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     getValues,
     control,
     trigger,
@@ -227,35 +235,6 @@ const FoodElementaryEditForm: FC<TProps> = ({
     }
   };
 
-  let checkIfFilledRight = () => {
-    let foodElementaryNameFilled = getValues("foodElementaryName");
-    let caloriesValueFilled = getValues("caloriesValue").toString();
-    let emptyCharacteristics = getValues("addCharacteristicsList")?.find(
-      (item) => item.characteristicInfo === undefined
-    );
-
-    const isAllCharacteristicsListsEmply =
-      !getValues("addCharacteristicsList")?.length &&
-      !getValues("originalCharacteristicsList")?.length;
-
-    let addCharacteristicValueErrors = errors?.addCharacteristicsList;
-    let originalCharacteristicValueErrors = errors?.originalCharacteristicsList;
-
-    let result =
-      foodElementaryNameFilled &&
-      !errors?.foodElementaryName &&
-      caloriesValueFilled &&
-      !errors?.caloriesValue &&
-      !emptyCharacteristics &&
-      !addCharacteristicValueErrors &&
-      !originalCharacteristicValueErrors &&
-      !isAllCharacteristicsListsEmply
-        ? true
-        : false;
-
-    return result;
-  };
-
   useEffect(() => {
     const originalCharacteristicsOnForm = originalCharacteristics.map(
       (characteristic: IFoodCharacteristic) => {
@@ -291,9 +270,6 @@ const FoodElementaryEditForm: FC<TProps> = ({
   }, [dirtyFields, touchedFields]);
 
   const onSubmit: SubmitHandler<TFoodElementaryEditFormData> = async (data) => {
-    console.log("\nFoodElementaryEditForm Submit\n");
-    console.log("data", data);
-
     const foodElementaryNameOnForm = data.foodElementaryName;
     const caloriesValueOnForm = data.caloriesValue;
 
@@ -335,8 +311,6 @@ const FoodElementaryEditForm: FC<TProps> = ({
           originalCharacteristicOnForm.value
       ) {
         changeCharacteristicsValuesList.push(originalCharacteristicOnForm);
-
-        console.log("Push in Change Characteristics Values List");
       }
     }
 
@@ -367,9 +341,15 @@ const FoodElementaryEditForm: FC<TProps> = ({
             : true,
       };
 
-      await doChangeFoodElementaryName(changeFoodElementaryNameData);
-
-      console.log("Change Food Recipe Name");
+      await doChangeFoodElementaryName(changeFoodElementaryNameData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Change Calories Value
@@ -388,9 +368,15 @@ const FoodElementaryEditForm: FC<TProps> = ({
             : true,
       };
 
-      await doChangeFoodCharacteristicValue(changeCaloriesValueData);
-
-      console.log("Change Calories Value");
+      await doChangeFoodCharacteristicValue(changeCaloriesValueData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Delete Characteristics
@@ -413,11 +399,15 @@ const FoodElementaryEditForm: FC<TProps> = ({
               ? true
               : false,
         };
-        await doDeleteFoodCharacteristic(deleteFoodCharacteristicData).catch(
-          (e) => console.log(e)
-        );
-
-        console.log("Delete Characteristics");
+        await doDeleteFoodCharacteristic(deleteFoodCharacteristicData)
+          .unwrap()
+          .catch((error) => {
+            handleApiCallError({
+              error: error,
+              dispatch: dispatch,
+              navigate: navigate,
+            });
+          });
       }
     }
 
@@ -438,11 +428,15 @@ const FoodElementaryEditForm: FC<TProps> = ({
             : false,
       };
 
-      await doChangeFoodCharacteristicValue(
-        changeCharacteristicValueData
-      ).catch((e) => console.log(e));
-
-      console.log("Change Characteristics Value");
+      await doChangeFoodCharacteristicValue(changeCharacteristicValueData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Add New Characteristics
@@ -456,16 +450,20 @@ const FoodElementaryEditForm: FC<TProps> = ({
           index == addCharacteristicsList.length - 1 ? true : false,
       };
 
-      await doAddFoodCharacteristic(addCharacteristicData).catch((e) =>
-        console.log(e)
-      );
-
-      console.log("Add New Characteristics");
+      await doAddFoodCharacteristic(addCharacteristicData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     reset();
 
-    setIsEditMode(false);
+    setIsEditMode(!isEditMode);
   };
 
   return (
@@ -613,7 +611,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
             <ButtonIlluminated
               children={"Сохранить"}
               type="submit"
-              isDisabled={checkIfFilledRight() ? false : true}
+              isDisabled={isValid ? false : true}
             />
           </span>
           <span className="flex-grow">
@@ -621,7 +619,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
               children={"Отменить"}
               type="button"
               onClick={() => {
-                setIsEditMode(false);
+                setIsEditMode(!isEditMode);
               }}
               buttonVariant={"light"}
             />

@@ -5,6 +5,7 @@ import { useAppDispatch } from "../../../global/store/store-hooks.ts";
 import { logout } from "../slices/user-slice.ts";
 import { removeTokenFromLocalStorage } from "../../../global/helpers/local-storage.helper.ts";
 import { IUser } from "../../../global/types/entities-types.ts";
+import { notify } from "../../../global/helpers/notify.helper.tsx";
 
 type TProps = {
   userInfo: IUser;
@@ -18,6 +19,12 @@ const UserInfoTileBody: FC<TProps> = ({ userInfo }) => {
     dispatch(logout());
     removeTokenFromLocalStorage();
     navigate("/");
+
+    notify({
+      messageText: "Вы вышли из системы",
+      toastId: "infoLogoutNotification",
+      toastType: "info",
+    });
   };
 
   return (
@@ -55,7 +62,7 @@ const UserInfoTileBody: FC<TProps> = ({ userInfo }) => {
           <ButtonIlluminated
             children={"Выйти"}
             type="button"
-            onClick={(): void => handleExitAccount()}
+            onClick={() => handleExitAccount()}
             buttonVariant={"dark"}
           />
         </span>

@@ -11,6 +11,10 @@ import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
 import { BASIC_CHARACTERISTICS_IDS_LIST } from "../../../global/constants/constants";
 import InputFieldRowWithDeleteButton from "../../../components/InputFieldRowWithDeleteButton/InputFieldRowWithDeleteButton";
 import { editFoodCharacteristicTypesValidationSchema } from "../constants/FoodCharacteristicTypesInfoTile.constants";
+import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../global/store/store-hooks";
+import { notify } from "../../../global/helpers/notify.helper";
 
 type TProps = {
   originalFoodCharacteristicTypes: IFoodCharacteristicType[];
@@ -35,6 +39,9 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
   isEditMode,
   setIsEditMode,
 }) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   // Food Characteristic Types to delete
   const originalIdsToRemoveRef = useRef<Array<String>>(new Array());
 
@@ -51,10 +58,10 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
     register,
     reset,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     getValues,
     control,
-    trigger,
+    // trigger,
   } = useForm<TFoodCharacteristicTypeInfoEditFormData>({
     resolver: yupResolver(editFoodCharacteristicTypesValidationSchema),
     mode: "onChange",
@@ -94,29 +101,6 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
     toAddRemove(itemIndex);
   };
 
-  let checkIfFilledRight = () => {
-    let emptyNewItems = getValues("addFoodCharacteristicTypesList")?.find(
-      (item) => item.foodCharacteristicTypeName === undefined
-    );
-
-    const isAllListsEmply =
-      !getValues("addFoodCharacteristicTypesList")?.length &&
-      !getValues("originalFoodCharacteristicTypesList")?.length;
-
-    let newItemsErrors = errors?.addFoodCharacteristicTypesList;
-    let originalItemsErrors = errors?.originalFoodCharacteristicTypesList;
-
-    let result =
-      !emptyNewItems &&
-      !newItemsErrors &&
-      !originalItemsErrors &&
-      !isAllListsEmply
-        ? true
-        : false;
-
-    return result;
-  };
-
   useEffect(() => {
     const originalItems = originalFoodCharacteristicTypes.map(
       (item: IFoodCharacteristicType) => {
@@ -137,9 +121,6 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
   const onSubmit: SubmitHandler<
     TFoodCharacteristicTypeInfoEditFormData
   > = async (data) => {
-    console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
-    console.log("data", data);
-
     // Delete Nutrients List
     const deleteNutrientsList = originalIdsToRemoveRef.current;
 
@@ -165,8 +146,6 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
 
       if (itemToChange != undefined && itemToChange.name != originalItem.name) {
         changeNutrientsList.push(originalItem);
-
-        console.log("Push in Change Nutrients List");
       }
     }
 
@@ -189,11 +168,26 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
             ? true
             : false,
       };
-      await doDeleteFoodCharacteristicType(deteleItemData).catch((e) =>
-        console.log(e)
-      );
+      await doDeleteFoodCharacteristicType(deteleItemData)
+        .unwrap()
+        .catch((error) => {
+          if (error?.status == 500) {
+            const errorMessage =
+              "Нельзя удалить нутриент, использущийся в некоторых простых блюдах";
 
-      console.log("Delete Food Characteristic Types");
+            notify({
+              messageText: errorMessage,
+              toastId: "errorNotification",
+              toastType: "error",
+            });
+          } else {
+            handleApiCallError({
+              error: error,
+              dispatch: dispatch,
+              navigate: navigate,
+            });
+          }
+        });
     }
 
     // Change Food Characteristic Types Name
@@ -210,11 +204,15 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
             : false,
       };
 
-      await doChangeFoodCharacteristicTypeName(changeItemNameData).catch((e) =>
-        console.log(e)
-      );
-
-      console.log("Change Food Characteristic Types Name");
+      await doChangeFoodCharacteristicTypeName(changeItemNameData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Add New Food Characteristic Types
@@ -227,11 +225,15 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
           index == addNutrientsList.length - 1 ? true : false,
       };
 
-      await doCreateFoodCharacteristicType(addItemData).catch((e) =>
-        console.log(e)
-      );
-
-      console.log("Add New Food Characteristic Types");
+      await doCreateFoodCharacteristicType(addItemData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     reset();
@@ -327,7 +329,7 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
             <ButtonIlluminated
               children={"Сохранить"}
               type="submit"
-              isDisabled={checkIfFilledRight() ? false : true}
+              isDisabled={isValid ? false : true}
             />
           </span>
           <span className="flex-grow">

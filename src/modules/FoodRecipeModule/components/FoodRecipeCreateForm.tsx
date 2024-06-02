@@ -11,6 +11,9 @@ import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
 import { IFoodElementary } from "../../../global/types/entities-types";
 import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
+import { useAppDispatch } from "../../../global/store/store-hooks";
+import { useNavigate } from "react-router-dom";
+import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -34,6 +37,9 @@ type TSelectElement = {
 
 const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
   const newFoodForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [doCreateFoodRecipe] = useCreateFoodRecipeMutation();
   const [doAddElementary] = useAddElementaryMutation();
@@ -67,8 +73,7 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     register,
     reset,
     handleSubmit,
-    formState: { errors },
-    getValues,
+    formState: { errors, isValid },
     control,
     trigger,
   } = useForm<TFoodRecipeCreateFormData>({
@@ -126,14 +131,24 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
               index == addElementaryList.length - 1 ? true : false,
           };
 
-          await doAddElementary(addFoodElementaryData).catch((e) =>
-            console.log(e)
-          );
-
-          console.log("Add Elementaries");
+          await doAddElementary(addFoodElementaryData)
+            .unwrap()
+            .catch((error) => {
+              handleApiCallError({
+                error: error,
+                dispatch: dispatch,
+                navigate: navigate,
+              });
+            });
         }
       })
-      .catch((e) => console.log(e));
+      .catch((error) => {
+        handleApiCallError({
+          error: error,
+          dispatch: dispatch,
+          navigate: navigate,
+        });
+      });
 
     reset();
 
@@ -252,7 +267,11 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
           </div>
 
           <div className="mt-5">
-            <ButtonIlluminated children={"Сохранить"} type="submit" />
+            <ButtonIlluminated
+              children={"Сохранить"}
+              type="submit"
+              isDisabled={isValid ? false : true}
+            />
           </div>
         </form>
       </div>

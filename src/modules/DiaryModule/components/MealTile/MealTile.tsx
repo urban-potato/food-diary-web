@@ -4,6 +4,9 @@ import MealEditForm from "./MealEditForm";
 import { ICourseMeal } from "../../../../global/types/entities-types";
 import MealTileBody from "./MealTileBody";
 import TileIcons from "../../../../components/TileIcons/TileIcons";
+import { useAppDispatch } from "../../../../global/store/store-hooks";
+import { useNavigate } from "react-router-dom";
+import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
 
 const MealTile: FC<ICourseMeal> = ({
   id,
@@ -15,9 +18,21 @@ const MealTile: FC<ICourseMeal> = ({
   characteristicsSum,
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [doDeleteCourseMeal] = useDeleteCourseMealMutation();
   const deleteMeal = async () => {
-    await doDeleteCourseMeal(id).catch((e: any) => console.log(e));
+    await doDeleteCourseMeal(id)
+      .unwrap()
+      .catch((error) => {
+        handleApiCallError({
+          error: error,
+          dispatch: dispatch,
+          navigate: navigate,
+        });
+      });
   };
 
   return (

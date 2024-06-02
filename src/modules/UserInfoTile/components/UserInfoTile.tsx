@@ -5,9 +5,33 @@ import { Player } from "@lordicon/react";
 import EDIT_ICON from "../../../global/assets/settings.json";
 import { useGetUserInfo } from "../hooks/use-get-user-info.hook.ts";
 import Preloader from "../../../components/Preloader/Preloader.tsx";
+import { useGetUserInfoQuery } from "../api/profile.api.ts";
+import { notify } from "../../../global/helpers/notify.helper.tsx";
 
 const UserInfoTile: FC = () => {
   let userInfo = useGetUserInfo();
+
+  const {
+    isLoading: isLoadingGetUserInfo,
+    data: dataGetUserInfo,
+    isError: isErrorGetUserInfo,
+    error: errorGetUserInfo,
+  } = useGetUserInfoQuery(userInfo?.id);
+
+  if (isErrorGetUserInfo && errorGetUserInfo && "status" in errorGetUserInfo) {
+    let errorMessage =
+      "При получении данных пользователя произошла неизвестная ошибка :(";
+
+    if (errorGetUserInfo?.status == "FETCH_ERROR") {
+      errorMessage = "Проблемы с интернет соединением";
+    }
+
+    notify({
+      messageText: errorMessage,
+      toastId: "errorNotification",
+      toastType: "error",
+    });
+  }
 
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -16,7 +40,7 @@ const UserInfoTile: FC = () => {
 
   return (
     <section className="flex flex-col justify-center items-center w-full gap-5">
-      {!userInfo || !userInfo?.email ? (
+      {isLoadingGetUserInfo || !dataGetUserInfo?.email ? (
         <span className="m-10">
           <Preloader />
         </span>
@@ -43,16 +67,19 @@ const UserInfoTile: FC = () => {
 
             {isEditMode ? (
               <UserInfoEditForm
-                id={userInfo?.id}
-                originalEmail={userInfo?.email}
+                id={dataGetUserInfo?.id}
+                originalEmail={dataGetUserInfo?.email}
                 originalFirstName={
-                  userInfo?.firstName ? userInfo?.firstName : ""
+                  dataGetUserInfo?.firstName ? dataGetUserInfo?.firstName : ""
                 }
-                originalLastName={userInfo?.lastName ? userInfo?.lastName : ""}
+                originalLastName={
+                  dataGetUserInfo?.lastName ? dataGetUserInfo?.lastName : ""
+                }
                 setIsEditMode={setIsEditMode}
+                isEditMode={isEditMode}
               />
             ) : (
-              <UserInfoTileBody userInfo={userInfo} />
+              <UserInfoTileBody userInfo={dataGetUserInfo} />
             )}
           </div>
         </div>

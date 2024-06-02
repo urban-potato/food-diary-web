@@ -7,6 +7,9 @@ import {
 } from "../../../../global/types/entities-types";
 import TileIcons from "../../../../components/TileIcons/TileIcons";
 import FoodRecipeInfo from "./FoodRecipeInfo";
+import { useAppDispatch } from "../../../../global/store/store-hooks";
+import { useNavigate } from "react-router-dom";
+import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
 
 type TProps = {
   foodRecipe: IFoodRecipe;
@@ -14,9 +17,21 @@ type TProps = {
 
 const FoodRecipeTile: FC<TProps> = ({ foodRecipe }) => {
   const [isEditMode, setIsEditMode] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [doDeleteFoodRecipe] = useDeleteFoodRecipeMutation();
   const deleteFoodRecipe = async () => {
-    await doDeleteFoodRecipe(foodRecipe.id).catch((e: any) => console.log(e));
+    await doDeleteFoodRecipe(foodRecipe.id)
+      .unwrap()
+      .catch((error) => {
+        handleApiCallError({
+          error: error,
+          dispatch: dispatch,
+          navigate: navigate,
+        });
+      });
   };
 
   const sortedIngredients = foodRecipe.ingredients

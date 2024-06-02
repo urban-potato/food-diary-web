@@ -15,7 +15,6 @@ import { login } from "../../UserInfoTile/index.ts";
 import { registrationValidationSchema } from "../constants/RegistrationForm.constants.ts";
 import { useRegisterMutation } from "../api/registration.api.ts";
 import { notify } from "../../../global/helpers/notify.helper.tsx";
-import Toaster from "../../../ui/Toaster/Toaster.tsx";
 
 interface FormType {
   email: string;
@@ -56,26 +55,41 @@ const RegistrationForm: FC = () => {
 
     await doRegister(registerData)
       .unwrap()
-      .then(() => {
-        doLogin(registerData)
+      .then(async () => {
+        notify({
+          messageText: "Успешная регистрация",
+          toastId: "successRegistrationNotification",
+          toastType: "success",
+        });
+
+        await doLogin(registerData)
           .unwrap()
-          .then((data) => {
+          .then(async (data) => {
             setTokenToLocalStorage(data.token, data.expiresIn);
 
-            doGetMe(undefined)
+            await doGetMe(undefined)
               .unwrap()
-              .then((data) => {
-                doGetUserInfo(data.id)
+              .then(async (data) => {
+                await doGetUserInfo(data.id)
                   .unwrap()
                   .then((data) => {
                     dispatch(login(data));
+
+                    reset();
+                    navigate("/diary");
+
+                    notify({
+                      messageText: "Вы авторизованы",
+                      toastId: "successAuthorizationNotification",
+                      toastType: "success",
+                    });
                   })
                   .catch((error) => {
-                    let errorMessage = "Произошла неизвестная ошибка :(";
+                    let errorMessage =
+                      "При получении данных пользователя произошла неизвестная ошибка :(";
 
                     if (error?.status == "FETCH_ERROR") {
-                      errorMessage =
-                        "Сервер временно недоступен, попробуйте позже";
+                      errorMessage = "Проблемы с интернет соединением";
                     }
 
                     notify({
@@ -86,12 +100,15 @@ const RegistrationForm: FC = () => {
                   });
               })
               .catch((error) => {
-                let errorMessage = "Произошла неизвестная ошибка :(";
+                let errorMessage =
+                  "При авторизации произошла неизвестная ошибка :(";
 
-                if (error?.status == 401 || error?.status == 403) {
-                  errorMessage = "Требуется авторизация";
+                if (error?.status == 401) {
+                  errorMessage = "Не удалось войти в систему. Попробуйте снова";
+                } else if (error?.status == 403) {
+                  errorMessage = "Ошибка: 403 Forbidden";
                 } else if (error?.status == "FETCH_ERROR") {
-                  errorMessage = "Сервер временно недоступен, попробуйте позже";
+                  errorMessage = "Проблемы с интернет соединением";
                 }
 
                 notify({
@@ -102,7 +119,8 @@ const RegistrationForm: FC = () => {
               });
           })
           .catch((error) => {
-            let errorMessage = "Произошла неизвестная ошибка :(";
+            let errorMessage =
+              "При авторизации произошла неизвестная ошибка :(";
 
             if (
               error?.data?.title?.includes("Email or password is incorrect")
@@ -115,7 +133,7 @@ const RegistrationForm: FC = () => {
             ) {
               errorMessage = "Для этой почты вход запрещен";
             } else if (error?.status == "FETCH_ERROR") {
-              errorMessage = "Сервер временно недоступен, попробуйте позже";
+              errorMessage = "Проблемы с интернет соединением";
             }
 
             notify({
@@ -124,17 +142,14 @@ const RegistrationForm: FC = () => {
               toastType: "error",
             });
           });
-
-        navigate("/diary");
-        reset();
       })
       .catch((error) => {
-        let errorMessage = "Произошла неизвестная ошибка :(";
+        let errorMessage = "При регистрации произошла неизвестная ошибка :(";
 
         if (error?.status == 400) {
           errorMessage = "Уже существует пользователь с этой почтой";
         } else if (error?.status == "FETCH_ERROR") {
-          errorMessage = "Сервер временно недоступен, попробуйте позже";
+          errorMessage = "Проблемы с интернет соединением";
         }
 
         notify({
@@ -154,12 +169,11 @@ const RegistrationForm: FC = () => {
   }, [dirtyFields, touchedFields]);
 
   if (isAuth) {
-    return <Navigate to="/diary" replace={true} />;
+    return <Navigate to="/diary" replace />;
   }
 
   return (
     <section className="flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md">
-      <Toaster />
       <h2 className="mb-5">Зарегистрируйтесь в FoodDiary</h2>
 
       <form className="" onSubmit={handleSubmit(onSubmit)}>

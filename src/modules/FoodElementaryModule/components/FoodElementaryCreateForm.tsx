@@ -20,9 +20,13 @@ import { sortCharacteristics } from "../../../global/helpers/sort-characteristic
 import DisabledSelectRowWithWeightField from "../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField.tsx";
 import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField.tsx";
 import { replaceIncorrectDecimal } from "../../../global/helpers/replace-incorrect-decimal.helper.ts";
+import { useAppDispatch } from "../../../global/store/store-hooks.ts";
+import { useNavigate } from "react-router-dom";
+import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper.ts";
 
 type TProps = {
   setShowCreateForm: Function;
+  showCreateForm: boolean;
 };
 
 type TFoodElementaryCreateFormData = {
@@ -49,10 +53,16 @@ type TSelectElement = {
   value: string;
 };
 
-const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
+const FoodElementaryCreateForm: FC<TProps> = ({
+  setShowCreateForm,
+  showCreateForm,
+}) => {
   const newCharacteristicsForbiddenToAddIdsRef = useRef<Array<String>>(
     new Array()
   );
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [doCreateFoodElementary] = useCreateFoodElementaryMutation();
   const [doAddFoodCharacteristic] = useAddFoodCharacteristicMutation();
@@ -97,8 +107,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     register,
     reset,
     handleSubmit,
-    formState: { errors },
-    getValues,
+    formState: { errors, isValid },
     control,
     trigger,
   } = useForm<TFoodElementaryCreateFormData>({
@@ -141,9 +150,6 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
   const onSubmit: SubmitHandler<TFoodElementaryCreateFormData> = async (
     data
   ) => {
-    console.log("==========================================");
-    console.log("data", data);
-
     const defaultCharacteristics = data.defaultCharacteristicsList;
     const additionalCharacteristics = data.addCharacteristicsList;
 
@@ -181,8 +187,6 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     await doCreateFoodElementary(createFoodElementaryData)
       .unwrap()
       .then(async (responseFoodElementaryId) => {
-        console.log("Create Food Elementary");
-
         for (const [
           index,
           characteristic,
@@ -197,14 +201,24 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
               index == additionalCharacteristics.length - 1 ? true : false,
           };
 
-          await doAddFoodCharacteristic(addCharacteristicData).catch((e) =>
-            console.log(e)
-          );
-
-          console.log("Add Additional Characteristics");
+          await doAddFoodCharacteristic(addCharacteristicData)
+            .unwrap()
+            .catch((error) => {
+              handleApiCallError({
+                error: error,
+                dispatch: dispatch,
+                navigate: navigate,
+              });
+            });
         }
       })
-      .catch((e) => console.log(e));
+      .catch((error) => {
+        handleApiCallError({
+          error: error,
+          dispatch: dispatch,
+          navigate: navigate,
+        });
+      });
 
     reset();
 
@@ -217,7 +231,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
       });
     }
 
-    setShowCreateForm(false);
+    setShowCreateForm(!showCreateForm);
   };
 
   const handleOnInputChange = () => {
@@ -413,7 +427,11 @@ const FoodElementaryCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
           </div>
 
           <div className="mt-5">
-            <ButtonIlluminated children={"Сохранить"} type="submit" />
+            <ButtonIlluminated
+              children={"Сохранить"}
+              type="submit"
+              isDisabled={isValid ? false : true}
+            />
           </div>
         </form>
       </div>

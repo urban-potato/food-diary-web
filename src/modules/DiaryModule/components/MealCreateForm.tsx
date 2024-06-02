@@ -26,10 +26,13 @@ import {
 import Preloader from "../../../components/Preloader/Preloader";
 import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
 import { SELECT_STYLES_SMALLER_HEIGHT } from "../../../global/constants/constants";
-import Errors from "../../../ui/Errors/Errors";
+import { useAppDispatch } from "../../../global/store/store-hooks";
+import { useNavigate } from "react-router-dom";
+import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper";
 
 type TProps = {
   setShowCreateForm: Function;
+  showCreateForm: boolean;
   date: string;
 };
 
@@ -56,7 +59,11 @@ type TSelectOption = {
   value: string;
 };
 
-const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
+const MealCreateForm: FC<TProps> = ({
+  setShowCreateForm,
+  showCreateForm,
+  date,
+}) => {
   const [mealTypeOptions, setMealTypeOptions] = useState<Array<TSelectOption>>(
     new Array()
   );
@@ -64,6 +71,9 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     useState<TSelectOption | null>(null);
 
   const newFoodForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [doLazyGetCourseMealDayByDate] = useLazyGetCourseMealDayByDateQuery();
   const [doCreateCourseMealDay] = useCreateCourseMealDayMutation();
@@ -132,8 +142,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     register,
     reset,
     handleSubmit,
-    formState: { errors },
-    getValues,
+    formState: { errors, isValid },
     control,
     trigger,
   } = useForm<TMealCreateFormData>({
@@ -194,7 +203,13 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
           courseMealDayId = response.items[0].id;
         }
       })
-      .catch((e) => console.log(e));
+      .catch((error) => {
+        handleApiCallError({
+          error: error,
+          dispatch: dispatch,
+          navigate: navigate,
+        });
+      });
 
     if (courseMealDayId === null) {
       const courseMealDayData = {
@@ -206,7 +221,13 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
         .then((responseCourseMealDayId) => {
           courseMealDayId = responseCourseMealDayId;
         })
-        .catch((e) => console.log(e));
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     const time = data.creationTime.toString().concat(":00");
@@ -224,7 +245,13 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
       .then((responseCourseMealId) => {
         courseMealId = responseCourseMealId;
       })
-      .catch((e) => console.log(e));
+      .catch((error) => {
+        handleApiCallError({
+          error: error,
+          dispatch: dispatch,
+          navigate: navigate,
+        });
+      });
 
     // Add New Consumed Elementaries
     for (const [index, foodElementary] of addElementaryList.entries()) {
@@ -240,11 +267,15 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
             : false,
       };
 
-      await doAddConsumedElementary(addFoodElementaryData).catch((e) =>
-        console.log(e)
-      );
-
-      console.log("Add New Consumed Elementaries");
+      await doAddConsumedElementary(addFoodElementaryData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Add New Consumed Recipes
@@ -258,9 +289,15 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
         isInvalidationNeeded: index == addRecipeList.length - 1 ? true : false,
       };
 
-      await doAddConsumedRecipe(addFoodRecipeData).catch((e) => console.log(e));
-
-      console.log("Add New Consumed Recipes");
+      await doAddConsumedRecipe(addFoodRecipeData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     reset();
@@ -274,7 +311,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
       });
     }
 
-    setShowCreateForm(false);
+    setShowCreateForm(!showCreateForm);
   };
 
   const handleOnInputChange = () => {
@@ -300,21 +337,6 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
     addFoodListAppend({
       weight: "0",
     });
-  };
-
-  let checkIfFilledRight = () => {
-    let emptyMeals = getValues("addFoodList")?.find(
-      (item) => item.foodInfo === undefined
-    );
-
-    const isAddFoodListEmply = !getValues("addFoodList")?.length;
-
-    let addFoodWeightErrors = errors?.addFoodList;
-
-    let result =
-      !emptyMeals && !addFoodWeightErrors && !isAddFoodListEmply ? true : false;
-
-    return result;
   };
 
   useEffect(() => {
@@ -462,7 +484,7 @@ const MealCreateForm: FC<TProps> = ({ setShowCreateForm, date }) => {
                 <ButtonIlluminated
                   children={"Сохранить"}
                   type="submit"
-                  isDisabled={checkIfFilledRight() ? false : true}
+                  isDisabled={isValid ? false : true}
                 />
               </div>
             </>

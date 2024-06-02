@@ -36,7 +36,9 @@ const foodRecipeApi = api.injectEndpoints({
       }),
 
       invalidatesTags: (result, error, arg) =>
-        arg.isInvalidationNeeded ? [{ type: "FoodRecipesList" }] : [],
+        arg.isInvalidationNeeded
+          ? [{ type: "FoodRecipesList" }, { type: "Diary" }]
+          : [],
     }),
 
     deleteFoodRecipe: builder.mutation({
@@ -46,11 +48,7 @@ const foodRecipeApi = api.injectEndpoints({
         credentials: "same-origin",
       }),
 
-      invalidatesTags: () => [
-        {
-          type: "FoodRecipesList",
-        },
-      ],
+      invalidatesTags: () => [{ type: "FoodRecipesList" }, { type: "Diary" }],
     }),
 
     addElementary: builder.mutation({
@@ -62,7 +60,9 @@ const foodRecipeApi = api.injectEndpoints({
       }),
 
       invalidatesTags: (result, error, arg) =>
-        arg.isInvalidationNeeded ? [{ type: "FoodRecipesList" }] : [],
+        arg.isInvalidationNeeded
+          ? [{ type: "FoodRecipesList" }, { type: "Diary" }]
+          : [],
     }),
 
     changeElementaryWeight: builder.mutation({
@@ -79,7 +79,9 @@ const foodRecipeApi = api.injectEndpoints({
       }),
 
       invalidatesTags: (result, error, arg) =>
-        arg.isInvalidationNeeded ? [{ type: "FoodRecipesList" }] : [],
+        arg.isInvalidationNeeded
+          ? [{ type: "FoodRecipesList" }, { type: "Diary" }]
+          : [],
     }),
 
     deleteElementary: builder.mutation({
@@ -90,7 +92,9 @@ const foodRecipeApi = api.injectEndpoints({
       }),
 
       invalidatesTags: (result, error, arg) =>
-        arg.isInvalidationNeeded ? [{ type: "FoodRecipesList" }] : [],
+        arg.isInvalidationNeeded
+          ? [{ type: "FoodRecipesList" }, { type: "Diary" }]
+          : [],
     }),
   }),
 });

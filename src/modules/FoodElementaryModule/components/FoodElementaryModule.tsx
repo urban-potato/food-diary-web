@@ -24,7 +24,10 @@ const FoodElementaryModule: FC = () => {
       </span>
 
       {showCreateForm ? (
-        <FoodElementaryCreateForm setShowCreateForm={setShowCreateForm} />
+        <FoodElementaryCreateForm
+          setShowCreateForm={setShowCreateForm}
+          showCreateForm={showCreateForm}
+        />
       ) : null}
 
       <FoodElementaryList />

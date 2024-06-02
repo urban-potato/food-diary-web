@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
 import MealCreateForm from "./MealCreateForm";
 import MealsList from "./MealsList";
@@ -8,11 +8,15 @@ import { format } from "date-fns";
 import { useGetCourseMealDayByDateQuery } from "../api/meal.api";
 import DayCharacteristicsSumTile from "./DayCharacteristicsSumTile/DayCharacteristicsSumTile";
 
-const DiaryModule = () => {
+type TProps = {
+  date?: string;
+};
+
+const DiaryModule: FC<TProps> = ({ date }) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   const [valueCalendar, setValueCalendar] = useState<TCalendarValue>(
-    new Date()
+    !!date ? new Date(date) : new Date()
   );
 
   const formattedDate = format(valueCalendar, "yyyy-MM-dd", { locale: ru });
@@ -56,6 +60,7 @@ const DiaryModule = () => {
         {showCreateForm ? (
           <MealCreateForm
             setShowCreateForm={setShowCreateForm}
+            showCreateForm={showCreateForm}
             date={formattedDate}
           />
         ) : null}

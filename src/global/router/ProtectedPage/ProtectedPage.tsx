@@ -1,18 +1,13 @@
-import { Navigate } from "react-router-dom";
-import { useIsAuth } from "../../../modules/AuthorizationForm";
+import { Navigate, Outlet } from "react-router-dom";
 import { FC } from "react";
+import { useIsAuth } from "../../hooks/use-is-auth.hook";
 
-type TProps = {
-  children: JSX.Element;
-};
-
-const ProtectedPage: FC<TProps> = ({ children }) => {
+const ProtectedPage: FC = () => {
   const isAuth = useIsAuth();
+
   if (!isAuth) return <Navigate to="/login" replace={true} />;
 
-  return children;
-
-  // return <>{isAuth ? children : <Navigate to="/login" replace={true} />}</>;
+  return <Outlet />;
 };
 
 export default ProtectedPage;

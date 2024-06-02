@@ -5,6 +5,9 @@ import { SubmitHandler, useForm, useFormState } from "react-hook-form";
 import { FC, useEffect } from "react";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../global/store/store-hooks.ts";
+import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper.ts";
 
 type TProps = {
   id: string;
@@ -12,6 +15,7 @@ type TProps = {
   originalFirstName: string;
   originalLastName: string;
   setIsEditMode: Function;
+  isEditMode: boolean;
 };
 
 type TSubmitData = {
@@ -26,6 +30,7 @@ const UserInfoEditForm: FC<TProps> = ({
   originalFirstName,
   originalLastName,
   setIsEditMode,
+  isEditMode,
 }) => {
   const [doChangeUserInfo] = useChangeUserInfoMutation();
 
@@ -39,8 +44,7 @@ const UserInfoEditForm: FC<TProps> = ({
     register,
     reset,
     handleSubmit,
-    formState: { errors },
-    getValues,
+    formState: { errors, isValid },
     control,
     trigger,
   } = useForm({
@@ -50,6 +54,8 @@ const UserInfoEditForm: FC<TProps> = ({
   });
 
   const { dirtyFields, touchedFields } = useFormState({ control });
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<TSubmitData> = async (data) => {
     let submitData: TSubmitData = {};
@@ -59,30 +65,25 @@ const UserInfoEditForm: FC<TProps> = ({
       submitData.firstName = data.firstName;
     if (data.lastName != originalLastName) submitData.lastName = data.lastName;
 
-    try {
-      await doChangeUserInfo({
-        id: id,
-        data: submitData,
+    const changeUserInfoData = {
+      id: id,
+      data: submitData,
+    };
+
+    await doChangeUserInfo(changeUserInfoData)
+      .unwrap()
+      .then(() => {
+        reset();
+        setIsEditMode(!isEditMode);
+      })
+      .catch((error) => {
+        handleApiCallError({
+          error: error,
+          dispatch: dispatch,
+          navigate: navigate,
+        });
       });
-
-      reset();
-      setIsEditMode(false);
-    } catch (error: any) {
-      console.log("error");
-      console.log(error);
-      alert(error?.data?.title);
-    }
   };
-
-  let isFilledRight =
-    getValues("email") &&
-    getValues("firstName") &&
-    getValues("lastName") &&
-    !errors?.email &&
-    !errors?.firstName &&
-    !errors?.lastName
-      ? true
-      : false;
 
   useEffect(() => {
     if (Object.keys(dirtyFields).length && !Object.keys(touchedFields).length) {
@@ -151,7 +152,7 @@ const UserInfoEditForm: FC<TProps> = ({
             <ButtonIlluminated
               children={"Сохранить"}
               type="submit"
-              isDisabled={isFilledRight ? false : true}
+              isDisabled={isValid ? false : true}
             />
           </span>
           <span className="flex-grow">
@@ -159,7 +160,7 @@ const UserInfoEditForm: FC<TProps> = ({
               children={"Отменить"}
               type="button"
               onClick={() => {
-                setIsEditMode(false);
+                setIsEditMode(!isEditMode);
               }}
               buttonVariant={"light"}
             />

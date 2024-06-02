@@ -28,6 +28,9 @@ import Preloader from "../../../../components/Preloader/Preloader";
 import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField";
 import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
 import { SELECT_STYLES_SMALLER_HEIGHT } from "../../../../global/constants/constants";
+import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
+import { useAppDispatch } from "../../../../global/store/store-hooks";
+import { useNavigate } from "react-router-dom";
 
 type TProps = {
   courseMealId: string;
@@ -94,6 +97,9 @@ const MealEditForm: FC<TProps> = ({
   const originalElementariesToRemoveIdsRef = useRef<Array<String>>(new Array());
   // Recipes to delete
   const originalRecipesToRemoveIdsRef = useRef<Array<String>>(new Array());
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [doChangeMealType] = useChangeMealTypeMutation();
 
@@ -166,7 +172,7 @@ const MealEditForm: FC<TProps> = ({
     register,
     reset,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     getValues,
     control,
     trigger,
@@ -291,8 +297,6 @@ const MealEditForm: FC<TProps> = ({
           originalElementary.weight
       ) {
         changeElementariesList.push(originalElementary);
-
-        console.log("Push in Change Elementaries List");
       }
     }
 
@@ -321,8 +325,6 @@ const MealEditForm: FC<TProps> = ({
           originalRecipe.weight
       ) {
         changeRecipesList.push(originalRecipe);
-
-        console.log("Push in Change Recipes List");
       }
     }
 
@@ -366,9 +368,15 @@ const MealEditForm: FC<TProps> = ({
             : true,
       };
 
-      await doChangeMealType(changeMealTypeData).catch((e) => console.log(e));
-
-      console.log("Change Meal Type");
+      await doChangeMealType(changeMealTypeData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Delete Consumed Elementaries
@@ -391,11 +399,15 @@ const MealEditForm: FC<TProps> = ({
             : false,
       };
 
-      await doDeleteConsumedElementary(deleteConsumedElementaryData).catch(
-        (e) => console.log(e)
-      );
-
-      console.log("Delete Consumed Elementaries");
+      await doDeleteConsumedElementary(deleteConsumedElementaryData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Delete Consumed Recipes
@@ -414,11 +426,15 @@ const MealEditForm: FC<TProps> = ({
             : false,
       };
 
-      await doDeleteConsumedRecipe(deleteConsumedRecipeData).catch((e) =>
-        console.log(e)
-      );
-
-      console.log("Delete Consumed Recipes");
+      await doDeleteConsumedRecipe(deleteConsumedRecipeData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Change Consumed Elementaries Weight
@@ -442,11 +458,15 @@ const MealEditForm: FC<TProps> = ({
             : false,
       };
 
-      await doChangeConsumedElementaryWeight(
-        changeConsumedElementaryWeightData
-      ).catch((e) => console.log(e));
-
-      console.log("Change Consumed Elementaries Weight");
+      await doChangeConsumedElementaryWeight(changeConsumedElementaryWeightData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Change Consumed Recipes Weight
@@ -464,11 +484,15 @@ const MealEditForm: FC<TProps> = ({
             : false,
       };
 
-      await doChangeConsumedRecipeWeight(changeConsumedRecipeWeightData).catch(
-        (e) => console.log(e)
-      );
-
-      console.log("Change Consumed Recipes Weight");
+      await doChangeConsumedRecipeWeight(changeConsumedRecipeWeightData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Add New Consumed Elementaries
@@ -485,11 +509,15 @@ const MealEditForm: FC<TProps> = ({
             : false,
       };
 
-      await doAddConsumedElementary(addFoodElementaryData).catch((e) =>
-        console.log(e)
-      );
-
-      console.log("Add New Consumed Elementaries");
+      await doAddConsumedElementary(addFoodElementaryData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Add New Consumed Recipes
@@ -503,9 +531,15 @@ const MealEditForm: FC<TProps> = ({
         isInvalidationNeeded: index == addRecipesList.length - 1 ? true : false,
       };
 
-      await doAddConsumedRecipe(addFoodRecipeData).catch((e) => console.log(e));
-
-      console.log("Add New Consumed Recipes");
+      await doAddConsumedRecipe(addFoodRecipeData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     reset();
@@ -528,32 +562,6 @@ const MealEditForm: FC<TProps> = ({
         newElement.value
       );
     }
-  };
-
-  let checkIfFilledRight = () => {
-    let emptyMeals = getValues("addFoodList")?.find(
-      (item) => item.foodInfo === undefined
-    );
-
-    const isAllFoodListsEmply =
-      !getValues("addFoodList")?.length &&
-      !getValues("originalFoodElementaryList")?.length &&
-      !getValues("originalFoodRecipeList")?.length;
-
-    let addFoodWeightErrors = errors?.addFoodList;
-    let originalElementariesWeightErrors = errors?.originalFoodElementaryList;
-    let originalRecipesWeightErrors = errors?.originalFoodRecipeList;
-
-    let result =
-      !emptyMeals &&
-      !addFoodWeightErrors &&
-      !originalElementariesWeightErrors &&
-      !originalRecipesWeightErrors &&
-      !isAllFoodListsEmply
-        ? true
-        : false;
-
-    return result;
   };
 
   useEffect(() => {
@@ -788,7 +796,7 @@ const MealEditForm: FC<TProps> = ({
                 <ButtonIlluminated
                   children={"Сохранить"}
                   type="submit"
-                  isDisabled={checkIfFilledRight() ? false : true}
+                  isDisabled={isValid ? false : true}
                 />
               </span>
               <span className="flex-grow">

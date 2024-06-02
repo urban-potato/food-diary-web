@@ -17,6 +17,9 @@ import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated";
 import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated";
 import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField";
 import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
+import { useAppDispatch } from "../../../../global/store/store-hooks";
+import { useNavigate } from "react-router-dom";
+import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
 
 type TProps = {
   foodRecipeId: string;
@@ -60,6 +63,9 @@ const FoodRecipeEditForm: FC<TProps> = ({
   // Ingredients to delete
   const originalIngredientsToRemoveIdsRef = useRef<Array<String>>(new Array());
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [doChangeFoodRecipeName] = useChangeFoodRecipeNameMutation();
 
   // Edit Ingredient
@@ -84,7 +90,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
     register,
     reset,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     getValues,
     control,
     trigger,
@@ -182,33 +188,6 @@ const FoodRecipeEditForm: FC<TProps> = ({
     }
   };
 
-  let checkIfFilledRight = () => {
-    let foodRecipeNameFilled = getValues("foodRecipeName");
-
-    let emptyNewIngredients = getValues("addIngredientsList")?.find(
-      (item) => item.ingredientInfo === undefined
-    );
-
-    const isAllIngredientsListsEmply =
-      !getValues("addIngredientsList")?.length &&
-      !getValues("originalIngredientsList")?.length;
-
-    let newIngredientsWeightErrors = errors?.addIngredientsList;
-    let originalIngredientsWeightErrors = errors?.originalIngredientsList;
-
-    let result =
-      foodRecipeNameFilled &&
-      !errors?.foodRecipeName &&
-      !emptyNewIngredients &&
-      !newIngredientsWeightErrors &&
-      !originalIngredientsWeightErrors &&
-      !isAllIngredientsListsEmply
-        ? true
-        : false;
-
-    return result;
-  };
-
   useEffect(() => {
     const originalIngredients = ingredients.map((ingredient: IIngredient) => {
       return {
@@ -229,9 +208,6 @@ const FoodRecipeEditForm: FC<TProps> = ({
   }, []);
 
   const onSubmit: SubmitHandler<TFoodRecipeEditFormData> = async (data) => {
-    console.log("\nFoodRecipeEditForm Submit\n");
-    console.log("data", data);
-
     // Delete Ingredients List
     const deleteIngredientsList = originalIngredientsToRemoveIdsRef.current;
 
@@ -262,8 +238,6 @@ const FoodRecipeEditForm: FC<TProps> = ({
           originalIngredient.weight
       ) {
         changeWeightsList.push(originalIngredient);
-
-        console.log("Push in Original Weghts To Change");
       }
     }
 
@@ -293,9 +267,15 @@ const FoodRecipeEditForm: FC<TProps> = ({
             : true,
       };
 
-      await doChangeFoodRecipeName(changeFoodRecipeNameData);
-
-      console.log("Change Food Recipe Name");
+      await doChangeFoodRecipeName(changeFoodRecipeNameData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Delete Ingredients
@@ -313,11 +293,15 @@ const FoodRecipeEditForm: FC<TProps> = ({
             : false,
       };
 
-      await doDeleteElementary(deleteIngredientData).catch((e) =>
-        console.log(e)
-      );
-
-      console.log("Delete Ingredients");
+      await doDeleteElementary(deleteIngredientData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Change Ingredients Weight
@@ -335,11 +319,15 @@ const FoodRecipeEditForm: FC<TProps> = ({
             : false,
       };
 
-      await doChangeElementaryWeight(changeIngredientWeightData).catch((e) =>
-        console.log(e)
-      );
-
-      console.log("Change Ingredient Weight");
+      await doChangeElementaryWeight(changeIngredientWeightData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     // Add New Ingredients
@@ -354,9 +342,15 @@ const FoodRecipeEditForm: FC<TProps> = ({
           index == addIngredientsList.length - 1 ? true : false,
       };
 
-      await doAddElementary(addIngredientData).catch((e) => console.log(e));
-
-      console.log("Add New Ingredients");
+      await doAddElementary(addIngredientData)
+        .unwrap()
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
     }
 
     reset();
@@ -488,7 +482,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
             <ButtonIlluminated
               children={"Сохранить"}
               type="submit"
-              isDisabled={checkIfFilledRight() ? false : true}
+              isDisabled={isValid ? false : true}
             />
           </span>
           <span className="flex-grow">

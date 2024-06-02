@@ -36,7 +36,13 @@ const foodElementaryApi = api.injectEndpoints({
       }),
 
       invalidatesTags: (result, error, arg) =>
-        arg.isInvalidationNeeded ? [{ type: "FoodElementaryList" }] : [],
+        arg.isInvalidationNeeded
+          ? [
+              { type: "FoodElementaryList" },
+              { type: "FoodRecipesList" },
+              { type: "Diary" },
+            ]
+          : [],
     }),
 
     deleteFoodElementary: builder.mutation({
@@ -47,9 +53,9 @@ const foodElementaryApi = api.injectEndpoints({
       }),
 
       invalidatesTags: () => [
-        {
-          type: "FoodElementaryList",
-        },
+        { type: "FoodElementaryList" },
+        { type: "FoodRecipesList" },
+        { type: "Diary" },
       ],
     }),
   }),

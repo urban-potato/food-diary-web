@@ -2,14 +2,18 @@ import { SubmitHandler, useForm, useFormState } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useIsAuth } from "../../../global/hooks/use-is-auth.hook.ts";
-import { useLoginMutation } from "../api/authorization.api.ts";
+import {
+  useLazyGetMeQuery,
+  useLoginMutation,
+} from "../api/authorization.api.ts";
 import { setTokenToLocalStorage } from "../../../global/helpers/local-storage.helper.ts";
 import { FC, useEffect } from "react";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import { AuthorizationData } from "../types/AuthorizationForm.types.ts";
 import { authorizationValidationSchema } from "../constants/AuthorizationForm.constants.ts";
-import Toaster from "../../../ui/Toaster/Toaster.tsx";
 import { notify } from "../../../global/helpers/notify.helper.tsx";
+import { login, useLazyGetUserInfoQuery } from "../../UserInfoTile/index.ts";
+import { useAppDispatch } from "../../../global/store/store-hooks.ts";
 
 const AuthorizationForm: FC = () => {
   const {
@@ -25,8 +29,13 @@ const AuthorizationForm: FC = () => {
   });
 
   const { dirtyFields, touchedFields } = useFormState({ control });
+
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const [doLogin] = useLoginMutation();
+  const [doGetMe] = useLazyGetMeQuery();
+  const [doGetUserInfo] = useLazyGetUserInfoQuery();
 
   const onSubmit: SubmitHandler<AuthorizationData> = async (data) => {
     const { email, password } = data;
@@ -38,16 +47,62 @@ const AuthorizationForm: FC = () => {
 
     await doLogin(loginData)
       .unwrap()
-      .then((data) => {
+      .then(async (data) => {
         setTokenToLocalStorage(data.token, data.expiresIn);
 
-        reset();
+        await doGetMe(undefined)
+          .unwrap()
+          .then(async (data) => {
+            await doGetUserInfo(data.id)
+              .unwrap()
+              .then((data) => {
+                dispatch(login(data));
 
-        navigate("/diary");
-        window.location.reload();
+                reset();
+                navigate("/diary");
+
+                notify({
+                  messageText: "Вы авторизованы",
+                  toastId: "successAuthorizationNotification",
+                  toastType: "success",
+                });
+              })
+              .catch((error) => {
+                let errorMessage =
+                  "При получении данных пользователя произошла неизвестная ошибка :(";
+
+                if (error?.status == "FETCH_ERROR") {
+                  errorMessage = "Проблемы с интернет соединением";
+                }
+
+                notify({
+                  messageText: errorMessage,
+                  toastId: "errorNotification",
+                  toastType: "error",
+                });
+              });
+          })
+          .catch((error) => {
+            let errorMessage =
+              "При авторизации произошла неизвестная ошибка :(";
+
+            if (error?.status == 401) {
+              errorMessage = "Не удалось войти в систему. Попробуйте снова";
+            } else if (error?.status == 403) {
+              errorMessage = "Ошибка: 403 Forbidden";
+            } else if (error?.status == "FETCH_ERROR") {
+              errorMessage = "Проблемы с интернет соединением";
+            }
+
+            notify({
+              messageText: errorMessage,
+              toastId: "errorNotification",
+              toastType: "error",
+            });
+          });
       })
       .catch((error) => {
-        let errorMessage = "Произошла неизвестная ошибка :(";
+        let errorMessage = "При авторизации произошла неизвестная ошибка :(";
 
         if (error?.data?.title?.includes("Email or password is incorrect")) {
           errorMessage = "Неверная почта или пароль";
@@ -56,7 +111,7 @@ const AuthorizationForm: FC = () => {
         } else if (error?.data?.title?.includes("is not allowed to Sign In")) {
           errorMessage = "Для этой почты вход запрещен";
         } else if (error?.status == "FETCH_ERROR") {
-          errorMessage = "Сервер временно недоступен, попробуйте позже";
+          errorMessage = "Проблемы с интернет соединением";
         }
 
         notify({
@@ -76,12 +131,11 @@ const AuthorizationForm: FC = () => {
   }, [dirtyFields, touchedFields]);
 
   if (isAuth) {
-    return <Navigate to="/diary" replace={true} />;
+    return <Navigate to="/diary" replace />;
   }
 
   return (
     <section className="flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md text-">
-      <Toaster />
       <h2 className="mb-5">Войдите в аккаунт</h2>
 
       <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>

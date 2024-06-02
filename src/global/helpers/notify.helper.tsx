@@ -11,7 +11,7 @@ type TProps = {
     | "bottom-center"
     | "bottom-left";
   theme?: "light" | "dark" | "colored";
-  toastId: string;
+  toastId: string | number;
   toastType: "info" | "success" | "warning" | "error" | "default";
 };
 

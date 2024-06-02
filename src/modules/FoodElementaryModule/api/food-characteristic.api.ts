@@ -11,7 +11,13 @@ const foodCharacteristicApi = api.injectEndpoints({
       }),
 
       invalidatesTags: (result, error, arg) =>
-        arg.isInvalidationNeeded ? [{ type: "FoodElementaryList" }] : [],
+        arg.isInvalidationNeeded
+          ? [
+              { type: "FoodElementaryList" },
+              { type: "FoodRecipesList" },
+              { type: "Diary" },
+            ]
+          : [],
     }),
 
     changeFoodCharacteristicValue: builder.mutation({
@@ -23,7 +29,13 @@ const foodCharacteristicApi = api.injectEndpoints({
       }),
 
       invalidatesTags: (result, error, arg) =>
-        arg.isInvalidationNeeded ? [{ type: "FoodElementaryList" }] : [],
+        arg.isInvalidationNeeded
+          ? [
+              { type: "FoodElementaryList" },
+              { type: "FoodRecipesList" },
+              { type: "Diary" },
+            ]
+          : [],
     }),
 
     deleteFoodCharacteristic: builder.mutation({
@@ -34,7 +46,13 @@ const foodCharacteristicApi = api.injectEndpoints({
       }),
 
       invalidatesTags: (result, error, arg) =>
-        arg.isInvalidationNeeded ? [{ type: "FoodElementaryList" }] : [],
+        arg.isInvalidationNeeded
+          ? [
+              { type: "FoodElementaryList" },
+              { type: "FoodRecipesList" },
+              { type: "Diary" },
+            ]
+          : [],
     }),
   }),
 });

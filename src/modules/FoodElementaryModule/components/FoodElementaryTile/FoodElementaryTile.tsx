@@ -4,6 +4,9 @@ import FoodElementaryEditForm from "./FoodElementaryEditForm";
 import FoodElementaryInfo from "./FoodElementaryInfo";
 import { IFoodCharacteristic } from "../../../../global/types/entities-types";
 import TileIcons from "../../../../components/TileIcons/TileIcons";
+import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
+import { useAppDispatch } from "../../../../global/store/store-hooks";
+import { useNavigate } from "react-router-dom";
 
 type TProps = {
   id: string;
@@ -14,10 +17,21 @@ type TProps = {
 const FoodElementaryTile: FC<TProps> = ({ id, name, characteristics }) => {
   const [isEditMode, setIsEditMode] = useState(false);
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [doDeleteFood] = useDeleteFoodElementaryMutation();
 
   const deleteFood = async () => {
-    await doDeleteFood(id);
+    await doDeleteFood(id)
+      .unwrap()
+      .catch((error) => {
+        handleApiCallError({
+          error: error,
+          dispatch: dispatch,
+          navigate: navigate,
+        });
+      });
   };
 
   return (
@@ -39,6 +53,7 @@ const FoodElementaryTile: FC<TProps> = ({ id, name, characteristics }) => {
             foodElementaryName={name}
             originalCharacteristics={characteristics}
             setIsEditMode={setIsEditMode}
+            isEditMode={isEditMode}
           />
         ) : (
           <FoodElementaryInfo
