@@ -3,23 +3,21 @@ import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
 import MealCreateForm from "./MealCreateForm";
 import MealsList from "./MealsList";
 import { ru } from "date-fns/locale";
-import { Calendar, TCalendarValue } from "./Calendar/Calendar";
+import { Calendar } from "./Calendar/Calendar";
 import { format } from "date-fns";
 import { useGetCourseMealDayByDateQuery } from "../api/meal.api";
 import DayCharacteristicsSumTile from "./DayCharacteristicsSumTile/DayCharacteristicsSumTile";
 
 type TProps = {
-  date?: string;
+  dateString?: string;
 };
 
-const DiaryModule: FC<TProps> = ({ date }) => {
+const DiaryModule: FC<TProps> = ({ dateString }) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  const [valueCalendar, setValueCalendar] = useState<TCalendarValue>(
-    !!date ? new Date(date) : new Date()
-  );
-
-  const formattedDate = format(valueCalendar, "yyyy-MM-dd", { locale: ru });
+  const nowDate = new Date();
+  const requiredDate = !!dateString ? new Date(dateString) : nowDate;
+  const formattedDate = format(requiredDate, "yyyy-MM-dd", { locale: ru });
 
   const { isLoading: isLoadingCourseMealDay, data: dataCourseMealDay } =
     useGetCourseMealDayByDateQuery(formattedDate);
@@ -29,9 +27,8 @@ const DiaryModule: FC<TProps> = ({ date }) => {
       <section className="lg:w-[20%] w-full flex flex-wrap justify-center items-center self-start lg:order-1 gap-5">
         <Calendar
           locale={ru.code}
-          setValueCalendar={setValueCalendar}
-          value={valueCalendar}
-          maxDate={new Date()}
+          value={requiredDate}
+          maxDate={nowDate}
           className="flex-grow-1"
         />
 

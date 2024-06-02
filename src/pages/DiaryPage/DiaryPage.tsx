@@ -7,7 +7,7 @@ const DiaryPage: FC = () => {
 
   return (
     <section className="flex flex-col h-fit w-full flex-grow">
-      <DiaryModule date={params.date} />
+      <DiaryModule dateString={params.date} />
     </section>
   );
 };

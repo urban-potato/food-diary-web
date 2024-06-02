@@ -4,6 +4,9 @@ import CalendarUI from "react-calendar";
 import type { CalendarProps } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./Calendar.scss";
+import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
 
 export type TCalendarValue = Date;
 
@@ -11,20 +14,27 @@ type TProps = {
   locale?: string;
   maxDate?: Date;
   minDate?: Date;
-  setValueCalendar: (date: Date) => void;
   value?: TCalendarValue;
 } & CalendarProps;
 
-const CalendarComponent: FC<TProps> = (props) => {
-  const { locale, maxDate, minDate, setValueCalendar, value } = props;
+const CalendarComponent: FC<TProps> = ({
+  locale,
+  maxDate,
+  minDate,
+  value,
+  ...rest
+}) => {
+  const navigate = useNavigate();
 
   const handleClickDay = (value: Date) => {
-    setValueCalendar(value);
+    const formattedDate = format(value, "yyyy-MM-dd", { locale: ru });
+
+    navigate(`/diary/${formattedDate}`);
   };
 
   return (
     <CalendarUI
-      {...props}
+      {...rest}
       className="Calendar shadow-lg rounded-xl"
       locale={locale}
       maxDate={maxDate}
