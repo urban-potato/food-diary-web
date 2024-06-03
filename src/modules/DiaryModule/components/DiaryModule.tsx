@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import ButtonIlluminated from "../../../ui/ButtonIlluminated/ButtonIlluminated";
 import MealCreateForm from "./MealCreateForm";
 import MealsList from "./MealsList";
@@ -7,20 +7,32 @@ import { Calendar } from "./Calendar/Calendar";
 import { format } from "date-fns";
 import { useGetCourseMealDayByDateQuery } from "../api/meal.api";
 import DayCharacteristicsSumTile from "./DayCharacteristicsSumTile/DayCharacteristicsSumTile";
+import { Player } from "@lordicon/react";
+import TEA_ICON from "../../../global/assets/tea.json";
 
 type TProps = {
-  dateString?: string;
+  requiredDate: Date;
 };
 
-const DiaryModule: FC<TProps> = ({ dateString }) => {
+const DiaryModule: FC<TProps> = ({ requiredDate }) => {
+  const teaIconPlayerRef = useRef<Player>(null);
+  const ICON_SIZE = 150;
+
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   const nowDate = new Date();
-  const requiredDate = !!dateString ? new Date(dateString) : nowDate;
+  nowDate.setHours(0, 0, 0, 0);
+  requiredDate.setHours(0, 0, 0, 0);
   const formattedDate = format(requiredDate, "yyyy-MM-dd", { locale: ru });
 
   const { isLoading: isLoadingCourseMealDay, data: dataCourseMealDay } =
     useGetCourseMealDayByDateQuery(formattedDate);
+
+  const isFutureDate = requiredDate > nowDate;
+
+  useEffect(() => {
+    teaIconPlayerRef.current?.playFromBeginning();
+  }, []);
 
   return (
     <section className="h-full w-full flex flex-wrap lg:flex-nowrap gap-3 justify-center">
@@ -43,31 +55,50 @@ const DiaryModule: FC<TProps> = ({ dateString }) => {
         </div>
       </section>
 
-      <section className="flex flex-col justify-start items-center py-3 w-full max-w-5xl lg:order-2 order-3">
-        <span className="my-3 w-full max-w-[280px]">
-          <ButtonIlluminated
-            children={showCreateForm ? "Скрыть" : "Новая запись"}
-            type="button"
-            onClick={() => setShowCreateForm(!showCreateForm)}
-            illuminationVariant={showCreateForm ? "full" : "light"}
-            buttonVariant={showCreateForm ? "dark" : "light"}
-          />
-        </span>
+      {isFutureDate ? (
+        <section className="flex flex-col justify-start items-center py-3 w-full max-w-5xl lg:order-2 order-3">
+          <div className="text-2xl w-full flex flex-col justify-center items-center mt-10 ">
+            <p className="block bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 font-bold">
+              Поздравляем!
+            </p>
+            <p className="block bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 font-bold">
+              Вы попали в будущее
+            </p>
+            <Player
+              ref={teaIconPlayerRef}
+              icon={TEA_ICON}
+              size={ICON_SIZE}
+              onComplete={() => teaIconPlayerRef.current?.playFromBeginning()}
+            />
+          </div>
+        </section>
+      ) : (
+        <section className="flex flex-col justify-start items-center py-3 w-full max-w-5xl lg:order-2 order-3">
+          <span className="my-3 w-full max-w-[280px]">
+            <ButtonIlluminated
+              children={showCreateForm ? "Скрыть" : "Новая запись"}
+              type="button"
+              onClick={() => setShowCreateForm(!showCreateForm)}
+              illuminationVariant={showCreateForm ? "full" : "light"}
+              buttonVariant={showCreateForm ? "dark" : "light"}
+            />
+          </span>
 
-        {showCreateForm ? (
-          <MealCreateForm
-            setShowCreateForm={setShowCreateForm}
-            showCreateForm={showCreateForm}
+          {showCreateForm ? (
+            <MealCreateForm
+              setShowCreateForm={setShowCreateForm}
+              showCreateForm={showCreateForm}
+              date={formattedDate}
+            />
+          ) : null}
+
+          <MealsList
             date={formattedDate}
+            isLoadingCourseMealDay={isLoadingCourseMealDay}
+            dataCourseMealDay={dataCourseMealDay}
           />
-        ) : null}
-
-        <MealsList
-          date={formattedDate}
-          isLoadingCourseMealDay={isLoadingCourseMealDay}
-          dataCourseMealDay={dataCourseMealDay}
-        />
-      </section>
+        </section>
+      )}
 
       <section className="lg:w-[30%] lg:order-3 order-2 hidden lg:block">
         <DayCharacteristicsSumTile

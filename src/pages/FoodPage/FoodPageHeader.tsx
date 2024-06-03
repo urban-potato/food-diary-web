@@ -1,37 +1,35 @@
+import { useNavigate } from "react-router-dom";
 import ButtonIlluminated from "../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
 import { FC } from "react";
+import { FOOD_TYPE } from "../../global/constants/constants.ts";
 
 type FoodPageHeaderProps = {
-  selectedValue: string;
-  setSelectedValue: React.Dispatch<React.SetStateAction<string>>;
+  foodType: string;
 };
 
-const FoodPageHeader: FC<FoodPageHeaderProps> = ({
-  selectedValue,
-  setSelectedValue,
-}) => {
+const FoodPageHeader: FC<FoodPageHeaderProps> = ({ foodType }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-wrap justify-center items-center text-center gap-x-5 gap-y-3">
       <span className="w-full  max-w-[280px]">
         <ButtonIlluminated
           children={"Простые блюда"}
           type="button"
-          onClick={() => setSelectedValue("foodElementary")}
-          illuminationVariant={
-            selectedValue === "foodElementary" ? "full" : "light"
-          }
-          buttonVariant={selectedValue === "foodElementary" ? "dark" : "light"}
+          onClick={() => navigate(`/food/${FOOD_TYPE.simple}`)}
+          illuminationVariant={foodType === FOOD_TYPE.simple ? "full" : "light"}
+          buttonVariant={foodType === FOOD_TYPE.simple ? "dark" : "light"}
         />
       </span>
       <span className="w-full  max-w-[280px]">
         <ButtonIlluminated
           children={"Составные блюда"}
           type="button"
-          onClick={() => setSelectedValue("foodRecipe")}
+          onClick={() => navigate(`/food/${FOOD_TYPE.complex}`)}
           illuminationVariant={
-            selectedValue === "foodRecipe" ? "full" : "light"
+            foodType === FOOD_TYPE.complex ? "full" : "light"
           }
-          buttonVariant={selectedValue === "foodRecipe" ? "dark" : "light"}
+          buttonVariant={foodType === FOOD_TYPE.complex ? "dark" : "light"}
         />
       </span>
     </div>

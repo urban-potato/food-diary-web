@@ -35,7 +35,7 @@ const Header: FC = () => {
           <Link to="/diary" className={navItemVariants()}>
             Дневник
           </Link>
-          <Link to="/food" className={navItemVariants()}>
+          <Link to="/food/simple" className={navItemVariants()}>
             Блюда
           </Link>
           <Link

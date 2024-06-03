@@ -2,6 +2,8 @@ $color-primary: rgba(176, 151, 106, 1); /* #B0976A */
 
 $color-disabled: rgba(191, 191, 191, 1); /* #bfbfbf */
 
+$color-pink: rgb(230, 185, 244); /* #E7DBDB */
+
 /* White */
 $color-white: rgba(255, 255, 255, 1); /* #fff */
 
@@ -54,7 +56,11 @@ $color-violet: rgba(205, 185, 244, 1); /* #CDB9F4 */
     text-transform: capitalize;
     width: 24px; */
 
-    &:enabled:hover,
+    &:enabled:hover {
+      background-color: $color-pink;
+      color: white;
+    }
+
     &:enabled:focus {
       background-color: $color-violet;
       color: white;
@@ -145,6 +151,6 @@ $color-violet: rgba(205, 185, 244, 1); /* #CDB9F4 */
 
   .react-calendar__tile--active {
     background: $color-violet;
-    /* color: black; */
+    color: $color-white;
   }
 }

@@ -41,10 +41,14 @@ export const router = createBrowserRouter(
               element: <DiaryPage />,
             },
             {
-              path: "/food",
+              path: "/food/:type?",
               element: <FoodPage />,
             },
           ],
+        },
+        {
+          path: "*",
+          element: <ErrorPage />,
         },
       ],
     },

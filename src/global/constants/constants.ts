@@ -42,3 +42,13 @@ export const SELECT_STYLES_SMALLER_HEIGHT: StylesConfig = {
     minHeight: 56,
   }),
 };
+
+type TFoodType = {
+  simple: string;
+  complex: string;
+};
+
+export const FOOD_TYPE: TFoodType = {
+  simple: "simple",
+  complex: "complex",
+};

@@ -1,22 +1,27 @@
-import { FC, useState } from "react";
-
+import { FC } from "react";
 import { FoodElementaryModule } from "../../modules/FoodElementaryModule/index.ts";
 import { FoodRecipeModule } from "../../modules/FoodRecipeModule/index.tsx";
 import FoodPageHeader from "./FoodPageHeader.tsx";
+import { useParams } from "react-router-dom";
+import { FOOD_TYPE } from "../../global/constants/constants.ts";
+import ErrorPage from "../ErrorPage/ErrorPage.tsx";
 
 const FoodPage: FC = () => {
-  const [selectedValue, setSelectedValue] = useState("foodElementary");
+  const params = useParams();
+
+  const foodType = params.type ?? FOOD_TYPE.simple;
+
+  if (foodType != FOOD_TYPE.simple && foodType != FOOD_TYPE.complex) {
+    return <ErrorPage />;
+  }
 
   return (
-    <section className=" flex flex-col h-fit w-full flex-grow ">
-      <FoodPageHeader
-        selectedValue={selectedValue}
-        setSelectedValue={setSelectedValue}
-      />
+    <section className="flex flex-col h-fit w-full flex-grow">
+      <FoodPageHeader foodType={foodType} />
 
-      {selectedValue === "foodElementary" ? (
+      {foodType === FOOD_TYPE.simple ? (
         <FoodElementaryModule />
-      ) : selectedValue === "foodRecipe" ? (
+      ) : foodType === FOOD_TYPE.complex ? (
         <FoodRecipeModule />
       ) : null}
     </section>
