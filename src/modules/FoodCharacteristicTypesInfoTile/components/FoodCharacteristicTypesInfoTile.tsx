@@ -7,12 +7,32 @@ import { Player } from "@lordicon/react";
 import EDIT_ICON from "../../../global/assets/settings.json";
 import { useGetAllFoodCharacteristicTypesQuery } from "../api/food-characteristic-type.api";
 import Preloader from "../../../components/Preloader/Preloader";
+import { useAppDispatch } from "../../../global/store/store-hooks";
+import { useNavigate } from "react-router-dom";
+import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper";
 
 const FoodCharacteristicTypesInfoTile: FC = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const {
     isLoading: isLoadingFoodCharacteristicTypes,
     data: dataFoodCharacteristicTypes,
+    isError: isErrorFoodCharacteristicTypes,
+    error: errorFoodCharacteristicTypes,
   } = useGetAllFoodCharacteristicTypesQuery(undefined);
+
+  if (
+    isErrorFoodCharacteristicTypes &&
+    errorFoodCharacteristicTypes &&
+    "status" in errorFoodCharacteristicTypes
+  ) {
+    handleApiCallError({
+      error: errorFoodCharacteristicTypes,
+      dispatch: dispatch,
+      navigate: navigate,
+    });
+  }
 
   const foodCharacteristicTypes: IFoodCharacteristicType[] =
     dataFoodCharacteristicTypes?.items?.length > 0

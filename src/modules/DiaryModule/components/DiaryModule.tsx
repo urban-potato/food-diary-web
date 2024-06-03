@@ -9,6 +9,10 @@ import { useGetCourseMealDayByDateQuery } from "../api/meal.api";
 import DayCharacteristicsSumTile from "./DayCharacteristicsSumTile/DayCharacteristicsSumTile";
 import { Player } from "@lordicon/react";
 import TEA_ICON from "../../../global/assets/tea.json";
+import { notify } from "../../../global/helpers/notify.helper";
+import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper";
+import { useAppDispatch } from "../../../global/store/store-hooks";
+import { useNavigate } from "react-router-dom";
 
 type TProps = {
   requiredDate: Date;
@@ -20,13 +24,32 @@ const DiaryModule: FC<TProps> = ({ requiredDate }) => {
 
   const [showCreateForm, setShowCreateForm] = useState(false);
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const nowDate = new Date();
   nowDate.setHours(0, 0, 0, 0);
   requiredDate.setHours(0, 0, 0, 0);
   const formattedDate = format(requiredDate, "yyyy-MM-dd", { locale: ru });
 
-  const { isLoading: isLoadingCourseMealDay, data: dataCourseMealDay } =
-    useGetCourseMealDayByDateQuery(formattedDate);
+  const {
+    isLoading: isLoadingCourseMealDay,
+    data: dataCourseMealDay,
+    isError: isErrorCourseMealDay,
+    error: errorCourseMealDay,
+  } = useGetCourseMealDayByDateQuery(formattedDate);
+
+  if (
+    isErrorCourseMealDay &&
+    errorCourseMealDay &&
+    "status" in errorCourseMealDay
+  ) {
+    handleApiCallError({
+      error: errorCourseMealDay,
+      dispatch: dispatch,
+      navigate: navigate,
+    });
+  }
 
   const isFutureDate = requiredDate > nowDate;
 

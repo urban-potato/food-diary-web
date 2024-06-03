@@ -86,15 +86,41 @@ const MealCreateForm: FC<TProps> = ({
   const {
     isLoading: isLoadingGetAllFoodElementary,
     data: dataGetAllFoodElementary,
+    isError: isErrorGetAllFoodElementary,
     error: errorGetAllFoodElementary,
   } = useGetAllFoodElementaryQuery(undefined);
+
+  if (
+    isErrorGetAllFoodElementary &&
+    errorGetAllFoodElementary &&
+    "status" in errorGetAllFoodElementary
+  ) {
+    handleApiCallError({
+      error: errorGetAllFoodElementary,
+      dispatch: dispatch,
+      navigate: navigate,
+    });
+  }
 
   // Food Recipes for Async Select
   const {
     isLoading: isLoadingGetAllFoodRecipe,
     data: dataGetAllFoodRecipe,
+    isError: isErrorGetAllFoodRecipe,
     error: errorGetAllFoodRecipe,
   } = useGetAllFoodRecipeQuery(undefined);
+
+  if (
+    isErrorGetAllFoodRecipe &&
+    errorGetAllFoodRecipe &&
+    "status" in errorGetAllFoodRecipe
+  ) {
+    handleApiCallError({
+      error: errorGetAllFoodRecipe,
+      dispatch: dispatch,
+      navigate: navigate,
+    });
+  }
 
   const loadOptions = (searchValue: string, callback: any) => {
     const filteredElementaryData: IFoodElementary[] =
@@ -128,9 +154,22 @@ const MealCreateForm: FC<TProps> = ({
   const {
     isLoading: isLoadingGetAllMealTypes,
     data: dataGetAllMealTypes,
+    isError: isErrorGetAllMealTypes,
     error: errorGetAllMealTypes,
     isSuccess: isSuccessGetAllMealTypes,
   } = useGetAllMealTypesQuery(undefined);
+
+  if (
+    isErrorGetAllMealTypes &&
+    errorGetAllMealTypes &&
+    "status" in errorGetAllMealTypes
+  ) {
+    handleApiCallError({
+      error: errorGetAllMealTypes,
+      dispatch: dispatch,
+      navigate: navigate,
+    });
+  }
 
   // defaultValues
   let defaultValues = {

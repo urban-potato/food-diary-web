@@ -12,21 +12,38 @@ import {
   PROTEIN_DEFAULT_ID,
 } from "../../../global/constants/constants.ts";
 import Preloader from "../../../components/Preloader/Preloader.tsx";
+import { useAppDispatch } from "../../../global/store/store-hooks.ts";
+import { useNavigate } from "react-router-dom";
+import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper.ts";
 
 export interface ILocalFoodCharacteristic extends IFoodCharacteristic {
   localId: number;
 }
 
 const FoodElementaryList: FC = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const {
     isLoading: isLoadingGetAllFoodElementary,
     data: dataGetAllFoodElementary,
+    isError: isErrorGetAllFoodElementary,
     error: errorGetAllFoodElementary,
   } = useGetAllFoodElementaryQuery(undefined);
 
-  let totalFoodCount: number = dataGetAllFoodElementary?.metadata.totalCount;
+  if (
+    isErrorGetAllFoodElementary &&
+    errorGetAllFoodElementary &&
+    "status" in errorGetAllFoodElementary
+  ) {
+    handleApiCallError({
+      error: errorGetAllFoodElementary,
+      dispatch: dispatch,
+      navigate: navigate,
+    });
+  }
 
-  // console.log(dataGetAllFoodElementary);
+  let totalFoodCount: number = dataGetAllFoodElementary?.metadata.totalCount;
 
   let foodItems = dataGetAllFoodElementary?.items.map(
     (item: IFoodElementary) => {

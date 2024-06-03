@@ -71,9 +71,22 @@ const FoodElementaryCreateForm: FC<TProps> = ({
   const {
     isLoading: isLoadingGetAllFoodCharacteristicTypes,
     data: dataGetAllFoodCharacteristicTypes,
+    isError: isErrorGetAllFoodCharacteristicTypes,
     error: errorGetAllFoodCharacteristicTypes,
     isSuccess: isSuccessGetAllFoodCharacteristicTypes,
   } = useGetAllFoodCharacteristicTypesQuery(undefined);
+
+  if (
+    isErrorGetAllFoodCharacteristicTypes &&
+    errorGetAllFoodCharacteristicTypes &&
+    "status" in errorGetAllFoodCharacteristicTypes
+  ) {
+    handleApiCallError({
+      error: errorGetAllFoodCharacteristicTypes,
+      dispatch: dispatch,
+      navigate: navigate,
+    });
+  }
 
   // Load Options for Async Select (Add new CHaracteristic)
   const loadOptions = (searchValue: string, callback: any) => {

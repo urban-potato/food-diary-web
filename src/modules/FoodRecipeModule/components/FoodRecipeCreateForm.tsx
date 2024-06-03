@@ -48,8 +48,21 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
   const {
     isLoading: isLoadingGetAllFoodElementary,
     data: dataGetAllFoodElementary,
+    isError: isErrorGetAllFoodElementary,
     error: errorGetAllFoodElementary,
   } = useGetAllFoodElementaryQuery(undefined);
+
+  if (
+    isErrorGetAllFoodElementary &&
+    errorGetAllFoodElementary &&
+    "status" in errorGetAllFoodElementary
+  ) {
+    handleApiCallError({
+      error: errorGetAllFoodElementary,
+      dispatch: dispatch,
+      navigate: navigate,
+    });
+  }
 
   const loadOptions = (searchValue: string, callback: any) => {
     const filteredElementaryData: IFoodElementary[] =

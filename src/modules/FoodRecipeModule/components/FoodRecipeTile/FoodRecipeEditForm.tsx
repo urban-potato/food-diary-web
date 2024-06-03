@@ -77,8 +77,21 @@ const FoodRecipeEditForm: FC<TProps> = ({
   const {
     isLoading: isLoadingGetAllFoodElementary,
     data: dataGetAllFoodElementary,
+    isError: isErrorGetAllFoodElementary,
     error: errorGetAllFoodElementary,
   } = useGetAllFoodElementaryQuery(undefined);
+
+  if (
+    isErrorGetAllFoodElementary &&
+    errorGetAllFoodElementary &&
+    "status" in errorGetAllFoodElementary
+  ) {
+    handleApiCallError({
+      error: errorGetAllFoodElementary,
+      dispatch: dispatch,
+      navigate: navigate,
+    });
+  }
 
   // defaultValues
   let defaultValues = {

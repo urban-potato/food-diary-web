@@ -108,8 +108,21 @@ const FoodElementaryEditForm: FC<TProps> = ({
   const {
     isLoading: isLoadingGetAllFoodCharacteristicTypes,
     data: dataGetAllFoodCharacteristicTypes,
+    isError: isErrorGetAllFoodCharacteristicTypes,
     error: errorGetAllFoodCharacteristicTypes,
   } = useGetAllFoodCharacteristicTypesQuery(undefined);
+
+  if (
+    isErrorGetAllFoodCharacteristicTypes &&
+    errorGetAllFoodCharacteristicTypes &&
+    "status" in errorGetAllFoodCharacteristicTypes
+  ) {
+    handleApiCallError({
+      error: errorGetAllFoodCharacteristicTypes,
+      dispatch: dispatch,
+      navigate: navigate,
+    });
+  }
 
   // defaultValues
   let defaultValues = {
