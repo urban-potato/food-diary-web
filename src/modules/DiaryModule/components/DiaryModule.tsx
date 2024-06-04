@@ -9,10 +9,12 @@ import { useGetCourseMealDayByDateQuery } from "../api/meal.api";
 import DayCharacteristicsSumTile from "./DayCharacteristicsSumTile/DayCharacteristicsSumTile";
 import { Player } from "@lordicon/react";
 import TEA_ICON from "../../../global/assets/tea.json";
-import { notify } from "../../../global/helpers/notify.helper";
 import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper";
 import { useAppDispatch } from "../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
+import BaseNutrientsChartTile from "./BaseNutrientsChartTile/BaseNutrientsChartTile";
+import { BASIC_CHARACTERISTICS_IDS_LIST } from "../../../global/constants/constants";
+import { ICharacteristicsSum } from "../../../global/types/entities-types";
 
 type TProps = {
   requiredDate: Date;
@@ -59,13 +61,28 @@ const DiaryModule: FC<TProps> = ({ requiredDate }) => {
 
   return (
     <section className="h-full w-full flex flex-wrap lg:flex-nowrap gap-3 justify-center">
-      <section className="lg:w-[20%] w-full flex flex-wrap justify-center items-center self-start lg:order-1 gap-5">
+      <section className="lg:w-[20%] w-max flex flex-wrap justify-center items-center self-start lg:order-1 gap-5">
         <Calendar
           locale={ru.code}
           value={requiredDate}
           maxDate={nowDate}
           className="flex-grow-1"
         />
+
+        <div className="flex-grow-1 max-w-max flex flex-wrap w-full">
+          <BaseNutrientsChartTile
+            nutrientsCaloriesData={
+              dataCourseMealDay?.items?.length > 0
+                ? dataCourseMealDay?.items[0]?.characteristicsSum.filter(
+                    (item: ICharacteristicsSum) =>
+                      BASIC_CHARACTERISTICS_IDS_LIST.includes(
+                        item.foodCharacteristicType.id
+                      )
+                  )
+                : []
+            }
+          />
+        </div>
 
         <div className="flex-grow-1 lg:hidden max-w-max flex flex-wrap gap-3 w-full">
           <DayCharacteristicsSumTile
