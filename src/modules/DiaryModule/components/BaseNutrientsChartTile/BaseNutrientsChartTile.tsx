@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { ICharacteristicsSum } from "../../../../global/types/entities-types";
-import NutrientsChart from "../../../../ui/BaseNutrientsChart/NutrientsChart";
+import DoughnutChart from "../../../../ui/DoughnutChart/DoughnutChart";
 import {
   CALORIES_DEFAULT_ID,
   CARBOHYDRATE_DEFAULT_ID,
@@ -59,9 +59,19 @@ const BaseNutrientsChartTile: FC<TProps> = ({ nutrientsCaloriesData }) => {
     },
   ];
 
-  const resultData = preparedData.filter(
+  const filteredData = preparedData.filter(
     (item) => item.value != 0 && !Number.isNaN(item.value)
   );
+
+  const resultLabelsList =
+    filteredData.length > 0
+      ? filteredData.map((item) => item.name)
+      : ["Белки", "Жиры", "Углеводы"];
+
+  const resultDataList =
+    filteredData.length > 0
+      ? filteredData.map((item) => item.value)
+      : [30, 20, 50];
 
   return (
     <div className="outer_box_style group w-full max-w-5xl mt-5">
@@ -70,9 +80,10 @@ const BaseNutrientsChartTile: FC<TProps> = ({ nutrientsCaloriesData }) => {
         className="box_content_transition bg-gradient-to-r from-pink-200 to-violet-200 shadow-lg rounded-xl p-5 
       flex flex-col flex-wrap justify-center items-start h-full w-full max-w-max"
       >
-        <NutrientsChart
-          labelsList={resultData.map((item) => item.name)}
-          dataList={resultData.map((item) => item.value)}
+        <DoughnutChart
+          labelsList={resultLabelsList}
+          dataList={resultDataList}
+          showDefault={filteredData.length > 0 ? false : true}
         />
       </div>
     </div>
