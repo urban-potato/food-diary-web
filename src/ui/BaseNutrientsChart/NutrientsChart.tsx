@@ -51,14 +51,9 @@ const doughnutOptions: ChartOptions<"doughnut"> = {
 type TProps = {
   labelsList: string[];
   dataList: number[];
-  showDefault?: boolean;
 };
 
-const NutrientsChart: FC<TProps> = ({
-  labelsList,
-  dataList,
-  showDefault = false,
-}) => {
+const NutrientsChart: FC<TProps> = ({ labelsList, dataList }) => {
   const defaultDoughnutOptions: ChartOptions<"doughnut"> = {
     plugins: {
       ...doughnutOptions.plugins,
@@ -69,10 +64,10 @@ const NutrientsChart: FC<TProps> = ({
   };
 
   const resultData = {
-    labels: showDefault ? ["Белки", "Жиры", "Углеводы"] : labelsList,
+    labels: dataList.length > 0 ? labelsList : ["Белки", "Жиры", "Углеводы"],
     datasets: [
       {
-        data: showDefault ? [30, 20, 50] : dataList,
+        data: dataList.length > 0 ? dataList : [30, 20, 50],
         backgroundColor: [
           "rgba(255, 99, 132, 0.8)",
           "rgba(54, 162, 235, 0.8)",
@@ -84,13 +79,11 @@ const NutrientsChart: FC<TProps> = ({
     ],
   };
 
-  console.log("dataList", dataList);
-
   return (
     <Doughnut
       data={resultData}
       //   plugins={[ChartDataLabels]}
-      options={showDefault ? defaultDoughnutOptions : doughnutOptions}
+      options={dataList.length > 0 ? doughnutOptions : defaultDoughnutOptions}
     />
   );
 };

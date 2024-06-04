@@ -73,7 +73,6 @@ const BaseNutrientsChartTile: FC<TProps> = ({ nutrientsCaloriesData }) => {
         <NutrientsChart
           labelsList={resultData.map((item) => item.name)}
           dataList={resultData.map((item) => item.value)}
-          showDefault={nutrientsCaloriesData.length > 0 ? false : true}
         />
       </div>
     </div>
