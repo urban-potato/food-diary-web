@@ -337,7 +337,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({
             <InputIlluminated
               id={"FoodElementaryCreateForm_caloriesValue"}
               type="text"
-              inputLabel="Калорийность (ккал.)"
+              inputLabel="Калорийность на 100г (ккал.)"
               register={{
                 ...register("caloriesValue"),
               }}
