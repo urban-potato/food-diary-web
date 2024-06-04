@@ -13,6 +13,12 @@ export const BASIC_CHARACTERISTICS_IDS_LIST = [
   CALORIES_DEFAULT_ID,
 ];
 
+export const BASIC_NUTRIENTS_IDS_LIST = [
+  PROTEIN_DEFAULT_ID,
+  FAT_DEFAULT_ID,
+  CARBOHYDRATE_DEFAULT_ID,
+];
+
 export const SELECT_STYLES: StylesConfig = {
   control: (styles) => ({
     ...styles,

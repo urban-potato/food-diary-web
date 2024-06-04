@@ -5,7 +5,10 @@ import {
   IIngredient,
 } from "../../../../global/types/entities-types";
 import Ingredients from "../Ingredients";
-import { CALORIES_DEFAULT_ID } from "../../../../global/constants/constants";
+import {
+  BASIC_NUTRIENTS_IDS_LIST,
+  CALORIES_DEFAULT_ID,
+} from "../../../../global/constants/constants";
 
 type TProps = {
   foodRecipeName: string;
@@ -19,7 +22,10 @@ const FoodRecipeInfo: FC<TProps> = ({
   characteristicsSum,
 }) => {
   const nutrients = characteristicsSum.filter(
-    (item) => item.foodCharacteristicType.id != CALORIES_DEFAULT_ID
+    (item) =>
+      (item.foodCharacteristicType.id != CALORIES_DEFAULT_ID &&
+        item.characteristicSumValue > 0) ||
+      BASIC_NUTRIENTS_IDS_LIST.includes(item.foodCharacteristicType.id)
   );
 
   const calories = characteristicsSum.filter(
