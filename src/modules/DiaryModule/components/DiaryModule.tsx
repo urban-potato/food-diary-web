@@ -69,7 +69,7 @@ const DiaryModule: FC<TProps> = ({ requiredDate }) => {
           className="flex-grow-1"
         />
 
-        <div className="flex-grow-1 max-w-max flex flex-wrap w-full">
+        <div className="flex-grow-1 max-w-max flex flex-col w-full justify-center items-center">
           <BaseNutrientsChartTile
             nutrientsCaloriesData={
               dataCourseMealDay?.items?.length > 0
