@@ -31,9 +31,11 @@ import { SELECT_STYLES_SMALLER_HEIGHT } from "../../../../global/constants/const
 import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
 import { useAppDispatch } from "../../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
+import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated";
 
 type TProps = {
   courseMealId: string;
+  originalCreationTime: string;
   originalMealTypeId: string;
   consumedElementaries: IConsumedElementary[];
   consumedRecipes: IConsumedRecipe[];
@@ -41,6 +43,7 @@ type TProps = {
 };
 
 type TMealEditFormData = {
+  creationTime: string;
   addFoodList: {
     foodInfo?: {
       label?: string | undefined;
@@ -78,6 +81,7 @@ type TSelectOption = {
 
 const MealEditForm: FC<TProps> = ({
   courseMealId,
+  originalCreationTime,
   originalMealTypeId,
   consumedElementaries,
   consumedRecipes,
@@ -206,6 +210,11 @@ const MealEditForm: FC<TProps> = ({
     callback(filteredOptions);
   };
 
+  // defaultValues
+  let defaultValues = {
+    creationTime: originalCreationTime,
+  };
+
   // useForm
   const {
     register,
@@ -218,6 +227,7 @@ const MealEditForm: FC<TProps> = ({
   } = useForm<TMealEditFormData>({
     resolver: yupResolver(editValidationSchema),
     mode: "onChange",
+    defaultValues: defaultValues,
   });
 
   // For Generating Original Elementaries Fields
@@ -694,7 +704,26 @@ const MealEditForm: FC<TProps> = ({
           </div>
         ) : (
           <>
-            <div className="w-full flex-grow flex justify-center items-end gap-y-1 gap-x-3 mb-5 -mt-5">
+            <div className="w-full flex-grow flex flex-wrap sm:flex-nowrap justify-center items-start gap-y-1 gap-x-3 mb-5 -mt-5">
+              <div className="w-full">
+                <InputIlluminated
+                  id={"FoodRecipeEditForm_creationTime"}
+                  type="time"
+                  inputLabel="Время"
+                  register={{
+                    ...register("creationTime"),
+                  }}
+                  isRequired={true}
+                  className="h-[56px]"
+                  isError={!!errors?.creationTime}
+                  errorMessagesList={
+                    [errors?.creationTime?.message].filter(
+                      (item) => !!item
+                    ) as string[]
+                  }
+                />
+              </div>
+
               <div className="flex flex-col justify-center w-full h-full gap-1 flex-grow">
                 <span className="flex gap-x-1">
                   <h3>Тип</h3>

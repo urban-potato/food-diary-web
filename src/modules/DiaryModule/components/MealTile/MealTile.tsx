@@ -50,6 +50,7 @@ const MealTile: FC<ICourseMeal> = ({
         {isEditMode ? (
           <MealEditForm
             courseMealId={id}
+            originalCreationTime={creationTime}
             originalMealTypeId={mealTypeId}
             consumedElementaries={consumedElementaries}
             consumedRecipes={consumedRecipes}

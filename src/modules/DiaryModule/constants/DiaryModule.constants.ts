@@ -65,6 +65,9 @@ export const createValidationSchema = yup.object({
 });
 
 export const editValidationSchema = yup.object({
+  creationTime: yup
+    .string()
+    .required("• Время: " + validValues.requiredErrorMessage),
   addFoodList: yup
     .array()
     .of(
