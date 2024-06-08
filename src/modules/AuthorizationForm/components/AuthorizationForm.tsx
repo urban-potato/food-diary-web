@@ -89,7 +89,7 @@ const AuthorizationForm: FC = () => {
             if (error?.status == 401) {
               errorMessage = "Не удалось войти в систему. Попробуйте снова";
             } else if (error?.status == 403) {
-              errorMessage = "Ошибка: 403 Forbidden";
+              errorMessage = "Отсутстуют права для выполнения операции";
             } else if (error?.status == "FETCH_ERROR") {
               errorMessage = "Проблемы с интернет соединением";
             }
