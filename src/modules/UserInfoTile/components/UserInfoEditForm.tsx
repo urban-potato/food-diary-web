@@ -99,7 +99,7 @@ const UserInfoEditForm: FC<TProps> = ({
         autoComplete="off"
       >
         <div className="flex flex-col w-full gap-1">
-          <div className="w-full flex-grow">
+          {/* <div className="w-full flex-grow">
             <InputIlluminated
               id="email"
               type="email"
@@ -112,7 +112,7 @@ const UserInfoEditForm: FC<TProps> = ({
                 [errors?.email?.message].filter((item) => !!item) as string[]
               }
             />
-          </div>
+          </div> */}
 
           <div className="w-full flex-grow">
             <InputIlluminated
