@@ -29,6 +29,7 @@ export interface IFoodCharacteristic {
 
 export interface IFoodCharacteristicWithLocalId extends IFoodCharacteristic {
   localId: number;
+  localName: string;
 }
 
 export interface ICourseMealDay {
@@ -84,6 +85,7 @@ export interface ICharacteristicsSum {
 
 export interface ICharacteristicsSumWithLocalId extends ICharacteristicsSum {
   localId: number;
+  localName: string;
 }
 
 export interface IFoodCharacteristicType {
@@ -96,4 +98,5 @@ export interface IFoodCharacteristicType {
 export interface IFoodCharacteristicTypeWithLocalId
   extends IFoodCharacteristicType {
   localId: number;
+  localName: string;
 }

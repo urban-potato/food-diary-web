@@ -1,4 +1,5 @@
 import {
+  BASIC_CHARACTERISTICS_IDS_LIST,
   CALORIES_DEFAULT_ID,
   CARBOHYDRATE_DEFAULT_ID,
   FAT_DEFAULT_ID,
@@ -13,16 +14,50 @@ import {
   IFoodCharacteristicWithLocalId,
 } from "../types/entities-types";
 
+type TCompareDefaultElement = {
+  localId: number;
+  [key: string]: any;
+};
+
+function compareDefault(a: TCompareDefaultElement, b: TCompareDefaultElement) {
+  if (a.localId < b.localId) {
+    return -1;
+  }
+  if (a.localId > b.localId) {
+    return 1;
+  }
+  return 0;
+}
+
+type TCompareAdditionalElement = {
+  localName: string;
+  [key: string]: any;
+};
+
+function compareAdditional(
+  a: TCompareAdditionalElement,
+  b: TCompareAdditionalElement
+) {
+  if (a.localName < b.localName) {
+    return -1;
+  }
+  if (a.localName > b.localName) {
+    return 1;
+  }
+  return 0;
+}
+
 export const sortCharacteristics = (
-  characteristicsSum:
+  originalCharacteristicsList:
     | ICharacteristicsSum[]
     | IFoodCharacteristicType[]
     | IFoodCharacteristic[]
 ) => {
-  let parsedCharacteristics = JSON.parse(JSON.stringify(characteristicsSum));
-  let localId = 4;
+  let parsedCharacteristics = JSON.parse(
+    JSON.stringify(originalCharacteristicsList)
+  );
 
-  let preparedCharacteristics = parsedCharacteristics.map(
+  const defaultCharacteristics = parsedCharacteristics.map(
     (
       characteristic:
         | ICharacteristicsSumWithLocalId
@@ -32,12 +67,11 @@ export const sortCharacteristics = (
       let characteristicId = null;
 
       if ("foodCharacteristicType" in characteristic) {
-        characteristicId =
-          characteristic.foodCharacteristicType.id.toLowerCase();
+        characteristicId = characteristic.foodCharacteristicType.id;
       } else if ("characteristicTypeId" in characteristic) {
-        characteristic.characteristicTypeId.toLowerCase();
+        characteristicId = characteristic.characteristicTypeId;
       } else {
-        characteristicId = characteristic.id.toLowerCase();
+        characteristicId = characteristic.id;
       }
 
       if (characteristicId === PROTEIN_DEFAULT_ID) {
@@ -49,28 +83,57 @@ export const sortCharacteristics = (
       } else if (characteristicId === CALORIES_DEFAULT_ID) {
         characteristic.localId = 3;
       } else {
-        characteristic.localId = localId;
-        localId += 1;
+        return;
       }
 
       return characteristic;
     }
   );
 
-  function compare(
-    a: ICharacteristicsSumWithLocalId,
-    b: ICharacteristicsSumWithLocalId
-  ) {
-    if (a.localId < b.localId) {
-      return -1;
-    }
-    if (a.localId > b.localId) {
-      return 1;
-    }
-    return 0;
-  }
+  const additionalCharacteristics = parsedCharacteristics.map(
+    (
+      characteristic:
+        | ICharacteristicsSumWithLocalId
+        | IFoodCharacteristicTypeWithLocalId
+        | IFoodCharacteristicWithLocalId
+    ) => {
+      let characteristicId = null;
+      let characteristicName = null;
 
-  preparedCharacteristics.sort(compare);
+      if ("foodCharacteristicType" in characteristic) {
+        characteristicId = characteristic.foodCharacteristicType.id;
+        characteristicName = characteristic.foodCharacteristicType.name;
+      } else if ("characteristicTypeId" in characteristic) {
+        characteristicId = characteristic.characteristicTypeId;
+        characteristicName = characteristic.characteristicName;
+      } else {
+        characteristicId = characteristic.id;
+        characteristicName = characteristic.name;
+      }
 
-  return preparedCharacteristics;
+      if (BASIC_CHARACTERISTICS_IDS_LIST.includes(characteristicId as string)) {
+        return;
+      } else {
+        characteristic.localName = characteristicName;
+      }
+
+      return characteristic;
+    }
+  );
+
+  const filteredDefaultCharacteristics = defaultCharacteristics.filter(
+    (item: any) => !!item
+  );
+  const filteredAdditionalCharacteristics = additionalCharacteristics.filter(
+    (item: any) => !!item
+  );
+
+  filteredDefaultCharacteristics.sort(compareDefault);
+  filteredAdditionalCharacteristics.sort(compareAdditional);
+
+  const resultSortedCharacteristics = filteredDefaultCharacteristics.concat(
+    filteredAdditionalCharacteristics
+  );
+
+  return resultSortedCharacteristics;
 };
