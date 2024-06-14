@@ -51,7 +51,8 @@ const FoodCharacteristicTypesInfoTile: FC = () => {
 
   return (
     <section className="flex flex-col justify-center items-center w-full gap-5">
-      {!dataFoodCharacteristicTypes ||
+      {isLoadingFoodCharacteristicTypes ||
+      !dataFoodCharacteristicTypes ||
       dataFoodCharacteristicTypes?.items?.length < 1 ? (
         <span className="m-10">
           <Preloader />
