@@ -25,6 +25,7 @@ type TProps = {
   isDeleteButtonDisabled?: boolean;
   hasErrors: boolean;
   errorMessagesList: Array<string>;
+  linkForNoOptionsMessage?: string;
 };
 
 const AsyncSelectRowWithWeightField: FC<TProps> = ({
@@ -42,6 +43,7 @@ const AsyncSelectRowWithWeightField: FC<TProps> = ({
   isDeleteButtonDisabled = false,
   hasErrors,
   errorMessagesList,
+  linkForNoOptionsMessage = "",
 }) => {
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
@@ -61,7 +63,11 @@ const AsyncSelectRowWithWeightField: FC<TProps> = ({
               <AsyncSelect
                 {...field}
                 className="relative text-sm rounded-xl"
-                components={{ NoOptionsMessage }}
+                components={{
+                  NoOptionsMessage: NoOptionsMessage(
+                    linkForNoOptionsMessage
+                  ),
+                }}
                 styles={SELECT_STYLES}
                 placeholder={selectPlaceholder}
                 loadOptions={loadSelectOptions}

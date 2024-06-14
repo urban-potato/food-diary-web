@@ -61,3 +61,10 @@ export const FOOD_TYPE: TFoodType = {
   simple: "simple",
   complex: "complex",
 };
+
+export const ROUTES_LIST = {
+  food: "/food",
+  foodSimple: `/food/${FOOD_TYPE.simple}`,
+  foodComplex: `/food/${FOOD_TYPE.complex}`,
+  profile: "/profile",
+};

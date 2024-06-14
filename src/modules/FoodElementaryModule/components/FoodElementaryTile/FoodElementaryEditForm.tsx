@@ -24,6 +24,7 @@ import {
   BASIC_CHARACTERISTICS_IDS_LIST,
   CALORIES_DEFAULT_ID,
   DECIMAL_REGEX,
+  ROUTES_LIST,
 } from "../../../../global/constants/constants.ts";
 import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField.tsx";
 import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField.tsx";
@@ -609,6 +610,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
                           ?.characteristicValue?.message,
                       ].filter((item) => !!item) as string[]
                     }
+                    linkForNoOptionsMessage={ROUTES_LIST.profile}
                   />
                 );
               })}

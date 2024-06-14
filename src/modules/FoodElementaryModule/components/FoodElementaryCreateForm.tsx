@@ -15,6 +15,7 @@ import {
   DECIMAL_REGEX,
   FAT_DEFAULT_ID,
   PROTEIN_DEFAULT_ID,
+  ROUTES_LIST,
 } from "../../../global/constants/constants.ts";
 import { sortCharacteristics } from "../../../global/helpers/sort-characteristics.helper.ts";
 import DisabledSelectRowWithWeightField from "../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField.tsx";
@@ -435,6 +436,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({
                             ?.characteristicValue?.message,
                         ].filter((item) => !!item) as string[]
                       }
+                      linkForNoOptionsMessage={ROUTES_LIST.profile}
                     />
                   );
                 })}

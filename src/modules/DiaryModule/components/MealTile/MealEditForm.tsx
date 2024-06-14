@@ -15,7 +15,6 @@ import {
 import { useGetAllFoodElementaryQuery } from "../../../FoodElementaryModule";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import NoOptionsMessage from "../../../../components/NoOptionsMessage/NoOptionsMessage";
 import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated";
 import Select from "react-select";
 import { useGetAllFoodRecipeQuery } from "../../../FoodRecipeModule/api/food-recipe.api";
@@ -29,12 +28,16 @@ import {
 import Preloader from "../../../../components/Preloader/Preloader";
 import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField";
 import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
-import { SELECT_STYLES_SMALLER_HEIGHT } from "../../../../global/constants/constants";
+import {
+  ROUTES_LIST,
+  SELECT_STYLES_SMALLER_HEIGHT,
+} from "../../../../global/constants/constants";
 import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
 import { useAppDispatch } from "../../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
 import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated";
 import { compareLabels } from "../../../../global/helpers/compare-labels.helper";
+import NoOptionsMessage from "../../../../components/NoOptionsMessage/NoOptionsMessage";
 
 type TProps = {
   originalCourseMealId: string;
@@ -860,7 +863,7 @@ const MealEditForm: FC<TProps> = ({
                     </div>
                   }
                   className="relative text-sm rounded-xl"
-                  components={{ NoOptionsMessage }}
+                  components={{ NoOptionsMessage: NoOptionsMessage() }}
                   styles={SELECT_STYLES_SMALLER_HEIGHT}
                   isSearchable={false}
                 />
@@ -957,6 +960,7 @@ const MealEditForm: FC<TProps> = ({
                         errors?.addFoodList?.[index]?.weight?.message,
                       ].filter((item) => !!item) as string[]
                     }
+                    linkForNoOptionsMessage={ROUTES_LIST.foodSimple}
                   />
                 );
               })}

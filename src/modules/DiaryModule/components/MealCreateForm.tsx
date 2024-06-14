@@ -25,7 +25,10 @@ import {
 
 import Preloader from "../../../components/Preloader/Preloader";
 import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
-import { SELECT_STYLES_SMALLER_HEIGHT } from "../../../global/constants/constants";
+import {
+  ROUTES_LIST,
+  SELECT_STYLES_SMALLER_HEIGHT,
+} from "../../../global/constants/constants";
 import { useAppDispatch } from "../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper";
@@ -474,7 +477,7 @@ const MealCreateForm: FC<TProps> = ({
                       </div>
                     }
                     className="relative text-sm rounded-xl"
-                    components={{ NoOptionsMessage }}
+                    components={{ NoOptionsMessage: NoOptionsMessage() }}
                     styles={SELECT_STYLES_SMALLER_HEIGHT}
                     isSearchable={false}
                   />
@@ -510,6 +513,7 @@ const MealCreateForm: FC<TProps> = ({
                           errors?.addFoodList?.[index]?.weight?.message,
                         ].filter((item) => !!item) as string[]
                       }
+                      linkForNoOptionsMessage={ROUTES_LIST.foodSimple}
                     />
                   );
                 })}

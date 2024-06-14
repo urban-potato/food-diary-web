@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import ButtonIlluminated from "../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
 import { FC } from "react";
-import { FOOD_TYPE } from "../../global/constants/constants.ts";
+import { FOOD_TYPE, ROUTES_LIST } from "../../global/constants/constants.ts";
 
 type FoodPageHeaderProps = {
   foodType: string;
@@ -16,7 +16,7 @@ const FoodPageHeader: FC<FoodPageHeaderProps> = ({ foodType }) => {
         <ButtonIlluminated
           children={"Простые блюда"}
           type="button"
-          onClick={() => navigate(`/food/${FOOD_TYPE.simple}`)}
+          onClick={() => navigate(ROUTES_LIST.foodSimple)}
           illuminationVariant={foodType === FOOD_TYPE.simple ? "full" : "light"}
           buttonVariant={foodType === FOOD_TYPE.simple ? "dark" : "light"}
         />
@@ -25,7 +25,7 @@ const FoodPageHeader: FC<FoodPageHeaderProps> = ({ foodType }) => {
         <ButtonIlluminated
           children={"Составные блюда"}
           type="button"
-          onClick={() => navigate(`/food/${FOOD_TYPE.complex}`)}
+          onClick={() => navigate(ROUTES_LIST.foodComplex)}
           illuminationVariant={
             foodType === FOOD_TYPE.complex ? "full" : "light"
           }

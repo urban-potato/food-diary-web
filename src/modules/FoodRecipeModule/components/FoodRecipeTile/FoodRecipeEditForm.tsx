@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
 import Preloader from "../../../../components/Preloader/Preloader";
 import { compareLabels } from "../../../../global/helpers/compare-labels.helper";
+import { ROUTES_LIST } from "../../../../global/constants/constants";
 
 type TProps = {
   foodRecipeId: string;
@@ -483,6 +484,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
                         errors?.addIngredientsList?.[index]?.weight?.message,
                       ].filter((item) => !!item) as string[]
                     }
+                    linkForNoOptionsMessage={ROUTES_LIST.foodSimple}
                   />
                 );
               })}
