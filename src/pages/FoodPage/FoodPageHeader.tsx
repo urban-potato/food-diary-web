@@ -11,7 +11,10 @@ const FoodPageHeader: FC<FoodPageHeaderProps> = ({ foodType }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-wrap justify-center items-center text-center gap-x-5 gap-y-3">
+    <div
+      id="create"
+      className="flex flex-wrap justify-center items-center text-center gap-x-5 gap-y-3"
+    >
       <span className="w-full  max-w-[280px]">
         <ButtonIlluminated
           children={"Простые блюда"}
