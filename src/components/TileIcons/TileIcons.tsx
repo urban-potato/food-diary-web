@@ -16,7 +16,11 @@ const TileIcons: FC<TProps> = ({ isEditMode, setIsEditMode, handleDelete }) => {
 
   return (
     <>
-      <span role="button" onClick={() => setIsEditMode(!isEditMode)}>
+      <span
+        role="button"
+        onClick={() => setIsEditMode(!isEditMode)}
+        className="remove_tap_highlight"
+      >
         <span
           onMouseEnter={() => editIconPlayerRef.current?.playFromBeginning()}
         >
@@ -29,7 +33,11 @@ const TileIcons: FC<TProps> = ({ isEditMode, setIsEditMode, handleDelete }) => {
         </span>
       </span>
 
-      <span role="button" onClick={async () => await handleDelete()}>
+      <span
+        role="button"
+        onClick={async () => await handleDelete()}
+        className="remove_tap_highlight"
+      >
         <span
           onMouseEnter={() => deleteIconPlayerRef.current?.playFromBeginning()}
         >

@@ -30,8 +30,8 @@ const buttonVariants = cva(
   {
     variants: {
       buttonVariant: {
-        light: "cursor-pointer bg-[#fff] text-near_black",
-        dark: "cursor-pointer bg-near_black text-near_white",
+        light: "remove_tap_highlight bg-[#fff] text-near_black",
+        dark: "remove_tap_highlight bg-near_black text-near_white",
         disabled:
           "cursor-default bg-light_near_black text-near_white border-light_near_black",
       },

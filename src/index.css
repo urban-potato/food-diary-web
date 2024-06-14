@@ -46,7 +46,7 @@
   }
 
   .nav_item {
-    @apply flex flex-grow flex-shrink 
+    @apply flex flex-grow flex-shrink remove_tap_highlight
 
      justify-center 
      items-center 
@@ -60,7 +60,7 @@
   }
 
   .btn {
-    @apply border border-solid rounded-full
+    @apply border border-solid rounded-full remove_tap_highlight
      
     flex
     flex-grow flex-shrink 
@@ -126,6 +126,10 @@
 
   .form_margin {
     @apply mb-9 mt-9 ml-5 mr-5;
+  }
+
+  .remove_tap_highlight {
+    @apply cursor-default sm:cursor-pointer;
   }
 
   .outer_box_style {
