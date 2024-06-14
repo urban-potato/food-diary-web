@@ -7,10 +7,12 @@ import TileIcons from "../../../../components/TileIcons/TileIcons";
 import { useAppDispatch } from "../../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
+import { cn } from "../../../../global/helpers/cn.helper";
 
 type TProps = {
   mealDayId: string;
-} & ICourseMeal;
+} & ICourseMeal &
+  React.HTMLAttributes<HTMLDivElement>;
 
 const MealTile: FC<TProps> = ({
   id,
@@ -21,6 +23,7 @@ const MealTile: FC<TProps> = ({
   consumedRecipes,
   characteristicsSum,
   mealDayId,
+  className,
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -41,7 +44,9 @@ const MealTile: FC<TProps> = ({
   };
 
   return (
-    <div className="outer_box_style group w-full max-w-5xl mt-5">
+    <div
+      className={cn("outer_box_style group w-full max-w-5xl mt-5", className)}
+    >
       <div className="box_style"></div>
       <div className="box_content_transition flex flex-col flex-wrap w-full justify-center items-start p-7">
         <div className="box_icons">

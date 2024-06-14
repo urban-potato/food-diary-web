@@ -31,19 +31,22 @@ export const SELECT_STYLES: StylesConfig = {
     ...base,
   }),
   option: (base, state) => ({
+    // option box
     ...base,
     backgroundColor: state.isSelected ? "#C2BAFF" : "white",
+  }),
+  menu: (base) => ({
+    // all box
+    ...base,
+    zIndex: 100,
+    backgroundColor: "white",
   }),
 };
 
 export const SELECT_STYLES_SMALLER_HEIGHT: StylesConfig = {
   ...SELECT_STYLES,
-  control: (base) => ({
+  valueContainer: (base) => ({
     ...base,
-    backgroundColor: "white",
-    borderRadius: "12px",
-    border: 0,
-    boxShadow: "none",
     height: 56,
     minHeight: 56,
   }),
