@@ -49,7 +49,11 @@ const UserInfoTile: FC = () => {
           <div className="box_style"></div>
           <div className="box_content_transition flex flex-wrap w-full justify-center items-start p-7">
             <div className="ml-auto gap-x-2 flex justify-center items-start">
-              <span role="button" onClick={() => setIsEditMode(!isEditMode)}>
+              <span
+                role="button"
+                className="remove_tap_highlight"
+                onClick={() => setIsEditMode(!isEditMode)}
+              >
                 <span
                   onMouseEnter={() =>
                     editIconPlayerRef.current?.playFromBeginning()
