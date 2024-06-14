@@ -8,7 +8,11 @@ import { useAppDispatch } from "../../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
 
-const MealTile: FC<ICourseMeal> = ({
+type TProps = {
+  mealDayId: string;
+} & ICourseMeal;
+
+const MealTile: FC<TProps> = ({
   id,
   creationTime,
   mealTypeId,
@@ -16,6 +20,7 @@ const MealTile: FC<ICourseMeal> = ({
   consumedElementaries,
   consumedRecipes,
   characteristicsSum,
+  mealDayId,
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -49,12 +54,14 @@ const MealTile: FC<ICourseMeal> = ({
 
         {isEditMode ? (
           <MealEditForm
-            courseMealId={id}
+            originalCourseMealId={id}
             originalCreationTime={creationTime}
             originalMealTypeId={mealTypeId}
-            consumedElementaries={consumedElementaries}
-            consumedRecipes={consumedRecipes}
+            originalConsumedElementaries={consumedElementaries}
+            originalConsumedRecipes={consumedRecipes}
             setIsEditMode={setIsEditMode}
+            isEditMode={isEditMode}
+            originalMealDayId={mealDayId}
           />
         ) : (
           <MealTileBody

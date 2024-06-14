@@ -24,7 +24,13 @@ const MealsList: FC<TProps> = ({
         meal.consumedElementaries.length > 0 ||
         meal.consumedRecipes.length > 0
       ) {
-        return <MealTile key={`courseMeals_${meal.id}`} {...meal} />;
+        return (
+          <MealTile
+            key={`courseMeals_${meal.id}`}
+            {...meal}
+            mealDayId={dataCourseMealDay?.items[0]?.id}
+          />
+        );
       }
     })
     .filter((item: ReactElement | undefined) => item != undefined);

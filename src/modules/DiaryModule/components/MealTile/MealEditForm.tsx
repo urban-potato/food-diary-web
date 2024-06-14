@@ -9,6 +9,8 @@ import {
   useChangeConsumedRecipeWeightMutation,
   useDeleteConsumedRecipeMutation,
   useGetAllMealTypesQuery,
+  useCreateCourseMealMutation,
+  useDeleteCourseMealMutation,
 } from "../../api/meal.api";
 import { useGetAllFoodElementaryQuery } from "../../../FoodElementaryModule";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
@@ -34,19 +36,21 @@ import { useNavigate } from "react-router-dom";
 import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated";
 
 type TProps = {
-  courseMealId: string;
+  originalCourseMealId: string;
   originalCreationTime: string;
   originalMealTypeId: string;
-  consumedElementaries: IConsumedElementary[];
-  consumedRecipes: IConsumedRecipe[];
+  originalConsumedElementaries: IConsumedElementary[];
+  originalConsumedRecipes: IConsumedRecipe[];
   setIsEditMode: Function;
+  isEditMode: boolean;
+  originalMealDayId: string;
 };
 
 type TMealEditFormData = {
   creationTime: string;
   addFoodList: {
     foodInfo?: {
-      label?: string | undefined;
+      label: string;
       value: string;
       isElementary: boolean;
     };
@@ -79,13 +83,25 @@ type TSelectOption = {
   value: string;
 };
 
+type TAddElementariesList = {
+  foodElementaryId: string;
+  weight: string;
+}[];
+
+type TAddRecipesList = {
+  foodRecipeId: string;
+  weight: string;
+}[];
+
 const MealEditForm: FC<TProps> = ({
-  courseMealId,
+  originalCourseMealId,
   originalCreationTime,
   originalMealTypeId,
-  consumedElementaries,
-  consumedRecipes,
+  originalConsumedElementaries,
+  originalConsumedRecipes,
   setIsEditMode,
+  isEditMode,
+  originalMealDayId,
 }) => {
   const [mealTypeOptions, setMealTypeOptions] = useState<Array<TSelectOption>>(
     new Array()
@@ -104,6 +120,9 @@ const MealEditForm: FC<TProps> = ({
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const [doCreateCourseMeal] = useCreateCourseMealMutation();
+  const [doDeleteCourseMeal] = useDeleteCourseMealMutation();
 
   const [doChangeMealType] = useChangeMealTypeMutation();
 
@@ -312,6 +331,8 @@ const MealEditForm: FC<TProps> = ({
   };
 
   const onSubmit: SubmitHandler<TMealEditFormData> = async (data) => {
+    const isChangeTimeNeeded = originalCreationTime != data.creationTime;
+
     // Delete Elementaries List
     const deleteElementariesList = originalElementariesToRemoveIdsRef.current;
     // Delete Recipes List
@@ -329,9 +350,10 @@ const MealEditForm: FC<TProps> = ({
       }
     );
 
-    const consumedElementariesWithoutDeleted = consumedElementaries.filter(
-      (item) => !deleteElementariesList.includes(item.foodElementary.id)
-    );
+    const consumedElementariesWithoutDeleted =
+      originalConsumedElementaries.filter(
+        (item) => !deleteElementariesList.includes(item.foodElementary.id)
+      );
 
     for (const originalElementary of originalElementaryList) {
       const consumedElementaryToChange =
@@ -359,7 +381,7 @@ const MealEditForm: FC<TProps> = ({
       };
     });
 
-    const consumedRecipesWithoutDeleted = consumedRecipes.filter(
+    const consumedRecipesWithoutDeleted = originalConsumedRecipes.filter(
       (item) => !deleteRecipesList.includes(item.foodRecipe.id)
     );
 
@@ -397,203 +419,292 @@ const MealEditForm: FC<TProps> = ({
         };
       });
 
-    // Change Meal Type
-    const mealType = selectedMealTypeOption?.value;
-    if (mealType != originalMealTypeId) {
-      const changeMealTypeData = {
-        courseMealId: courseMealId,
-        data: {
-          mealTypeId: mealType,
-        },
-        isInvalidationNeeded:
-          deleteElementariesList.length +
+    // if Change Time Needed
+    if (isChangeTimeNeeded) {
+      const time = data.creationTime.toString().concat(":00");
+      const mealType = selectedMealTypeOption?.value;
+      // let courseMealId: string | null = null;
+
+      const createCourseMealData = {
+        mealTypeId: mealType,
+        courseMealDayId: originalMealDayId,
+        courseMealTime: time,
+      };
+
+      const finalAddElementariesList = originalElementaryList.concat(
+        addElementariesList as TAddElementariesList
+      );
+      const finalAddRecipesList = originalRecipeList.concat(
+        addRecipesList as TAddRecipesList
+      );
+
+      await doCreateCourseMeal(createCourseMealData)
+        .unwrap()
+        .then(async (responseCourseMealId) => {
+          // Add New Consumed Elementaries
+          for (const foodElementary of finalAddElementariesList) {
+            const addFoodElementaryData = {
+              id: responseCourseMealId,
+              data: {
+                foodElementaryId: foodElementary.foodElementaryId,
+                weight: foodElementary.weight,
+              },
+              isInvalidationNeeded: false,
+            };
+
+            await doAddConsumedElementary(addFoodElementaryData)
+              .unwrap()
+              .catch((error) => {
+                handleApiCallError({
+                  error: error,
+                  dispatch: dispatch,
+                  navigate: navigate,
+                });
+              });
+          }
+
+          // Add New Consumed Recipes
+          for (const foodRecipe of finalAddRecipesList) {
+            const addFoodRecipeData = {
+              id: responseCourseMealId,
+              data: {
+                foodRecipeId: foodRecipe.foodRecipeId,
+                weight: foodRecipe.weight,
+              },
+              isInvalidationNeeded: false,
+            };
+
+            await doAddConsumedRecipe(addFoodRecipeData)
+              .unwrap()
+              .catch((error) => {
+                handleApiCallError({
+                  error: error,
+                  dispatch: dispatch,
+                  navigate: navigate,
+                });
+              });
+          }
+
+          await doDeleteCourseMeal(originalCourseMealId)
+            .unwrap()
+            .catch((error) => {
+              handleApiCallError({
+                error: error,
+                dispatch: dispatch,
+                navigate: navigate,
+              });
+            });
+        })
+        .catch((error) => {
+          handleApiCallError({
+            error: error,
+            dispatch: dispatch,
+            navigate: navigate,
+          });
+        });
+    } else {
+      // Change Meal Type
+      const mealType = selectedMealTypeOption?.value;
+      if (mealType != originalMealTypeId) {
+        const changeMealTypeData = {
+          courseMealId: originalCourseMealId,
+          data: {
+            mealTypeId: mealType,
+          },
+          isInvalidationNeeded:
+            deleteElementariesList.length +
+              deleteRecipesList.length +
+              changeElementariesList.length +
+              changeRecipesList.length +
+              addElementariesList.length +
+              addRecipesList.length >
+            0
+              ? false
+              : true,
+        };
+
+        await doChangeMealType(changeMealTypeData)
+          .unwrap()
+          .catch((error) => {
+            handleApiCallError({
+              error: error,
+              dispatch: dispatch,
+              navigate: navigate,
+            });
+          });
+      }
+
+      // Delete Consumed Elementaries
+      for (const [
+        index,
+        elementaryToDeleteId,
+      ] of deleteElementariesList.entries()) {
+        const deleteConsumedElementaryData = {
+          courseMealId: originalCourseMealId,
+          foodElementaryId: elementaryToDeleteId,
+          isInvalidationNeeded:
+            index == deleteElementariesList.length - 1 &&
             deleteRecipesList.length +
+              changeElementariesList.length +
+              changeRecipesList.length +
+              addElementariesList.length +
+              addRecipesList.length ==
+              0
+              ? true
+              : false,
+        };
+
+        await doDeleteConsumedElementary(deleteConsumedElementaryData)
+          .unwrap()
+          .catch((error) => {
+            handleApiCallError({
+              error: error,
+              dispatch: dispatch,
+              navigate: navigate,
+            });
+          });
+      }
+
+      // Delete Consumed Recipes
+      for (const [index, recipeToDeleteId] of deleteRecipesList.entries()) {
+        const deleteConsumedRecipeData = {
+          courseMealId: originalCourseMealId,
+          foodRecipeId: recipeToDeleteId,
+          isInvalidationNeeded:
+            index == deleteRecipesList.length - 1 &&
             changeElementariesList.length +
+              changeRecipesList.length +
+              addElementariesList.length +
+              addRecipesList.length ==
+              0
+              ? true
+              : false,
+        };
+
+        await doDeleteConsumedRecipe(deleteConsumedRecipeData)
+          .unwrap()
+          .catch((error) => {
+            handleApiCallError({
+              error: error,
+              dispatch: dispatch,
+              navigate: navigate,
+            });
+          });
+      }
+
+      // Change Consumed Elementaries Weight
+      for (const [
+        index,
+        originalElementary,
+      ] of changeElementariesList.entries()) {
+        const changeConsumedElementaryWeightData = {
+          courseMealId: originalCourseMealId,
+          foodElementaryId: originalElementary.foodElementaryId,
+          data: {
+            weight: originalElementary.weight,
+          },
+          isInvalidationNeeded:
+            index == changeElementariesList.length - 1 &&
             changeRecipesList.length +
-            addElementariesList.length +
-            addRecipesList.length >
-          0
-            ? false
-            : true,
-      };
+              addElementariesList.length +
+              addRecipesList.length ==
+              0
+              ? true
+              : false,
+        };
 
-      await doChangeMealType(changeMealTypeData)
-        .unwrap()
-        .catch((error) => {
-          handleApiCallError({
-            error: error,
-            dispatch: dispatch,
-            navigate: navigate,
+        await doChangeConsumedElementaryWeight(
+          changeConsumedElementaryWeightData
+        )
+          .unwrap()
+          .catch((error) => {
+            handleApiCallError({
+              error: error,
+              dispatch: dispatch,
+              navigate: navigate,
+            });
           });
-        });
-    }
+      }
 
-    // Delete Consumed Elementaries
-    for (const [
-      index,
-      elementaryToDeleteId,
-    ] of deleteElementariesList.entries()) {
-      const deleteConsumedElementaryData = {
-        courseMealId: courseMealId,
-        foodElementaryId: elementaryToDeleteId,
-        isInvalidationNeeded:
-          index == deleteElementariesList.length - 1 &&
-          deleteRecipesList.length +
-            changeElementariesList.length +
-            changeRecipesList.length +
-            addElementariesList.length +
-            addRecipesList.length ==
-            0
-            ? true
-            : false,
-      };
+      // Change Consumed Recipes Weight
+      for (const [index, originalRecipe] of changeRecipesList.entries()) {
+        const changeConsumedRecipeWeightData = {
+          courseMealId: originalCourseMealId,
+          foodRecipeId: originalRecipe.foodRecipeId,
+          data: {
+            weight: originalRecipe.weight,
+          },
+          isInvalidationNeeded:
+            index == changeRecipesList.length - 1 &&
+            addElementariesList.length + addRecipesList.length == 0
+              ? true
+              : false,
+        };
 
-      await doDeleteConsumedElementary(deleteConsumedElementaryData)
-        .unwrap()
-        .catch((error) => {
-          handleApiCallError({
-            error: error,
-            dispatch: dispatch,
-            navigate: navigate,
+        await doChangeConsumedRecipeWeight(changeConsumedRecipeWeightData)
+          .unwrap()
+          .catch((error) => {
+            handleApiCallError({
+              error: error,
+              dispatch: dispatch,
+              navigate: navigate,
+            });
           });
-        });
-    }
+      }
 
-    // Delete Consumed Recipes
-    for (const [index, recipeToDeleteId] of deleteRecipesList.entries()) {
-      const deleteConsumedRecipeData = {
-        courseMealId: courseMealId,
-        foodRecipeId: recipeToDeleteId,
-        isInvalidationNeeded:
-          index == deleteRecipesList.length - 1 &&
-          changeElementariesList.length +
-            changeRecipesList.length +
-            addElementariesList.length +
-            addRecipesList.length ==
-            0
-            ? true
-            : false,
-      };
+      // Add New Consumed Elementaries
+      for (const [index, foodElementary] of addElementariesList.entries()) {
+        const addFoodElementaryData = {
+          id: originalCourseMealId,
+          data: {
+            foodElementaryId: foodElementary.foodElementaryId,
+            weight: foodElementary.weight,
+          },
+          isInvalidationNeeded:
+            index == addElementariesList.length - 1 &&
+            addRecipesList.length == 0
+              ? true
+              : false,
+        };
 
-      await doDeleteConsumedRecipe(deleteConsumedRecipeData)
-        .unwrap()
-        .catch((error) => {
-          handleApiCallError({
-            error: error,
-            dispatch: dispatch,
-            navigate: navigate,
+        await doAddConsumedElementary(addFoodElementaryData)
+          .unwrap()
+          .catch((error) => {
+            handleApiCallError({
+              error: error,
+              dispatch: dispatch,
+              navigate: navigate,
+            });
           });
-        });
-    }
+      }
 
-    // Change Consumed Elementaries Weight
-    for (const [
-      index,
-      originalElementary,
-    ] of changeElementariesList.entries()) {
-      const changeConsumedElementaryWeightData = {
-        courseMealId: courseMealId,
-        foodElementaryId: originalElementary.foodElementaryId,
-        data: {
-          weight: originalElementary.weight,
-        },
-        isInvalidationNeeded:
-          index == changeElementariesList.length - 1 &&
-          changeRecipesList.length +
-            addElementariesList.length +
-            addRecipesList.length ==
-            0
-            ? true
-            : false,
-      };
+      // Add New Consumed Recipes
+      for (const [index, foodRecipe] of addRecipesList.entries()) {
+        const addFoodRecipeData = {
+          id: originalCourseMealId,
+          data: {
+            foodRecipeId: foodRecipe.foodRecipeId,
+            weight: foodRecipe.weight,
+          },
+          isInvalidationNeeded:
+            index == addRecipesList.length - 1 ? true : false,
+        };
 
-      await doChangeConsumedElementaryWeight(changeConsumedElementaryWeightData)
-        .unwrap()
-        .catch((error) => {
-          handleApiCallError({
-            error: error,
-            dispatch: dispatch,
-            navigate: navigate,
+        await doAddConsumedRecipe(addFoodRecipeData)
+          .unwrap()
+          .catch((error) => {
+            handleApiCallError({
+              error: error,
+              dispatch: dispatch,
+              navigate: navigate,
+            });
           });
-        });
-    }
-
-    // Change Consumed Recipes Weight
-    for (const [index, originalRecipe] of changeRecipesList.entries()) {
-      const changeConsumedRecipeWeightData = {
-        courseMealId: courseMealId,
-        foodRecipeId: originalRecipe.foodRecipeId,
-        data: {
-          weight: originalRecipe.weight,
-        },
-        isInvalidationNeeded:
-          index == changeRecipesList.length - 1 &&
-          addElementariesList.length + addRecipesList.length == 0
-            ? true
-            : false,
-      };
-
-      await doChangeConsumedRecipeWeight(changeConsumedRecipeWeightData)
-        .unwrap()
-        .catch((error) => {
-          handleApiCallError({
-            error: error,
-            dispatch: dispatch,
-            navigate: navigate,
-          });
-        });
-    }
-
-    // Add New Consumed Elementaries
-    for (const [index, foodElementary] of addElementariesList.entries()) {
-      const addFoodElementaryData = {
-        id: courseMealId,
-        data: {
-          foodElementaryId: foodElementary.foodElementaryId,
-          weight: foodElementary.weight,
-        },
-        isInvalidationNeeded:
-          index == addElementariesList.length - 1 && addRecipesList.length == 0
-            ? true
-            : false,
-      };
-
-      await doAddConsumedElementary(addFoodElementaryData)
-        .unwrap()
-        .catch((error) => {
-          handleApiCallError({
-            error: error,
-            dispatch: dispatch,
-            navigate: navigate,
-          });
-        });
-    }
-
-    // Add New Consumed Recipes
-    for (const [index, foodRecipe] of addRecipesList.entries()) {
-      const addFoodRecipeData = {
-        id: courseMealId,
-        data: {
-          foodRecipeId: foodRecipe.foodRecipeId,
-          weight: foodRecipe.weight,
-        },
-        isInvalidationNeeded: index == addRecipesList.length - 1 ? true : false,
-      };
-
-      await doAddConsumedRecipe(addFoodRecipeData)
-        .unwrap()
-        .catch((error) => {
-          handleApiCallError({
-            error: error,
-            dispatch: dispatch,
-            navigate: navigate,
-          });
-        });
+      }
     }
 
     reset();
 
-    setIsEditMode(false);
+    setIsEditMode(!isEditMode);
   };
 
   const handleOnInputChange = () => {
@@ -614,7 +725,7 @@ const MealEditForm: FC<TProps> = ({
   };
 
   useEffect(() => {
-    const originalElementaries = consumedElementaries.map(
+    const originalElementaries = originalConsumedElementaries.map(
       (elementary: IConsumedElementary) => {
         return {
           foodElementaryId: {
@@ -633,15 +744,17 @@ const MealEditForm: FC<TProps> = ({
       );
     });
 
-    const originalRecipes = consumedRecipes.map((recipe: IConsumedRecipe) => {
-      return {
-        foodRecipeId: {
-          label: recipe.foodRecipe.name,
-          value: recipe.foodRecipe.id,
-        },
-        weight: recipe.recipeInMealWeight.toString(),
-      };
-    });
+    const originalRecipes = originalConsumedRecipes.map(
+      (recipe: IConsumedRecipe) => {
+        return {
+          foodRecipeId: {
+            label: recipe.foodRecipe.name,
+            value: recipe.foodRecipe.id,
+          },
+          weight: recipe.recipeInMealWeight.toString(),
+        };
+      }
+    );
 
     originalRecipes.forEach((originalRecipe) => {
       originalRecipeAppend(originalRecipe);
@@ -872,7 +985,7 @@ const MealEditForm: FC<TProps> = ({
                   children={"Отменить"}
                   type="button"
                   onClick={() => {
-                    setIsEditMode(false);
+                    setIsEditMode(!isEditMode);
                   }}
                   buttonVariant={"light"}
                 />
