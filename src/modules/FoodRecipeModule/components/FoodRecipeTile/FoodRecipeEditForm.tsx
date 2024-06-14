@@ -20,6 +20,8 @@ import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRow
 import { useAppDispatch } from "../../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
+import Preloader from "../../../../components/Preloader/Preloader";
+import { compareLabels } from "../../../../global/helpers/compare-labels.helper";
 
 type TProps = {
   foodRecipeId: string;
@@ -129,6 +131,8 @@ const FoodRecipeEditForm: FC<TProps> = ({
         !ingredientsForbiddenToAddIdsRef.current.includes(item.value) &&
         !newIngredientsForbiddenToAddIdsRef.current.includes(item.value)
     );
+
+    filteredOptions.sort(compareLabels);
 
     callback(filteredOptions);
   };
@@ -378,137 +382,148 @@ const FoodRecipeEditForm: FC<TProps> = ({
         onSubmit={handleSubmit(onSubmit)}
         autoComplete="off"
       >
-        <div className="text-xl w-full flex-grow">
-          <InputIlluminated
-            id={"FoodRecipeEditForm_foodRecipeName"}
-            type="text"
-            inputLabel="Название блюда"
-            register={{
-              ...register("foodRecipeName"),
-            }}
-            isRequired={true}
-            className="h-[67px]"
-            labelClassName="text-lg"
-            isError={!!errors?.foodRecipeName}
-            errorMessagesList={
-              [errors?.foodRecipeName?.message].filter(
-                (item) => !!item
-              ) as string[]
-            }
-          />
-        </div>
-
-        <div className="flex flex-col mt-5">
-          {originalIngredientsFields.map((item, index) => {
-            return (
-              <DisabledSelectRowWithWeightField
-                key={`FoodRecipeEditForm_div_originalIngredientsFields_${item.id}_${index}`}
-                itemId={item.id}
-                itemIndex={index}
-                label={"Ингредиент"}
-                selectPlaceholder={"Введите название ингредиента"}
-                handleRemoveItem={handleRemoveOriginalIngredient}
-                controllerName={
-                  `originalIngredientsList.${index}.ingredientInfo` as const
-                }
-                control={control}
-                register={{
-                  ...register(
-                    `originalIngredientsList.${index}.weight` as const
-                  ),
-                }}
-                isDeleteButtonDisabled={
-                  originalIngredientsFields.length +
-                    addIngredientsListFields.length <
-                  2
-                    ? true
-                    : false
-                }
-                hasErrors={!!errors?.originalIngredientsList}
-                errorMessagesList={
-                  [
-                    errors?.originalIngredientsList?.[index]?.ingredientInfo
-                      ?.value?.message,
-                    errors?.originalIngredientsList?.[index]?.weight?.message,
-                  ].filter((item) => !!item) as string[]
-                }
-              />
-            );
-          })}
-
-          {addIngredientsListFields.map((item, index) => {
-            return (
-              <AsyncSelectRowWithWeightField
-                key={`FoodRecipeEditForm_Div_addIngredientsList_${item.id}_${index}`}
-                itemId={item.id}
-                itemIndex={index}
-                label={"Ингредиент"}
-                selectPlaceholder={"Введите название ингредиента"}
-                handleRemoveItem={handleRemoveIngredientToAdd}
-                controllerName={
-                  `addIngredientsList.${index}.ingredientInfo` as const
-                }
-                control={control}
-                register={{
-                  ...register(`addIngredientsList.${index}.weight` as const),
-                }}
-                loadSelectOptions={loadOptions}
-                handleOnSelectInputChange={handleOnInputChange}
-                handleOnSelectValueChange={handleOnChange}
-                isDeleteButtonDisabled={
-                  originalIngredientsFields.length +
-                    addIngredientsListFields.length <
-                  2
-                    ? true
-                    : false
-                }
-                hasErrors={!!errors?.addIngredientsList}
-                errorMessagesList={
-                  [
-                    errors?.addIngredientsList?.[index]?.ingredientInfo?.value
-                      ?.message,
-                    errors?.addIngredientsList?.[index]?.weight?.message,
-                  ].filter((item) => !!item) as string[]
-                }
-              />
-            );
-          })}
-
-          <div className="w-full max-w-[280px] mt-3">
-            <ButtonIlluminated
-              children={"Еще один ингредиент"}
-              type="button"
-              onClick={() => {
-                newIngredientsForbiddenToAddIdsRef.current.push("");
-
-                addIngredientsListAppend({
-                  weight: "0",
-                });
-              }}
-              className="p-[12px]"
-            />
+        {isLoadingGetAllFoodElementary ? (
+          <div className="flex justify-center items-center">
+            <Preloader />
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="text-xl w-full flex-grow">
+              <InputIlluminated
+                id={"FoodRecipeEditForm_foodRecipeName"}
+                type="text"
+                inputLabel="Название блюда"
+                register={{
+                  ...register("foodRecipeName"),
+                }}
+                isRequired={true}
+                className="h-[67px]"
+                labelClassName="text-lg"
+                isError={!!errors?.foodRecipeName}
+                errorMessagesList={
+                  [errors?.foodRecipeName?.message].filter(
+                    (item) => !!item
+                  ) as string[]
+                }
+              />
+            </div>
 
-        <div className="mt-5 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
-          <span className="flex-grow">
-            <ButtonIlluminated
-              children={"Сохранить"}
-              type="submit"
-              isDisabled={isValid ? false : true}
-            />
-          </span>
-          <span className="flex-grow">
-            <ButtonIlluminated
-              children={"Отменить"}
-              type="button"
-              onClick={() => {
-                setIsEditMode(false);
-              }}
-              buttonVariant={"light"}
-            />
-          </span>
-        </div>
+            <div className="flex flex-col mt-5">
+              {originalIngredientsFields.map((item, index) => {
+                return (
+                  <DisabledSelectRowWithWeightField
+                    key={`FoodRecipeEditForm_div_originalIngredientsFields_${item.id}_${index}`}
+                    itemId={item.id}
+                    itemIndex={index}
+                    label={"Ингредиент"}
+                    selectPlaceholder={"Введите название ингредиента"}
+                    handleRemoveItem={handleRemoveOriginalIngredient}
+                    controllerName={
+                      `originalIngredientsList.${index}.ingredientInfo` as const
+                    }
+                    control={control}
+                    register={{
+                      ...register(
+                        `originalIngredientsList.${index}.weight` as const
+                      ),
+                    }}
+                    isDeleteButtonDisabled={
+                      originalIngredientsFields.length +
+                        addIngredientsListFields.length <
+                      2
+                        ? true
+                        : false
+                    }
+                    hasErrors={!!errors?.originalIngredientsList}
+                    errorMessagesList={
+                      [
+                        errors?.originalIngredientsList?.[index]?.ingredientInfo
+                          ?.value?.message,
+                        errors?.originalIngredientsList?.[index]?.weight
+                          ?.message,
+                      ].filter((item) => !!item) as string[]
+                    }
+                  />
+                );
+              })}
+
+              {addIngredientsListFields.map((item, index) => {
+                return (
+                  <AsyncSelectRowWithWeightField
+                    key={`FoodRecipeEditForm_Div_addIngredientsList_${item.id}_${index}`}
+                    itemId={item.id}
+                    itemIndex={index}
+                    label={"Ингредиент"}
+                    selectPlaceholder={"Введите название ингредиента"}
+                    handleRemoveItem={handleRemoveIngredientToAdd}
+                    controllerName={
+                      `addIngredientsList.${index}.ingredientInfo` as const
+                    }
+                    control={control}
+                    register={{
+                      ...register(
+                        `addIngredientsList.${index}.weight` as const
+                      ),
+                    }}
+                    loadSelectOptions={loadOptions}
+                    handleOnSelectInputChange={handleOnInputChange}
+                    handleOnSelectValueChange={handleOnChange}
+                    isDeleteButtonDisabled={
+                      originalIngredientsFields.length +
+                        addIngredientsListFields.length <
+                      2
+                        ? true
+                        : false
+                    }
+                    hasErrors={!!errors?.addIngredientsList}
+                    errorMessagesList={
+                      [
+                        errors?.addIngredientsList?.[index]?.ingredientInfo
+                          ?.value?.message,
+                        errors?.addIngredientsList?.[index]?.weight?.message,
+                      ].filter((item) => !!item) as string[]
+                    }
+                  />
+                );
+              })}
+
+              <div className="w-full max-w-[280px] mt-3">
+                <ButtonIlluminated
+                  children={"Еще один ингредиент"}
+                  type="button"
+                  onClick={() => {
+                    newIngredientsForbiddenToAddIdsRef.current.push("");
+
+                    addIngredientsListAppend({
+                      weight: "0",
+                    });
+                  }}
+                  className="p-[12px]"
+                />
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
+              <span className="flex-grow">
+                <ButtonIlluminated
+                  children={"Сохранить"}
+                  type="submit"
+                  isDisabled={isValid ? false : true}
+                />
+              </span>
+              <span className="flex-grow">
+                <ButtonIlluminated
+                  children={"Отменить"}
+                  type="button"
+                  onClick={() => {
+                    setIsEditMode(false);
+                  }}
+                  buttonVariant={"light"}
+                />
+              </span>
+            </div>
+          </>
+        )}
       </form>
     </div>
   );

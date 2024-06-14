@@ -23,6 +23,8 @@ import { replaceIncorrectDecimal } from "../../../global/helpers/replace-incorre
 import { useAppDispatch } from "../../../global/store/store-hooks.ts";
 import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper.ts";
+import Preloader from "../../../components/Preloader/Preloader.tsx";
+import { compareLabels } from "../../../global/helpers/compare-labels.helper.ts";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -106,6 +108,8 @@ const FoodElementaryCreateForm: FC<TProps> = ({
         !newCharacteristicsForbiddenToAddIdsRef.current.includes(item.value) &&
         !BASIC_CHARACTERISTICS_IDS_LIST.includes(item.value)
     );
+
+    filteredOptions.sort(compareLabels);
 
     callback(filteredOptions);
   };
@@ -313,139 +317,147 @@ const FoodElementaryCreateForm: FC<TProps> = ({
           onSubmit={handleSubmit(onSubmit)}
           autoComplete="off"
         >
-          <div className="text-xl w-full flex-grow">
-            <InputIlluminated
-              id={"FoodElementaryCreateForm_foodElementaryName"}
-              type="text"
-              inputLabel="Название блюда"
-              register={{
-                ...register("foodElementaryName"),
-              }}
-              isRequired={true}
-              className="h-[67px]"
-              labelClassName="text-lg"
-              isError={!!errors?.foodElementaryName}
-              errorMessagesList={
-                [errors?.foodElementaryName?.message].filter(
-                  (item) => !!item
-                ) as string[]
-              }
-            />
-          </div>
-
-          <div className="text-xl w-full flex-grow mt-2">
-            <InputIlluminated
-              id={"FoodElementaryCreateForm_caloriesValue"}
-              type="text"
-              inputLabel="Калорийность на 100г (ккал.)"
-              register={{
-                ...register("caloriesValue"),
-              }}
-              isRequired={true}
-              onInput={(event: ChangeEvent<HTMLInputElement>) => {
-                const isValidInput = DECIMAL_REGEX.test(event.target.value);
-
-                if (!isValidInput) {
-                  event.target.value = replaceIncorrectDecimal(
-                    event.target.value
-                  );
-                }
-              }}
-              className="h-[67px]"
-              labelClassName="text-lg"
-              isError={!!errors?.caloriesValue}
-              errorMessagesList={
-                [errors?.caloriesValue?.message].filter(
-                  (item) => !!item
-                ) as string[]
-              }
-            />
-          </div>
-
-          <div className="flex flex-col  mt-5">
-            {defaultCharacteristicsFields.map((item, index) => {
-              return (
-                <DisabledSelectRowWithWeightField
-                  key={`FoodElementaryCreateForm_div_defaultCharacteristicsFields_${item.id}_${index}`}
-                  itemId={item.id}
-                  itemIndex={index}
-                  label={"Нутриент"}
-                  selectPlaceholder={"Введите название нутриента"}
-                  handleRemoveItem={() => {}}
-                  controllerName={
-                    `defaultCharacteristicsList.${index}.characteristicInfo` as const
-                  }
-                  control={control}
-                  register={{
-                    ...register(
-                      `defaultCharacteristicsList.${index}.characteristicValue` as const
-                    ),
-                  }}
-                  isDeleteButtonDisabled={true}
-                  hasErrors={!!errors?.defaultCharacteristicsList}
-                  errorMessagesList={
-                    [
-                      errors?.defaultCharacteristicsList?.[index]
-                        ?.characteristicInfo?.value?.message,
-                      errors?.defaultCharacteristicsList?.[index]
-                        ?.characteristicValue?.message,
-                    ].filter((item) => !!item) as string[]
-                  }
-                />
-              );
-            })}
-
-            {addCharacteristicListFields.map((item, index) => {
-              return (
-                <AsyncSelectRowWithWeightField
-                  key={`FoodElementaryCreateForm_Div_addCharacteristicsList_${item.id}_${index}`}
-                  itemId={item.id}
-                  itemIndex={index}
-                  label={"Нутриент"}
-                  selectPlaceholder={"Введите название нутриента"}
-                  handleRemoveItem={handleRemoveCharacteristicToAdd}
-                  controllerName={
-                    `addCharacteristicsList.${index}.characteristicInfo` as const
-                  }
-                  control={control}
-                  register={{
-                    ...register(
-                      `addCharacteristicsList.${index}.characteristicValue` as const
-                    ),
-                  }}
-                  loadSelectOptions={loadOptions}
-                  handleOnSelectInputChange={handleOnInputChange}
-                  handleOnSelectValueChange={handleOnChange}
-                  hasErrors={!!errors?.addCharacteristicsList}
-                  errorMessagesList={
-                    [
-                      errors?.addCharacteristicsList?.[index]
-                        ?.characteristicInfo?.value?.message,
-                      errors?.addCharacteristicsList?.[index]
-                        ?.characteristicValue?.message,
-                    ].filter((item) => !!item) as string[]
-                  }
-                />
-              );
-            })}
-
-            <div className="w-full max-w-[280px] mt-3">
-              <ButtonIlluminated
-                children={"Добавить нутриент"}
-                type="button"
-                onClick={() => handleAddNutrient()}
-                className="p-[12px]"
-              />
+          {isLoadingGetAllFoodCharacteristicTypes ? (
+            <div className="flex justify-center items-center">
+              <Preloader />
             </div>
-          </div>
+          ) : (
+            <>
+              <div className="text-xl w-full flex-grow">
+                <InputIlluminated
+                  id={"FoodElementaryCreateForm_foodElementaryName"}
+                  type="text"
+                  inputLabel="Название блюда"
+                  register={{
+                    ...register("foodElementaryName"),
+                  }}
+                  isRequired={true}
+                  className="h-[67px]"
+                  labelClassName="text-lg"
+                  isError={!!errors?.foodElementaryName}
+                  errorMessagesList={
+                    [errors?.foodElementaryName?.message].filter(
+                      (item) => !!item
+                    ) as string[]
+                  }
+                />
+              </div>
 
-          <div className="mt-5">
-            <ButtonIlluminated
-              children={"Сохранить"}
-              type="submit"
-              isDisabled={isValid ? false : true}
-            />
-          </div>
+              <div className="text-xl w-full flex-grow mt-2">
+                <InputIlluminated
+                  id={"FoodElementaryCreateForm_caloriesValue"}
+                  type="text"
+                  inputLabel="Калорийность на 100г (ккал.)"
+                  register={{
+                    ...register("caloriesValue"),
+                  }}
+                  isRequired={true}
+                  onInput={(event: ChangeEvent<HTMLInputElement>) => {
+                    const isValidInput = DECIMAL_REGEX.test(event.target.value);
+
+                    if (!isValidInput) {
+                      event.target.value = replaceIncorrectDecimal(
+                        event.target.value
+                      );
+                    }
+                  }}
+                  className="h-[67px]"
+                  labelClassName="text-lg"
+                  isError={!!errors?.caloriesValue}
+                  errorMessagesList={
+                    [errors?.caloriesValue?.message].filter(
+                      (item) => !!item
+                    ) as string[]
+                  }
+                />
+              </div>
+
+              <div className="flex flex-col  mt-5">
+                {defaultCharacteristicsFields.map((item, index) => {
+                  return (
+                    <DisabledSelectRowWithWeightField
+                      key={`FoodElementaryCreateForm_div_defaultCharacteristicsFields_${item.id}_${index}`}
+                      itemId={item.id}
+                      itemIndex={index}
+                      label={"Нутриент"}
+                      selectPlaceholder={"Введите название нутриента"}
+                      handleRemoveItem={() => {}}
+                      controllerName={
+                        `defaultCharacteristicsList.${index}.characteristicInfo` as const
+                      }
+                      control={control}
+                      register={{
+                        ...register(
+                          `defaultCharacteristicsList.${index}.characteristicValue` as const
+                        ),
+                      }}
+                      isDeleteButtonDisabled={true}
+                      hasErrors={!!errors?.defaultCharacteristicsList}
+                      errorMessagesList={
+                        [
+                          errors?.defaultCharacteristicsList?.[index]
+                            ?.characteristicInfo?.value?.message,
+                          errors?.defaultCharacteristicsList?.[index]
+                            ?.characteristicValue?.message,
+                        ].filter((item) => !!item) as string[]
+                      }
+                    />
+                  );
+                })}
+
+                {addCharacteristicListFields.map((item, index) => {
+                  return (
+                    <AsyncSelectRowWithWeightField
+                      key={`FoodElementaryCreateForm_Div_addCharacteristicsList_${item.id}_${index}`}
+                      itemId={item.id}
+                      itemIndex={index}
+                      label={"Нутриент"}
+                      selectPlaceholder={"Введите название нутриента"}
+                      handleRemoveItem={handleRemoveCharacteristicToAdd}
+                      controllerName={
+                        `addCharacteristicsList.${index}.characteristicInfo` as const
+                      }
+                      control={control}
+                      register={{
+                        ...register(
+                          `addCharacteristicsList.${index}.characteristicValue` as const
+                        ),
+                      }}
+                      loadSelectOptions={loadOptions}
+                      handleOnSelectInputChange={handleOnInputChange}
+                      handleOnSelectValueChange={handleOnChange}
+                      hasErrors={!!errors?.addCharacteristicsList}
+                      errorMessagesList={
+                        [
+                          errors?.addCharacteristicsList?.[index]
+                            ?.characteristicInfo?.value?.message,
+                          errors?.addCharacteristicsList?.[index]
+                            ?.characteristicValue?.message,
+                        ].filter((item) => !!item) as string[]
+                      }
+                    />
+                  );
+                })}
+
+                <div className="w-full max-w-[280px] mt-3">
+                  <ButtonIlluminated
+                    children={"Добавить нутриент"}
+                    type="button"
+                    onClick={() => handleAddNutrient()}
+                    className="p-[12px]"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <ButtonIlluminated
+                  children={"Сохранить"}
+                  type="submit"
+                  isDisabled={isValid ? false : true}
+                />
+              </div>
+            </>
+          )}
         </form>
       </div>
     </section>

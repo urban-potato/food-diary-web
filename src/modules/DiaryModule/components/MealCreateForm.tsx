@@ -29,6 +29,7 @@ import { SELECT_STYLES_SMALLER_HEIGHT } from "../../../global/constants/constant
 import { useAppDispatch } from "../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper";
+import { compareLabels } from "../../../global/helpers/compare-labels.helper";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -146,6 +147,8 @@ const MealCreateForm: FC<TProps> = ({
       .filter(
         (item) => !newFoodForbiddenToAddIdsRef.current.includes(item.value)
       );
+
+    filteredOptions.sort(compareLabels);
 
     callback(filteredOptions);
   };
@@ -425,7 +428,9 @@ const MealCreateForm: FC<TProps> = ({
           onSubmit={handleSubmit(onSubmit)}
           autoComplete="off"
         >
-          {isLoadingGetAllMealTypes ? (
+          {isLoadingGetAllMealTypes ||
+          isLoadingGetAllFoodElementary ||
+          isLoadingGetAllFoodRecipe ? (
             <div className="flex justify-center items-center">
               <Preloader />
             </div>

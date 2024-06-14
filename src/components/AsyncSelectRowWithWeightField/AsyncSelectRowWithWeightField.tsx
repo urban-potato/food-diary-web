@@ -70,6 +70,7 @@ const AsyncSelectRowWithWeightField: FC<TProps> = ({
                   handleOnSelectValueChange(newValue, itemIndex);
                   field.onChange(newValue);
                 }}
+                defaultOptions
               />
             )}
           />

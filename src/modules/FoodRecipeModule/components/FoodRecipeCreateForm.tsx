@@ -14,6 +14,8 @@ import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWit
 import { useAppDispatch } from "../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper";
+import Preloader from "../../../components/Preloader/Preloader";
+import { compareLabels } from "../../../global/helpers/compare-labels.helper";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -77,6 +79,8 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
     const filteredOptions = filteredElementaryOptions.filter(
       (item) => !newFoodForbiddenToAddIdsRef.current.includes(item.value)
     );
+
+    filteredOptions.sort(compareLabels);
 
     callback(filteredOptions);
   };
@@ -217,75 +221,84 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
           onSubmit={handleSubmit(onSubmit)}
           autoComplete="off"
         >
-          <div className="text-xl w-full flex-grow">
-            <InputIlluminated
-              id={"FoodRecipeCreateForm_foodRecipeName"}
-              type="text"
-              inputLabel="Название блюда"
-              register={{
-                ...register("foodRecipeName"),
-              }}
-              isRequired={true}
-              className="h-[67px]"
-              labelClassName="text-lg"
-              isError={!!errors?.foodRecipeName}
-              errorMessagesList={
-                [errors?.foodRecipeName?.message].filter(
-                  (item) => !!item
-                ) as string[]
-              }
-            />
-          </div>
-
-          <div className="flex flex-col mt-5">
-            {addFoodListFields.map((item, index) => {
-              return (
-                <AsyncSelectRowWithWeightField
-                  key={`FoodRecipeCreateForm_Div_addFoodList_${item.id}_${index}`}
-                  itemId={item.id}
-                  itemIndex={index}
-                  label={"Ингредиент"}
-                  selectPlaceholder={"Введите название простого блюда"}
-                  handleRemoveItem={handleRemoveFoodToAdd}
-                  controllerName={`addFoodList.${index}.foodInfo` as const}
-                  control={control}
+          {isLoadingGetAllFoodElementary ? (
+            <div className="flex justify-center items-center">
+              <Preloader />
+            </div>
+          ) : (
+            <>
+              <div className="text-xl w-full flex-grow">
+                <InputIlluminated
+                  id={"FoodRecipeCreateForm_foodRecipeName"}
+                  type="text"
+                  inputLabel="Название блюда"
                   register={{
-                    ...register(`addFoodList.${index}.weight` as const),
+                    ...register("foodRecipeName"),
                   }}
-                  loadSelectOptions={loadOptions}
-                  handleOnSelectInputChange={handleOnInputChange}
-                  handleOnSelectValueChange={handleOnChange}
-                  isDeleteButtonDisabled={
-                    addFoodListFields.length < 2 ? true : false
-                  }
-                  hasErrors={!!errors?.addFoodList}
+                  isRequired={true}
+                  className="h-[67px]"
+                  labelClassName="text-lg"
+                  isError={!!errors?.foodRecipeName}
                   errorMessagesList={
-                    [
-                      errors?.addFoodList?.[index]?.foodInfo?.value?.message,
-                      errors?.addFoodList?.[index]?.weight?.message,
-                    ].filter((item) => !!item) as string[]
+                    [errors?.foodRecipeName?.message].filter(
+                      (item) => !!item
+                    ) as string[]
                   }
                 />
-              );
-            })}
+              </div>
 
-            <div className="w-full max-w-[280px] mt-3">
-              <ButtonIlluminated
-                children={"Еще одно блюдо"}
-                type="button"
-                onClick={() => handleAddSelect()}
-                className="p-[12px]"
-              />
-            </div>
-          </div>
+              <div className="flex flex-col mt-5">
+                {addFoodListFields.map((item, index) => {
+                  return (
+                    <AsyncSelectRowWithWeightField
+                      key={`FoodRecipeCreateForm_Div_addFoodList_${item.id}_${index}`}
+                      itemId={item.id}
+                      itemIndex={index}
+                      label={"Ингредиент"}
+                      selectPlaceholder={"Введите название простого блюда"}
+                      handleRemoveItem={handleRemoveFoodToAdd}
+                      controllerName={`addFoodList.${index}.foodInfo` as const}
+                      control={control}
+                      register={{
+                        ...register(`addFoodList.${index}.weight` as const),
+                      }}
+                      loadSelectOptions={loadOptions}
+                      handleOnSelectInputChange={handleOnInputChange}
+                      handleOnSelectValueChange={handleOnChange}
+                      isDeleteButtonDisabled={
+                        addFoodListFields.length < 2 ? true : false
+                      }
+                      hasErrors={!!errors?.addFoodList}
+                      errorMessagesList={
+                        [
+                          errors?.addFoodList?.[index]?.foodInfo?.value
+                            ?.message,
+                          errors?.addFoodList?.[index]?.weight?.message,
+                        ].filter((item) => !!item) as string[]
+                      }
+                    />
+                  );
+                })}
 
-          <div className="mt-5">
-            <ButtonIlluminated
-              children={"Сохранить"}
-              type="submit"
-              isDisabled={isValid ? false : true}
-            />
-          </div>
+                <div className="w-full max-w-[280px] mt-3">
+                  <ButtonIlluminated
+                    children={"Еще одно блюдо"}
+                    type="button"
+                    onClick={() => handleAddSelect()}
+                    className="p-[12px]"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <ButtonIlluminated
+                  children={"Сохранить"}
+                  type="submit"
+                  isDisabled={isValid ? false : true}
+                />
+              </div>
+            </>
+          )}
         </form>
       </div>
     </section>

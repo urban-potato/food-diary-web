@@ -31,6 +31,8 @@ import { replaceIncorrectDecimal } from "../../../../global/helpers/replace-inco
 import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper.ts";
 import { useAppDispatch } from "../../../../global/store/store-hooks.ts";
 import { useNavigate } from "react-router-dom";
+import Preloader from "../../../../components/Preloader/Preloader.tsx";
+import { compareLabels } from "../../../../global/helpers/compare-labels.helper.ts";
 
 type TProps = {
   foodElementaryId: string;
@@ -166,6 +168,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
         !newCharacteristicsForbiddenToAddIdsRef.current.includes(item.value) &&
         item.value != CALORIES_DEFAULT_ID
     );
+
+    filteredOptions.sort(compareLabels);
 
     callback(filteredOptions);
   };
@@ -486,158 +490,166 @@ const FoodElementaryEditForm: FC<TProps> = ({
         onSubmit={handleSubmit(onSubmit)}
         autoComplete="off"
       >
-        <div className="text-xl w-full flex-grow">
-          <InputIlluminated
-            id={"FoodElementaryEditForm_foodElementaryName"}
-            type="text"
-            inputLabel="Название блюда"
-            register={{
-              ...register("foodElementaryName"),
-            }}
-            isRequired={true}
-            className="h-[67px]"
-            labelClassName="text-lg"
-            isSpaceAfterLabelNeeded={true}
-            isError={!!errors?.foodElementaryName}
-            errorMessagesList={
-              [errors?.foodElementaryName?.message].filter(
-                (item) => !!item
-              ) as string[]
-            }
-          />
-        </div>
-
-        <div className="text-xl w-full flex-grow mt-2">
-          <InputIlluminated
-            id={"FoodElementaryEditForm_caloriesValue"}
-            type="text"
-            inputLabel="Калорийность (ккал.)"
-            register={{
-              ...register("caloriesValue"),
-            }}
-            isRequired={true}
-            onInput={(event: ChangeEvent<HTMLInputElement>) => {
-              const isValidInput = DECIMAL_REGEX.test(event.target.value);
-
-              if (!isValidInput) {
-                event.target.value = replaceIncorrectDecimal(
-                  event.target.value
-                );
-              }
-            }}
-            className="h-[67px]"
-            labelClassName="text-lg"
-            isError={!!errors?.caloriesValue}
-            errorMessagesList={
-              [errors?.caloriesValue?.message].filter(
-                (item) => !!item
-              ) as string[]
-            }
-          />
-        </div>
-
-        <div className="flex flex-col mt-5">
-          {originalCharacteristicsFields.map((item, index) => {
-            return (
-              <DisabledSelectRowWithWeightField
-                key={`FoodElementaryEditForm_div_originalCharacteristicsFields_${item.id}_${index}`}
-                itemId={item.id}
-                itemIndex={index}
-                label={"Нутриент"}
-                selectPlaceholder={"Введите название нутриента"}
-                handleRemoveItem={handleRemoveOriginalCharacteristic}
-                controllerName={
-                  `originalCharacteristicsList.${index}.characteristicInfo` as const
-                }
-                control={control}
-                register={{
-                  ...register(
-                    `originalCharacteristicsList.${index}.characteristicValue` as const
-                  ),
-                }}
-                isDeleteButtonDisabled={index < 3 ? true : false}
-                hasErrors={!!errors?.originalCharacteristicsList}
-                errorMessagesList={
-                  [
-                    errors?.originalCharacteristicsList?.[index]
-                      ?.characteristicInfo?.value?.message,
-                    errors?.originalCharacteristicsList?.[index]
-                      ?.characteristicValue?.message,
-                  ].filter((item) => !!item) as string[]
-                }
-              />
-            );
-          })}
-
-          {addCharacteristicListFields.map((item, index) => {
-            return (
-              <AsyncSelectRowWithWeightField
-                key={`FoodElementaryEditForm_Div_addCharacteristicsList_${item.id}_${index}`}
-                itemId={item.id}
-                itemIndex={index}
-                label={"Нутриент"}
-                selectPlaceholder={"Введите название нутриента"}
-                handleRemoveItem={handleRemoveCharacteristicToAdd}
-                controllerName={
-                  `addCharacteristicsList.${index}.characteristicInfo` as const
-                }
-                control={control}
-                register={{
-                  ...register(
-                    `addCharacteristicsList.${index}.characteristicValue` as const
-                  ),
-                }}
-                loadSelectOptions={loadOptions}
-                handleOnSelectInputChange={handleOnInputChange}
-                handleOnSelectValueChange={handleOnChange}
-                hasErrors={!!errors?.addCharacteristicsList}
-                errorMessagesList={
-                  [
-                    errors?.addCharacteristicsList?.[index]?.characteristicInfo
-                      ?.value?.message,
-                    errors?.addCharacteristicsList?.[index]?.characteristicValue
-                      ?.message,
-                  ].filter((item) => !!item) as string[]
-                }
-              />
-            );
-          })}
-
-          <div className="w-full max-w-[280px] mt-3">
-            <ButtonIlluminated
-              children={"Добавить нутриент"}
-              type="button"
-              onClick={() => {
-                newCharacteristicsForbiddenToAddIdsRef.current.push("");
-
-                addCharacteristicListAppend({
-                  characteristicValue: "0",
-                });
-              }}
-              className="p-[12px]"
-            />
+        {isLoadingGetAllFoodCharacteristicTypes ? (
+          <div className="flex justify-center items-center">
+            <Preloader />
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="text-xl w-full flex-grow">
+              <InputIlluminated
+                id={"FoodElementaryEditForm_foodElementaryName"}
+                type="text"
+                inputLabel="Название блюда"
+                register={{
+                  ...register("foodElementaryName"),
+                }}
+                isRequired={true}
+                className="h-[67px]"
+                labelClassName="text-lg"
+                isSpaceAfterLabelNeeded={true}
+                isError={!!errors?.foodElementaryName}
+                errorMessagesList={
+                  [errors?.foodElementaryName?.message].filter(
+                    (item) => !!item
+                  ) as string[]
+                }
+              />
+            </div>
 
-        <div className="mt-5 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
-          <span className="flex-grow">
-            <ButtonIlluminated
-              children={"Сохранить"}
-              type="submit"
-              isDisabled={isValid ? false : true}
-            />
-          </span>
-          <span className="flex-grow">
-            <ButtonIlluminated
-              children={"Отменить"}
-              type="button"
-              onClick={() => {
-                setIsEditMode(!isEditMode);
-              }}
-              buttonVariant={"light"}
-            />
-          </span>
-        </div>
+            <div className="text-xl w-full flex-grow mt-2">
+              <InputIlluminated
+                id={"FoodElementaryEditForm_caloriesValue"}
+                type="text"
+                inputLabel="Калорийность (ккал.)"
+                register={{
+                  ...register("caloriesValue"),
+                }}
+                isRequired={true}
+                onInput={(event: ChangeEvent<HTMLInputElement>) => {
+                  const isValidInput = DECIMAL_REGEX.test(event.target.value);
+
+                  if (!isValidInput) {
+                    event.target.value = replaceIncorrectDecimal(
+                      event.target.value
+                    );
+                  }
+                }}
+                className="h-[67px]"
+                labelClassName="text-lg"
+                isError={!!errors?.caloriesValue}
+                errorMessagesList={
+                  [errors?.caloriesValue?.message].filter(
+                    (item) => !!item
+                  ) as string[]
+                }
+              />
+            </div>
+
+            <div className="flex flex-col mt-5">
+              {originalCharacteristicsFields.map((item, index) => {
+                return (
+                  <DisabledSelectRowWithWeightField
+                    key={`FoodElementaryEditForm_div_originalCharacteristicsFields_${item.id}_${index}`}
+                    itemId={item.id}
+                    itemIndex={index}
+                    label={"Нутриент"}
+                    selectPlaceholder={"Введите название нутриента"}
+                    handleRemoveItem={handleRemoveOriginalCharacteristic}
+                    controllerName={
+                      `originalCharacteristicsList.${index}.characteristicInfo` as const
+                    }
+                    control={control}
+                    register={{
+                      ...register(
+                        `originalCharacteristicsList.${index}.characteristicValue` as const
+                      ),
+                    }}
+                    isDeleteButtonDisabled={index < 3 ? true : false}
+                    hasErrors={!!errors?.originalCharacteristicsList}
+                    errorMessagesList={
+                      [
+                        errors?.originalCharacteristicsList?.[index]
+                          ?.characteristicInfo?.value?.message,
+                        errors?.originalCharacteristicsList?.[index]
+                          ?.characteristicValue?.message,
+                      ].filter((item) => !!item) as string[]
+                    }
+                  />
+                );
+              })}
+
+              {addCharacteristicListFields.map((item, index) => {
+                return (
+                  <AsyncSelectRowWithWeightField
+                    key={`FoodElementaryEditForm_Div_addCharacteristicsList_${item.id}_${index}`}
+                    itemId={item.id}
+                    itemIndex={index}
+                    label={"Нутриент"}
+                    selectPlaceholder={"Введите название нутриента"}
+                    handleRemoveItem={handleRemoveCharacteristicToAdd}
+                    controllerName={
+                      `addCharacteristicsList.${index}.characteristicInfo` as const
+                    }
+                    control={control}
+                    register={{
+                      ...register(
+                        `addCharacteristicsList.${index}.characteristicValue` as const
+                      ),
+                    }}
+                    loadSelectOptions={loadOptions}
+                    handleOnSelectInputChange={handleOnInputChange}
+                    handleOnSelectValueChange={handleOnChange}
+                    hasErrors={!!errors?.addCharacteristicsList}
+                    errorMessagesList={
+                      [
+                        errors?.addCharacteristicsList?.[index]
+                          ?.characteristicInfo?.value?.message,
+                        errors?.addCharacteristicsList?.[index]
+                          ?.characteristicValue?.message,
+                      ].filter((item) => !!item) as string[]
+                    }
+                  />
+                );
+              })}
+
+              <div className="w-full max-w-[280px] mt-3">
+                <ButtonIlluminated
+                  children={"Добавить нутриент"}
+                  type="button"
+                  onClick={() => {
+                    newCharacteristicsForbiddenToAddIdsRef.current.push("");
+
+                    addCharacteristicListAppend({
+                      characteristicValue: "0",
+                    });
+                  }}
+                  className="p-[12px]"
+                />
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap w-full gap-x-4 gap-y-3 justify-stretch items-center">
+              <span className="flex-grow">
+                <ButtonIlluminated
+                  children={"Сохранить"}
+                  type="submit"
+                  isDisabled={isValid ? false : true}
+                />
+              </span>
+              <span className="flex-grow">
+                <ButtonIlluminated
+                  children={"Отменить"}
+                  type="button"
+                  onClick={() => {
+                    setIsEditMode(!isEditMode);
+                  }}
+                  buttonVariant={"light"}
+                />
+              </span>
+            </div>
+          </>
+        )}
       </form>
     </div>
   );

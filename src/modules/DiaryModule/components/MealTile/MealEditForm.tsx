@@ -34,6 +34,7 @@ import { handleApiCallError } from "../../../../global/helpers/handle-api-call-e
 import { useAppDispatch } from "../../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
 import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated";
+import { compareLabels } from "../../../../global/helpers/compare-labels.helper";
 
 type TProps = {
   originalCourseMealId: string;
@@ -225,6 +226,8 @@ const MealEditForm: FC<TProps> = ({
           !foodForbiddenToAddIdsRef.current.includes(item.value) &&
           !newFoodForbiddenToAddIdsRef.current.includes(item.value)
       );
+
+    filteredOptions.sort(compareLabels);
 
     callback(filteredOptions);
   };
@@ -811,7 +814,9 @@ const MealEditForm: FC<TProps> = ({
         onSubmit={handleSubmit(onSubmit)}
         autoComplete="off"
       >
-        {isLoadingGetAllMealTypes ? (
+        {isLoadingGetAllMealTypes ||
+        isLoadingGetAllFoodElementary ||
+        isLoadingGetAllFoodRecipe ? (
           <div className="flex justify-center items-center">
             <Preloader />
           </div>
