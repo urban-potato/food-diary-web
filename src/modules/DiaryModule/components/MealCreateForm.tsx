@@ -513,7 +513,7 @@ const MealCreateForm: FC<TProps> = ({
                           errors?.addFoodList?.[index]?.weight?.message,
                         ].filter((item) => !!item) as string[]
                       }
-                      linkForNoOptionsMessage={ROUTES_LIST.foodSimple}
+                      linkForNoOptionsMessage={`${ROUTES_LIST.foodSimple}#createForm`}
                     />
                   );
                 })}

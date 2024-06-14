@@ -1,26 +1,5 @@
-import { Link } from "react-router-dom";
 import { NoticeProps, components } from "react-select";
-
-// const NoOptionsMessage = (props: NoticeProps) => {
-//   return (
-//     <components.NoOptionsMessage {...props}>
-//       <span className="">
-//         Ничего не нашлось.{" "}
-//         <Link
-//           to="/food/simple"
-//           className="underline text-near_black hover:text-light_near_black transition duration-1000 hover:duration-500"
-//         >
-//           Создать?
-//         </Link>
-//       </span>
-//     </components.NoOptionsMessage>
-//   );
-// };
-
-// type TProps = {
-//   isLinkNeeded?: boolean;
-//   linkAddress?: string;
-// };
+import { HashLink } from "react-router-hash-link";
 
 const NoOptionsMessage = (linkAddress: string = "") => {
   return (props: NoticeProps) => {
@@ -29,12 +8,12 @@ const NoOptionsMessage = (linkAddress: string = "") => {
         <span className="">
           Ничего не нашлось.{" "}
           {linkAddress && (
-            <Link
+            <HashLink
               to={linkAddress}
               className="underline text-near_black hover:text-light_near_black transition duration-1000 hover:duration-500"
             >
               Создать?
-            </Link>
+            </HashLink>
           )}
         </span>
       </components.NoOptionsMessage>

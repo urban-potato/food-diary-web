@@ -436,7 +436,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({
                             ?.characteristicValue?.message,
                         ].filter((item) => !!item) as string[]
                       }
-                      linkForNoOptionsMessage={ROUTES_LIST.profile}
+                      linkForNoOptionsMessage={`${ROUTES_LIST.profile}#nutrients`}
                     />
                   );
                 })}

@@ -484,7 +484,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
                         errors?.addIngredientsList?.[index]?.weight?.message,
                       ].filter((item) => !!item) as string[]
                     }
-                    linkForNoOptionsMessage={ROUTES_LIST.foodSimple}
+                    linkForNoOptionsMessage={`${ROUTES_LIST.foodSimple}#createForm`}
                   />
                 );
               })}

@@ -13,7 +13,7 @@ const FoodElementaryModule: FC = () => {
                   justify-center items-center 
                   py-3 "
     >
-      <span className=" my-3 w-full max-w-[280px] ">
+      <span id="createForm" className="my-3 w-full max-w-[280px]">
         <ButtonIlluminated
           children={showCreateForm ? "Скрыть" : "Создать блюдо"}
           type="button"

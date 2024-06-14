@@ -6,7 +6,7 @@ type TProps = {
 
 const FoodCharacteristicTypeTile: FC<TProps> = ({ name }) => {
   return (
-    <div className="gap-4 flex w-full bg-near_white shadow-md rounded-xl p-3 max-w-max justify-between">
+    <div id="nutrients" className="gap-4 flex w-full bg-near_white shadow-md rounded-xl p-3 max-w-max justify-between">
       <p className="truncate">{name}</p>
     </div>
   );
