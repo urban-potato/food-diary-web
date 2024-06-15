@@ -240,8 +240,6 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
         });
     }
 
-    console.log("HERE");
-
     setMainIsLoading(false);
     reset();
     setIsEditMode(!isEditMode);
