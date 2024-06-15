@@ -157,8 +157,6 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
           await doAddElementary(addFoodElementaryData)
             .unwrap()
             .catch((error) => {
-              setMainIsLoading(false);
-
               handleApiCallError({
                 error: error,
                 dispatch: dispatch,
@@ -168,8 +166,6 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
         }
       })
       .catch((error) => {
-        setMainIsLoading(false);
-
         handleApiCallError({
           error: error,
           dispatch: dispatch,
@@ -178,7 +174,6 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
       });
 
     setMainIsLoading(false);
-
     reset();
 
     // Reset Async Select Field,

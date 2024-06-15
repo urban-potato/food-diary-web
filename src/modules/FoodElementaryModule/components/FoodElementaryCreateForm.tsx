@@ -227,8 +227,6 @@ const FoodElementaryCreateForm: FC<TProps> = ({
           await doAddFoodCharacteristic(addCharacteristicData)
             .unwrap()
             .catch((error) => {
-              setMainIsLoading(false);
-
               handleApiCallError({
                 error: error,
                 dispatch: dispatch,
@@ -238,8 +236,6 @@ const FoodElementaryCreateForm: FC<TProps> = ({
         }
       })
       .catch((error) => {
-        setMainIsLoading(false);
-
         handleApiCallError({
           error: error,
           dispatch: dispatch,
@@ -248,7 +244,6 @@ const FoodElementaryCreateForm: FC<TProps> = ({
       });
 
     setMainIsLoading(false);
-
     reset();
 
     // Reset Async Select Field,

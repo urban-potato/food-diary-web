@@ -366,8 +366,6 @@ const FoodElementaryEditForm: FC<TProps> = ({
       await doChangeFoodElementaryName(changeFoodElementaryNameData)
         .unwrap()
         .catch((error) => {
-          setMainIsLoading(false);
-
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -395,8 +393,6 @@ const FoodElementaryEditForm: FC<TProps> = ({
       await doChangeFoodCharacteristicValue(changeCaloriesValueData)
         .unwrap()
         .catch((error) => {
-          setMainIsLoading(false);
-
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -428,8 +424,6 @@ const FoodElementaryEditForm: FC<TProps> = ({
         await doDeleteFoodCharacteristic(deleteFoodCharacteristicData)
           .unwrap()
           .catch((error) => {
-            setMainIsLoading(false);
-
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -459,8 +453,6 @@ const FoodElementaryEditForm: FC<TProps> = ({
       await doChangeFoodCharacteristicValue(changeCharacteristicValueData)
         .unwrap()
         .catch((error) => {
-          setMainIsLoading(false);
-
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -483,8 +475,6 @@ const FoodElementaryEditForm: FC<TProps> = ({
       await doAddFoodCharacteristic(addCharacteristicData)
         .unwrap()
         .catch((error) => {
-          setMainIsLoading(false);
-
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -494,9 +484,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
     }
 
     setMainIsLoading(false);
-
     reset();
-
     setIsEditMode(!isEditMode);
   };
 

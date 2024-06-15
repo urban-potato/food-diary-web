@@ -254,8 +254,6 @@ const MealCreateForm: FC<TProps> = ({
         }
       })
       .catch((error) => {
-        setMainIsLoading(false);
-
         handleApiCallError({
           error: error,
           dispatch: dispatch,
@@ -274,8 +272,6 @@ const MealCreateForm: FC<TProps> = ({
           courseMealDayId = responseCourseMealDayId;
         })
         .catch((error) => {
-          setMainIsLoading(false);
-
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -300,8 +296,6 @@ const MealCreateForm: FC<TProps> = ({
         courseMealId = responseCourseMealId;
       })
       .catch((error) => {
-        setMainIsLoading(false);
-
         handleApiCallError({
           error: error,
           dispatch: dispatch,
@@ -326,8 +320,6 @@ const MealCreateForm: FC<TProps> = ({
       await doAddConsumedElementary(addFoodElementaryData)
         .unwrap()
         .catch((error) => {
-          setMainIsLoading(false);
-
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -350,8 +342,6 @@ const MealCreateForm: FC<TProps> = ({
       await doAddConsumedRecipe(addFoodRecipeData)
         .unwrap()
         .catch((error) => {
-          setMainIsLoading(false);
-
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -361,7 +351,6 @@ const MealCreateForm: FC<TProps> = ({
     }
 
     setMainIsLoading(false);
-
     reset();
 
     // Reset Async Select Field,

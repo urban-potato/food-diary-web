@@ -465,8 +465,6 @@ const MealEditForm: FC<TProps> = ({
             await doAddConsumedElementary(addFoodElementaryData)
               .unwrap()
               .catch((error) => {
-                setMainIsLoading(false);
-
                 handleApiCallError({
                   error: error,
                   dispatch: dispatch,
@@ -489,8 +487,6 @@ const MealEditForm: FC<TProps> = ({
             await doAddConsumedRecipe(addFoodRecipeData)
               .unwrap()
               .catch((error) => {
-                setMainIsLoading(false);
-
                 handleApiCallError({
                   error: error,
                   dispatch: dispatch,
@@ -502,8 +498,6 @@ const MealEditForm: FC<TProps> = ({
           await doDeleteCourseMeal(originalCourseMealId)
             .unwrap()
             .catch((error) => {
-              setMainIsLoading(false);
-
               handleApiCallError({
                 error: error,
                 dispatch: dispatch,
@@ -512,8 +506,6 @@ const MealEditForm: FC<TProps> = ({
             });
         })
         .catch((error) => {
-          setMainIsLoading(false);
-
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -544,8 +536,6 @@ const MealEditForm: FC<TProps> = ({
         await doChangeMealType(changeMealTypeData)
           .unwrap()
           .catch((error) => {
-            setMainIsLoading(false);
-
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -577,8 +567,6 @@ const MealEditForm: FC<TProps> = ({
         await doDeleteConsumedElementary(deleteConsumedElementaryData)
           .unwrap()
           .catch((error) => {
-            setMainIsLoading(false);
-
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -606,8 +594,6 @@ const MealEditForm: FC<TProps> = ({
         await doDeleteConsumedRecipe(deleteConsumedRecipeData)
           .unwrap()
           .catch((error) => {
-            setMainIsLoading(false);
-
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -642,8 +628,6 @@ const MealEditForm: FC<TProps> = ({
         )
           .unwrap()
           .catch((error) => {
-            setMainIsLoading(false);
-
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -670,8 +654,6 @@ const MealEditForm: FC<TProps> = ({
         await doChangeConsumedRecipeWeight(changeConsumedRecipeWeightData)
           .unwrap()
           .catch((error) => {
-            setMainIsLoading(false);
-
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -698,8 +680,6 @@ const MealEditForm: FC<TProps> = ({
         await doAddConsumedElementary(addFoodElementaryData)
           .unwrap()
           .catch((error) => {
-            setMainIsLoading(false);
-
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -723,8 +703,6 @@ const MealEditForm: FC<TProps> = ({
         await doAddConsumedRecipe(addFoodRecipeData)
           .unwrap()
           .catch((error) => {
-            setMainIsLoading(false);
-
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -735,9 +713,7 @@ const MealEditForm: FC<TProps> = ({
     }
 
     setMainIsLoading(false);
-
     reset();
-
     setIsEditMode(!isEditMode);
   };
 
