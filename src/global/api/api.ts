@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getTokenFromLocalStorage } from "../helpers/local-storage.helper";
 
 const baseURL = "http://localhost:5000/";
-// const baseURL = "https://8054-193-218-138-73.ngrok-free.app";
+// const baseURL = "https://buck-thorough-pleasantly.ngrok-free.app";
 
 export const api = createApi({
   reducerPath: "api",
