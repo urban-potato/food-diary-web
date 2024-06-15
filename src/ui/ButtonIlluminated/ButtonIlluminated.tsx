@@ -26,7 +26,7 @@ const illuminationVariants = cva("absolute rounded-full -inset-0.5", {
 });
 
 const buttonVariants = cva(
-  "p-[14px] relative flex-grow flex-shrink flex justify-center items-center rounded-full break-words w-full transition duration-1000 hover:duration-500",
+  "outline-none p-[14px] relative flex-grow flex-shrink flex justify-center items-center rounded-full break-words w-full transition duration-1000 hover:duration-500",
   {
     variants: {
       buttonVariant: {

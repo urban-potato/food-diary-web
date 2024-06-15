@@ -5,7 +5,7 @@ import { cva } from "class-variance-authority";
 import { useIsAuth } from "../../global/hooks/use-is-auth.hook";
 
 const navItemVariants = cva(
-  "nav_item font-bold hover:text-light_near_black transition duration-1000 hover:duration-200",
+  "nav_item font-bold hover:text-light_near_black transition duration-1000 hover:duration-200 outline-none",
   {
     variants: {
       navItemVariant: {
@@ -40,7 +40,7 @@ const Header: FC = () => {
           </Link>
           <Link
             to="/profile"
-            className="nav_item max-w-[150px] min-w-[120px] ml-auto btn_dark"
+            className="outline-none nav_item max-w-[150px] min-w-[120px] ml-auto btn_dark"
           >
             Профиль
           </Link>
@@ -65,7 +65,7 @@ const Header: FC = () => {
             ></div>
             <Link
               to="/register"
-              className="relative nav_item max-w-max text-near_white border-near_black bg-near_black "
+              className="outline-none relative nav_item max-w-max text-near_white border-near_black bg-near_black "
             >
               Регистрация
             </Link>
