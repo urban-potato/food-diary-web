@@ -29,6 +29,8 @@ type TProps = {
   originalFoodRecipeName: string;
   ingredients: IIngredient[];
   setIsEditMode: Function;
+  isEditMode: boolean;
+  setMainIsLoading: Function;
 };
 
 type TFoodRecipeEditFormData = {
@@ -59,6 +61,8 @@ const FoodRecipeEditForm: FC<TProps> = ({
   originalFoodRecipeName,
   ingredients,
   setIsEditMode,
+  isEditMode,
+  setMainIsLoading,
 }) => {
   const ingredientsForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
   const newIngredientsForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
@@ -226,6 +230,8 @@ const FoodRecipeEditForm: FC<TProps> = ({
   }, []);
 
   const onSubmit: SubmitHandler<TFoodRecipeEditFormData> = async (data) => {
+    setMainIsLoading(true);
+
     // Delete Ingredients List
     const deleteIngredientsList = originalIngredientsToRemoveIdsRef.current;
 
@@ -288,6 +294,8 @@ const FoodRecipeEditForm: FC<TProps> = ({
       await doChangeFoodRecipeName(changeFoodRecipeNameData)
         .unwrap()
         .catch((error) => {
+          setMainIsLoading(false);
+
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -314,6 +322,8 @@ const FoodRecipeEditForm: FC<TProps> = ({
       await doDeleteElementary(deleteIngredientData)
         .unwrap()
         .catch((error) => {
+          setMainIsLoading(false);
+
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -340,6 +350,8 @@ const FoodRecipeEditForm: FC<TProps> = ({
       await doChangeElementaryWeight(changeIngredientWeightData)
         .unwrap()
         .catch((error) => {
+          setMainIsLoading(false);
+
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -363,6 +375,8 @@ const FoodRecipeEditForm: FC<TProps> = ({
       await doAddElementary(addIngredientData)
         .unwrap()
         .catch((error) => {
+          setMainIsLoading(false);
+
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -371,9 +385,11 @@ const FoodRecipeEditForm: FC<TProps> = ({
         });
     }
 
+    setMainIsLoading(false);
+
     reset();
 
-    setIsEditMode(false);
+    setIsEditMode(!isEditMode);
   };
 
   return (
@@ -518,7 +534,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
                   children={"Отменить"}
                   type="button"
                   onClick={() => {
-                    setIsEditMode(false);
+                    setIsEditMode(!isEditMode);
                   }}
                   buttonVariant={"light"}
                 />

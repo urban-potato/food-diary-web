@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   useAddElementaryMutation,
   useCreateFoodRecipeMutation,
@@ -17,6 +17,7 @@ import { handleApiCallError } from "../../../global/helpers/handle-api-call-erro
 import Preloader from "../../../components/Preloader/Preloader";
 import { compareLabels } from "../../../global/helpers/compare-labels.helper";
 import { ROUTES_LIST } from "../../../global/constants/constants";
+import LoaderWithBlock from "../../../components/LoaderWithBlock/LoaderWithBlock";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -43,6 +44,8 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const [mainlIsLoading, setMainIsLoading] = useState(false);
 
   const [doCreateFoodRecipe] = useCreateFoodRecipeMutation();
   const [doAddElementary] = useAddElementaryMutation();
@@ -121,6 +124,8 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
   };
 
   const onSubmit: SubmitHandler<TFoodRecipeCreateFormData> = async (data) => {
+    setMainIsLoading(true);
+
     // Create Food Recipe
     const createFoodRecipeData = {
       data: { name: data.foodRecipeName },
@@ -152,6 +157,8 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
           await doAddElementary(addFoodElementaryData)
             .unwrap()
             .catch((error) => {
+              setMainIsLoading(false);
+
               handleApiCallError({
                 error: error,
                 dispatch: dispatch,
@@ -161,12 +168,16 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
         }
       })
       .catch((error) => {
+        setMainIsLoading(false);
+
         handleApiCallError({
           error: error,
           dispatch: dispatch,
           navigate: navigate,
         });
       });
+
+    setMainIsLoading(false);
 
     reset();
 
@@ -217,6 +228,9 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
 
       <div className="outer_box_style group w-full max-w-5xl mt-5">
         <div className="box_style"></div>
+
+        {mainlIsLoading && <LoaderWithBlock />}
+
         <form
           className="box_content_transition flex flex-col flex-wrap w-full justify-center p-7"
           onSubmit={handleSubmit(onSubmit)}

@@ -10,6 +10,7 @@ import FoodRecipeInfo from "./FoodRecipeInfo";
 import { useAppDispatch } from "../../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
+import LoaderWithBlock from "../../../../components/LoaderWithBlock/LoaderWithBlock";
 
 type TProps = {
   foodRecipe: IFoodRecipe;
@@ -17,6 +18,7 @@ type TProps = {
 
 const FoodRecipeTile: FC<TProps> = ({ foodRecipe }) => {
   const [isEditMode, setIsEditMode] = useState(false);
+  const [mainlIsLoading, setMainIsLoading] = useState(false);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -43,6 +45,9 @@ const FoodRecipeTile: FC<TProps> = ({ foodRecipe }) => {
   return (
     <div className="outer_box_style group w-full max-w-5xl mt-5">
       <div className="box_style "></div>
+
+      {mainlIsLoading && <LoaderWithBlock />}
+
       <div className="box_content_transition flex flex-col flex-wrap w-full justify-center items-start p-7">
         <div className="box_icons">
           <TileIcons
@@ -58,6 +63,8 @@ const FoodRecipeTile: FC<TProps> = ({ foodRecipe }) => {
             originalFoodRecipeName={foodRecipe.name}
             ingredients={sortedIngredients}
             setIsEditMode={setIsEditMode}
+            isEditMode={isEditMode}
+            setMainIsLoading={setMainIsLoading}
           />
         ) : (
           <FoodRecipeInfo
