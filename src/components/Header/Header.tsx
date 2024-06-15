@@ -46,12 +46,12 @@ const Header: FC = () => {
           </Link>
         </>
       ) : (
-        <article className="flex flex-wrap nav_gap flex-grow flex-shrink justify-center items-center ml-auto min-w-[120px] max-w-[270px]">
+        <article className="flex flex-wrap nav_gap flex-grow flex-shrink justify-center items-center ml-auto max-w-max">
           <Link to="/login" className={navItemVariants()}>
             Вход
           </Link>
 
-          <div className="relative group max-w-[250px] min-w-[120px]">
+          <div className="relative group max-w-max">
             <div
               className="absolute -inset-0.5 
             bg-gradient-to-r from-indigo-700 to-purple-700 
@@ -65,7 +65,7 @@ const Header: FC = () => {
             ></div>
             <Link
               to="/register"
-              className="relative nav_item max-w-[150px] min-w-[120px] text-near_white border-near_black bg-near_black "
+              className="relative nav_item max-w-max text-near_white border-near_black bg-near_black "
             >
               Регистрация
             </Link>
