@@ -317,7 +317,7 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
 
           <div className="w-full max-w-[280px] mt-3">
             <ButtonIlluminated
-              children={"Еще один ингредиент"}
+              children={"Еще один нутриент"}
               type="button"
               onClick={() => {
                 toAddAppend({
