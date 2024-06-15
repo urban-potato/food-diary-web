@@ -1,8 +1,11 @@
+import { FC } from "react";
 import Preloader from "../Preloader/Preloader";
 
-const LoaderWithBlock = () => {
+const LoaderWithBlock: FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+}) => {
   return (
-    <div className="loader_with_block" onClick={(e) => e.stopPropagation()}>
+    <div className={className} onClick={(e) => e.stopPropagation()}>
       <Preloader />
     </div>
   );

@@ -46,7 +46,7 @@ const FoodRecipeTile: FC<TProps> = ({ foodRecipe }) => {
     <div className="outer_box_style group w-full max-w-5xl mt-5">
       <div className="box_style "></div>
 
-      {mainlIsLoading && <LoaderWithBlock />}
+      {mainlIsLoading && <LoaderWithBlock className="loader_with_block" />}
 
       <div className="box_content_transition flex flex-col flex-wrap w-full justify-center items-start p-7">
         <div className="box_icons">

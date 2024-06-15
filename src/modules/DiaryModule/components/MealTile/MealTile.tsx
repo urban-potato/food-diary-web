@@ -54,7 +54,7 @@ const MealTile: FC<TProps> = ({
     >
       <div className="box_style"></div>
 
-      {mainlIsLoading && <LoaderWithBlock />}
+      {mainlIsLoading && <LoaderWithBlock className="loader_with_block" />}
 
       <div className="box_content_transition flex flex-col flex-wrap w-full justify-center items-start p-7">
         <div className="box_icons">

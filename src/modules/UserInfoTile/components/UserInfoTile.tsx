@@ -51,7 +51,7 @@ const UserInfoTile: FC = () => {
         <div className="outer_box_style group w-full max-w-5xl">
           <div className="box_style"></div>
 
-          {mainlIsLoading && <LoaderWithBlock />}
+          {mainlIsLoading && <LoaderWithBlock className="loader_with_block" />}
 
           <div className="box_content_transition flex flex-wrap w-full justify-center items-start p-7">
             <div className="ml-auto gap-x-2 flex justify-center items-start">
