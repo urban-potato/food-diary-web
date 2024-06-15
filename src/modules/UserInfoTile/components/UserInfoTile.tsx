@@ -7,8 +7,11 @@ import { useGetUserInfo } from "../hooks/use-get-user-info.hook.ts";
 import Preloader from "../../../components/Preloader/Preloader.tsx";
 import { useGetUserInfoQuery } from "../api/profile.api.ts";
 import { notify } from "../../../global/helpers/notify.helper.tsx";
+import LoaderWithBlock from "../../../components/LoaderWithBlock/LoaderWithBlock.tsx";
 
 const UserInfoTile: FC = () => {
+  const [mainlIsLoading, setMainIsLoading] = useState(false);
+
   let userInfo = useGetUserInfo();
 
   const {
@@ -47,6 +50,9 @@ const UserInfoTile: FC = () => {
       ) : (
         <div className="outer_box_style group w-full max-w-5xl">
           <div className="box_style"></div>
+
+          {mainlIsLoading && <LoaderWithBlock />}
+
           <div className="box_content_transition flex flex-wrap w-full justify-center items-start p-7">
             <div className="ml-auto gap-x-2 flex justify-center items-start">
               <span
@@ -81,6 +87,7 @@ const UserInfoTile: FC = () => {
                 }
                 setIsEditMode={setIsEditMode}
                 isEditMode={isEditMode}
+                setMainIsLoading={setMainIsLoading}
               />
             ) : (
               <UserInfoTileBody userInfo={dataGetUserInfo} />

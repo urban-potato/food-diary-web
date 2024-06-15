@@ -16,6 +16,7 @@ type TProps = {
   originalLastName: string;
   setIsEditMode: Function;
   isEditMode: boolean;
+  setMainIsLoading: Function;
 };
 
 type TSubmitData = {
@@ -31,6 +32,7 @@ const UserInfoEditForm: FC<TProps> = ({
   originalLastName,
   setIsEditMode,
   isEditMode,
+  setMainIsLoading,
 }) => {
   const [doChangeUserInfo] = useChangeUserInfoMutation();
 
@@ -58,6 +60,8 @@ const UserInfoEditForm: FC<TProps> = ({
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<TSubmitData> = async (data) => {
+    setMainIsLoading(true);
+
     let submitData: TSubmitData = {};
 
     if (data.email != originalEmail) submitData.email = data.email;
@@ -72,10 +76,6 @@ const UserInfoEditForm: FC<TProps> = ({
 
     await doChangeUserInfo(changeUserInfoData)
       .unwrap()
-      .then(() => {
-        reset();
-        setIsEditMode(!isEditMode);
-      })
       .catch((error) => {
         handleApiCallError({
           error: error,
@@ -83,6 +83,10 @@ const UserInfoEditForm: FC<TProps> = ({
           navigate: navigate,
         });
       });
+
+    setMainIsLoading(false);
+    reset();
+    setIsEditMode(!isEditMode);
   };
 
   useEffect(() => {

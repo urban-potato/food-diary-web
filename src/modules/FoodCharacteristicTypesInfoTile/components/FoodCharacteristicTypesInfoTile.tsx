@@ -10,8 +10,11 @@ import Preloader from "../../../components/Preloader/Preloader";
 import { useAppDispatch } from "../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper";
+import LoaderWithBlock from "../../../components/LoaderWithBlock/LoaderWithBlock";
 
 const FoodCharacteristicTypesInfoTile: FC = () => {
+  const [mainlIsLoading, setMainIsLoading] = useState(false);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -60,6 +63,9 @@ const FoodCharacteristicTypesInfoTile: FC = () => {
       ) : (
         <div className="outer_box_style group w-full max-w-5xl">
           <div className="box_style"></div>
+
+          {mainlIsLoading && <LoaderWithBlock />}
+
           <div className="box_content_transition flex flex-wrap w-full justify-center items-start p-7">
             <div className="ml-auto gap-x-2 flex justify-center items-start">
               <span
@@ -86,6 +92,7 @@ const FoodCharacteristicTypesInfoTile: FC = () => {
                 originalFoodCharacteristicTypes={sortedFoodCharacteristicTypes}
                 isEditMode={isEditMode}
                 setIsEditMode={setIsEditMode}
+                setMainIsLoading={setMainIsLoading}
               />
             ) : (
               <FoodCharacteristicTypesInfoTileBody

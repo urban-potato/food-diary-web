@@ -20,6 +20,7 @@ type TProps = {
   originalFoodCharacteristicTypes: IFoodCharacteristicType[];
   isEditMode: boolean;
   setIsEditMode: Function;
+  setMainIsLoading: Function;
 };
 
 type TFoodCharacteristicTypeInfoEditFormData = {
@@ -38,6 +39,7 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
   originalFoodCharacteristicTypes,
   isEditMode,
   setIsEditMode,
+  setMainIsLoading,
 }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -121,6 +123,8 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
   const onSubmit: SubmitHandler<
     TFoodCharacteristicTypeInfoEditFormData
   > = async (data) => {
+    setMainIsLoading(true);
+
     // Delete Nutrients List
     const deleteNutrientsList = originalIdsToRemoveRef.current;
 
@@ -236,6 +240,9 @@ const FoodCharacteristicTypesInfoEditForm: FC<TProps> = ({
         });
     }
 
+    console.log("HERE");
+
+    setMainIsLoading(false);
     reset();
     setIsEditMode(!isEditMode);
   };
