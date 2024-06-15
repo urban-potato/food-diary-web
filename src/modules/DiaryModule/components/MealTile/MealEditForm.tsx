@@ -878,7 +878,7 @@ const MealEditForm: FC<TProps> = ({
                     itemId={item.id}
                     itemIndex={index}
                     label={"Блюдо"}
-                    selectPlaceholder={"Введите название блюда"}
+                    selectPlaceholder={"Название..."}
                     handleRemoveItem={handleRemoveOriginalElementary}
                     controllerName={
                       `originalFoodElementaryList.${index}.foodElementaryId` as const
@@ -910,7 +910,7 @@ const MealEditForm: FC<TProps> = ({
                     itemId={item.id}
                     itemIndex={index}
                     label={"Блюдо"}
-                    selectPlaceholder={"Введите название блюда"}
+                    selectPlaceholder={"Название..."}
                     handleRemoveItem={handleRemoveOriginalRecipe}
                     controllerName={
                       `originalFoodRecipeList.${index}.foodRecipeId` as const
@@ -942,7 +942,7 @@ const MealEditForm: FC<TProps> = ({
                     itemId={item.id}
                     itemIndex={index}
                     label={"Блюдо"}
-                    selectPlaceholder={"Введите название блюда"}
+                    selectPlaceholder={"Название..."}
                     handleRemoveItem={handleRemoveFoodToAdd}
                     controllerName={`addFoodList.${index}.foodInfo` as const}
                     control={control}

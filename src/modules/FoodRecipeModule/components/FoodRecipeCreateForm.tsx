@@ -256,7 +256,7 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
                       itemId={item.id}
                       itemIndex={index}
                       label={"Ингредиент"}
-                      selectPlaceholder={"Введите название простого блюда"}
+                      selectPlaceholder={"Название..."}
                       handleRemoveItem={handleRemoveFoodToAdd}
                       controllerName={`addFoodList.${index}.foodInfo` as const}
                       control={control}

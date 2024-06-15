@@ -417,7 +417,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
                     itemId={item.id}
                     itemIndex={index}
                     label={"Ингредиент"}
-                    selectPlaceholder={"Введите название ингредиента"}
+                    selectPlaceholder={"Название..."}
                     handleRemoveItem={handleRemoveOriginalIngredient}
                     controllerName={
                       `originalIngredientsList.${index}.ingredientInfo` as const
@@ -455,7 +455,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
                     itemId={item.id}
                     itemIndex={index}
                     label={"Ингредиент"}
-                    selectPlaceholder={"Введите название ингредиента"}
+                    selectPlaceholder={"Название..."}
                     handleRemoveItem={handleRemoveIngredientToAdd}
                     controllerName={
                       `addIngredientsList.${index}.ingredientInfo` as const

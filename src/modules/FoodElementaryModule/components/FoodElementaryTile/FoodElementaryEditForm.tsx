@@ -554,7 +554,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
                     itemId={item.id}
                     itemIndex={index}
                     label={"Нутриент"}
-                    selectPlaceholder={"Введите название нутриента"}
+                    selectPlaceholder={"Название..."}
                     handleRemoveItem={handleRemoveOriginalCharacteristic}
                     controllerName={
                       `originalCharacteristicsList.${index}.characteristicInfo` as const
@@ -586,7 +586,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
                     itemId={item.id}
                     itemIndex={index}
                     label={"Нутриент"}
-                    selectPlaceholder={"Введите название нутриента"}
+                    selectPlaceholder={"Название..."}
                     handleRemoveItem={handleRemoveCharacteristicToAdd}
                     controllerName={
                       `addCharacteristicsList.${index}.characteristicInfo` as const
