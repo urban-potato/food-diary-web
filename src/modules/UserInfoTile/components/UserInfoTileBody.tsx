@@ -30,9 +30,7 @@ const UserInfoTileBody: FC<TProps> = ({ userInfo }) => {
   return (
     <div className="flex flex-col w-full gap-y-4 ">
       <div className="flex flex-wrap items-center gap-x-2 overflow-hidden">
-        <p className="break-all font-bold text-lg">
-          Почта:{" "}
-        </p>
+        <p className="break-all font-bold text-lg">Почта: </p>
         <p className="break-all">{userInfo.email}</p>
       </div>
 
@@ -46,14 +44,12 @@ const UserInfoTileBody: FC<TProps> = ({ userInfo }) => {
       </div>
 
       <div className="flex flex-wrap items-center gap-x-2 overflow-hidden">
-        <p className="break-all font-bold text-lg">
-          Фамилия:{" "}
-        </p>
+        <p className="break-all font-bold text-lg">Фамилия: </p>
 
         {userInfo.lastName ? (
           <p className="break-all">{userInfo.lastName}</p>
         ) : (
-          <p className="text-rose-700 font-bold">не указано</p>
+          <p className="text-rose-700 font-bold break-all">не указано</p>
         )}
       </div>
 
