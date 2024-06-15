@@ -421,7 +421,7 @@ const MealCreateForm: FC<TProps> = ({
   }, [dataGetAllMealTypes]);
 
   return (
-    <section className="flex-grow-100 w-full flex flex-col flex-wrap justify-center items-center mb-3">
+    <section className="flex-grow-100 w-full flex flex-col flex-wrap justify-start items-center mb-3">
       <h2 className="mt-4 mb-3">Новая запись</h2>
 
       <div className="outer_box_style group w-full max-w-5xl mt-5">
