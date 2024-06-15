@@ -507,6 +507,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
                     });
                   }}
                   className="p-[12px]"
+                  isDisabled={isValid ? false : true}
                 />
               </div>
             </div>

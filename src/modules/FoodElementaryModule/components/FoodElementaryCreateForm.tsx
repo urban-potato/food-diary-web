@@ -456,6 +456,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({
                     type="button"
                     onClick={() => handleAddNutrient()}
                     className="p-[12px]"
+                    isDisabled={isValid ? false : true}
                   />
                 </div>
               </div>

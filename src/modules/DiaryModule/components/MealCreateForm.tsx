@@ -533,6 +533,7 @@ const MealCreateForm: FC<TProps> = ({
                     type="button"
                     onClick={() => handleAddSelect()}
                     className="p-[12px]"
+                    isDisabled={isValid ? false : true}
                   />
                 </div>
               </div>
