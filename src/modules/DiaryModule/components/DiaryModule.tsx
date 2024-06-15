@@ -148,6 +148,7 @@ const DiaryModule: FC<TProps> = ({ requiredDate }) => {
               ? dataCourseMealDay?.items[0]?.characteristicsSum
               : []
           }
+          className="flex-row"
         />
       </section>
     </section>
