@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useRef } from "react";
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { useCreateFoodElementaryMutation } from "../api/food-elementary.api.ts";
@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper.ts";
 import Preloader from "../../../components/Preloader/Preloader.tsx";
 import { compareLabels } from "../../../global/helpers/compare-labels.helper.ts";
+import LoaderWithBlock from "../../../components/LoaderWithBlock/LoaderWithBlock.tsx";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -66,6 +67,8 @@ const FoodElementaryCreateForm: FC<TProps> = ({
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const [mainlIsLoading, setMainIsLoading] = useState(false);
 
   const [doCreateFoodElementary] = useCreateFoodElementaryMutation();
   const [doAddFoodCharacteristic] = useAddFoodCharacteristicMutation();
@@ -168,6 +171,8 @@ const FoodElementaryCreateForm: FC<TProps> = ({
   const onSubmit: SubmitHandler<TFoodElementaryCreateFormData> = async (
     data
   ) => {
+    setMainIsLoading(true);
+
     const defaultCharacteristics = data.defaultCharacteristicsList;
     const additionalCharacteristics = data.addCharacteristicsList;
 
@@ -222,6 +227,8 @@ const FoodElementaryCreateForm: FC<TProps> = ({
           await doAddFoodCharacteristic(addCharacteristicData)
             .unwrap()
             .catch((error) => {
+              setMainIsLoading(false);
+
               handleApiCallError({
                 error: error,
                 dispatch: dispatch,
@@ -231,12 +238,16 @@ const FoodElementaryCreateForm: FC<TProps> = ({
         }
       })
       .catch((error) => {
+        setMainIsLoading(false);
+
         handleApiCallError({
           error: error,
           dispatch: dispatch,
           navigate: navigate,
         });
       });
+
+    setMainIsLoading(false);
 
     reset();
 
@@ -313,6 +324,9 @@ const FoodElementaryCreateForm: FC<TProps> = ({
 
       <div className="outer_box_style group w-full max-w-5xl mt-5">
         <div className="box_style"></div>
+
+        {mainlIsLoading && <LoaderWithBlock />}
+
         <form
           className="box_content_transition flex flex-col flex-wrap w-full justify-center p-7"
           onSubmit={handleSubmit(onSubmit)}

@@ -41,6 +41,7 @@ type TProps = {
   originalCharacteristics: IFoodCharacteristic[];
   setIsEditMode: Function;
   isEditMode: boolean;
+  setMainIsLoading: Function;
 };
 
 type TFoodElementaryEditFormData = {
@@ -76,6 +77,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
   originalCharacteristics,
   setIsEditMode,
   isEditMode,
+  setMainIsLoading,
 }) => {
   // Characteristics forbidden to add
   const characteristicsForbiddenToAddIdsRef = useRef<Array<String>>(
@@ -288,6 +290,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
   }, [dirtyFields, touchedFields]);
 
   const onSubmit: SubmitHandler<TFoodElementaryEditFormData> = async (data) => {
+    setMainIsLoading(true);
+
     const foodElementaryNameOnForm = data.foodElementaryName;
     const caloriesValueOnForm = data.caloriesValue;
 
@@ -362,6 +366,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
       await doChangeFoodElementaryName(changeFoodElementaryNameData)
         .unwrap()
         .catch((error) => {
+          setMainIsLoading(false);
+
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -389,6 +395,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
       await doChangeFoodCharacteristicValue(changeCaloriesValueData)
         .unwrap()
         .catch((error) => {
+          setMainIsLoading(false);
+
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -420,6 +428,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
         await doDeleteFoodCharacteristic(deleteFoodCharacteristicData)
           .unwrap()
           .catch((error) => {
+            setMainIsLoading(false);
+
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -449,6 +459,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
       await doChangeFoodCharacteristicValue(changeCharacteristicValueData)
         .unwrap()
         .catch((error) => {
+          setMainIsLoading(false);
+
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -471,6 +483,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
       await doAddFoodCharacteristic(addCharacteristicData)
         .unwrap()
         .catch((error) => {
+          setMainIsLoading(false);
+
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -478,6 +492,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
           });
         });
     }
+
+    setMainIsLoading(false);
 
     reset();
 

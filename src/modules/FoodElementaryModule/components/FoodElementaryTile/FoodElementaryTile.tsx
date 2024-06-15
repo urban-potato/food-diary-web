@@ -7,6 +7,7 @@ import TileIcons from "../../../../components/TileIcons/TileIcons";
 import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
 import { useAppDispatch } from "../../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
+import LoaderWithBlock from "../../../../components/LoaderWithBlock/LoaderWithBlock";
 
 type TProps = {
   id: string;
@@ -16,6 +17,7 @@ type TProps = {
 
 const FoodElementaryTile: FC<TProps> = ({ id, name, characteristics }) => {
   const [isEditMode, setIsEditMode] = useState(false);
+  const [mainlIsLoading, setMainIsLoading] = useState(false);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -37,6 +39,9 @@ const FoodElementaryTile: FC<TProps> = ({ id, name, characteristics }) => {
   return (
     <div className="outer_box_style group w-full max-w-5xl mt-5">
       <div className="box_style"></div>
+
+      {mainlIsLoading && <LoaderWithBlock />}
+
       <div className="box_content_transition flex flex-col flex-wrap w-full justify-center items-start p-7">
         <div className="box_icons">
           <TileIcons
@@ -54,6 +59,7 @@ const FoodElementaryTile: FC<TProps> = ({ id, name, characteristics }) => {
             originalCharacteristics={characteristics}
             setIsEditMode={setIsEditMode}
             isEditMode={isEditMode}
+            setMainIsLoading={setMainIsLoading}
           />
         ) : (
           <FoodElementaryInfo
