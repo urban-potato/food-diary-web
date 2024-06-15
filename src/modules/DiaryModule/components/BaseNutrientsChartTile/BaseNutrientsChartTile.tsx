@@ -75,13 +75,15 @@ const BaseNutrientsChartTile: FC<TProps> = ({ nutrientsCaloriesData }) => {
 
   return (
     <div className="outer_box_style group h-full w-full max-w-max mt-1">
-      <div className="box_style"></div>
+      <div className="box_style "></div>
       <div
-        className="box_content_transition shadow-lg p-5 
+        className="box_content_transition p-5 
       flex flex-col flex-wrap justify-center items-start h-full w-full max-w-max"
       >
         <div className="w-full flex justify-center items-center text-center mb-3">
-          <p className="font-semibold">Доля БЖУ в калорийности</p>
+          <p className="font-semibold w-full break-words">
+            Доля БЖУ в калорийности
+          </p>
         </div>
 
         <DoughnutChart

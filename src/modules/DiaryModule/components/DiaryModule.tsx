@@ -60,8 +60,8 @@ const DiaryModule: FC<TProps> = ({ requiredDate }) => {
   }, []);
 
   return (
-    <section className="h-full w-full flex flex-wrap lg:flex-nowrap gap-3 justify-center">
-      <section className="lg:w-[20%] w-max flex flex-wrap justify-center items-center self-start lg:order-1 gap-5">
+    <section className="h-full w-full max-w-full flex flex-wrap lg:flex-nowrap gap-3 justify-center">
+      <section className="lg:w-[21%] lg:max-w-[21%] w-max max-w-full flex flex-wrap justify-center items-center self-start lg:order-1 gap-5">
         <Calendar
           locale={ru.code}
           value={requiredDate}
@@ -84,19 +84,20 @@ const DiaryModule: FC<TProps> = ({ requiredDate }) => {
           />
         </div>
 
-        <div className="flex-grow-1 lg:hidden max-w-max flex flex-wrap gap-3 w-full">
+        <div className="flex-grow-1 lg:hidden max-w-full flex flex-wrap gap-3 w-full">
           <DayCharacteristicsSumTile
             characteristicsSum={
               dataCourseMealDay?.items?.length > 0
                 ? dataCourseMealDay?.items[0]?.characteristicsSum
                 : []
             }
+            className="flex-row"
           />
         </div>
       </section>
 
       {isFutureDate ? (
-        <section className="flex flex-col justify-start items-center py-3 w-full max-w-5xl lg:order-2 order-3">
+        <section className="flex flex-col justify-start items-center py-3 w-full max-w-full lg:max-w-[55%] lg:order-2 order-3">
           <div className="text-2xl w-full flex flex-col justify-center items-center mt-10 ">
             <p className="block bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 font-bold">
               Поздравляем!
@@ -113,7 +114,7 @@ const DiaryModule: FC<TProps> = ({ requiredDate }) => {
           </div>
         </section>
       ) : (
-        <section className="flex flex-col justify-start items-center py-3 w-full max-w-5xl lg:order-2 order-3">
+        <section className="flex flex-col justify-start items-center py-3 w-full max-w-full lg:max-w-[55%] lg:order-2 order-3">
           <span className="my-3 w-full max-w-[280px]">
             <ButtonIlluminated
               children={showCreateForm ? "Скрыть" : "Новая запись"}
@@ -140,7 +141,7 @@ const DiaryModule: FC<TProps> = ({ requiredDate }) => {
         </section>
       )}
 
-      <section className="lg:w-[30%] lg:order-3 order-2 hidden lg:block">
+      <section className="lg:w-[22%] lg:max-w-[22%] lg:order-3 order-2 hidden lg:block w-full max-w-full">
         <DayCharacteristicsSumTile
           characteristicsSum={
             dataCourseMealDay?.items?.length > 0

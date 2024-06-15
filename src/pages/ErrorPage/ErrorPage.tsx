@@ -3,19 +3,19 @@ import { Link } from "react-router-dom";
 
 const ErrorPage: FC = () => {
   return (
-    <section className="h-full flex-grow flex flex-col justify-center items-center py-5 px-5 gap-y-1">
-      <div className="flex justify-center items-center w-full">
-        <h2 className="text-ellipsis overflow-hidden">Ой! Здесь пусто...</h2>
+    <section className="h-full flex-grow flex flex-col justify-center items-center py-5 px-5 gap-y-1 overflow-hidden">
+      <div className="flex justify-center items-center w-full overflow-hidden">
+        <h2 className="text-ellipsis">Ой! Здесь пусто...</h2>
       </div>
 
-      <div className="flex justify-center items-center w-full">
-        <h3 className="text-2xl text-ellipsis overflow-hidden">404 ошибка</h3>
+      <div className="flex justify-center items-center w-full overflow-hidden">
+        <h3 className="text-2xl text-ellipsis">404 ошибка</h3>
       </div>
 
-      <div className="flex justify-center items-center w-full">
+      <div className="flex justify-center items-center w-full overflow-hidden">
         <Link
           to="/"
-          className="text-ellipsis overflow-hidden underline hover:text-light_near_black transition duration-1000 hover:duration-500"
+          className="text-ellipsis underline hover:text-light_near_black transition duration-1000 hover:duration-500"
         >
           Вернуться на главную страницу
         </Link>

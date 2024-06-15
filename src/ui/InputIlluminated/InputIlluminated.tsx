@@ -54,11 +54,14 @@ const InputIlluminated: FC<TProps> = ({
   ...rest
 }) => {
   return (
-    <section className="flex flex-col">
-      <div className="flex mb-1">
-        <label htmlFor={id} className={cn("block truncate", labelClassName)}>
-          <h3 className="flex gap-x-1 truncate">
-            <p className="truncate">{inputLabel}</p>
+    <section className="flex flex-col w-full max-w-full">
+      <div className="flex mb-1 w-full max-w-full">
+        <label
+          htmlFor={id}
+          className={cn("block w-full max-w-full ", labelClassName)}
+        >
+          <h3 className="flex gap-x-1 overflow-hidden w-full max-w-full">
+            <p className="brake-words w-max max-w-full">{inputLabel}</p>
             <p className={isRequired ? "text-red" : "hidden"}>*</p>
           </h3>
         </label>

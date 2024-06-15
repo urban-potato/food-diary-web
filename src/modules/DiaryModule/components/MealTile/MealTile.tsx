@@ -45,7 +45,7 @@ const MealTile: FC<TProps> = ({
 
   return (
     <div
-      className={cn("outer_box_style group w-full max-w-5xl mt-5", className)}
+      className={cn("outer_box_style group w-full max-w-5xl mt-5 overflow-hidden", className)}
     >
       <div className="box_style"></div>
       <div className="box_content_transition flex flex-col flex-wrap w-full justify-center items-start p-7">

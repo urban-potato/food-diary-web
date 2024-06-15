@@ -10,7 +10,7 @@ const navItemVariants = cva(
     variants: {
       navItemVariant: {
         base: "max-w-[120px] min-w-[120px]",
-        logo: "max-w-[150px] min-w-[150px] mr-5",
+        logo: "max-w-[150px] min-w-0 mr-5",
       },
     },
     defaultVariants: {

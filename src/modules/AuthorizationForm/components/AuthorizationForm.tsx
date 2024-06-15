@@ -135,10 +135,10 @@ const AuthorizationForm: FC = () => {
   }
 
   return (
-    <section className="flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md text-">
-      <h2 className="mb-5">Войдите в аккаунт</h2>
+    <section className="flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md">
+      <h2 className="mb-5 break-words w-full">Войдите в аккаунт</h2>
 
-      <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+      <form className="flex flex-col w-full" onSubmit={handleSubmit(onSubmit)}>
         <div className="w-full flex-grow">
           <InputIlluminated
             id="email"
@@ -168,7 +168,7 @@ const AuthorizationForm: FC = () => {
           />
         </div>
 
-        <div className="">
+        <div className="w-full">
           <button
             type="submit"
             disabled={isValid ? false : true}
@@ -179,15 +179,17 @@ const AuthorizationForm: FC = () => {
             Войти
           </button>
 
-          <p className="truncate">
-            Нет аккаунта?{" "}
-            <Link
-              to="/register"
-              className="underline hover:text-light_near_black transition duration-1000 hover:duration-500"
-            >
-              Зарегистрируйтесь
-            </Link>
-          </p>
+          <div className="w-full overflow-hidden">
+            <p className="break-words w-full">
+              Нет аккаунта?{" "}
+              <Link
+                to="/register"
+                className="underline hover:text-light_near_black transition duration-1000 hover:duration-500"
+              >
+                Зарегистрируйтесь
+              </Link>
+            </p>
+          </div>
         </div>
       </form>
     </section>

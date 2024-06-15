@@ -13,7 +13,7 @@ const DiaryPage: FC = () => {
   }
 
   return (
-    <section className="flex flex-col h-fit w-full flex-grow">
+    <section className="flex flex-col h-fit w-full flex-grow max-w-full">
       <DiaryModule requiredDate={requiredDate} />
     </section>
   );

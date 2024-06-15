@@ -36,7 +36,7 @@
   }
 
   .nav_container {
-    @apply flex flex-wrap 
+    @apply flex flex-wrap w-full
 
         justify-center 
         items-center
@@ -51,9 +51,9 @@
      justify-center 
      items-center 
 
-     rounded-full
+     rounded-full w-max
 
-     truncate
+     break-words
 
      p-3
      h-14;
@@ -68,28 +68,12 @@
     justify-center 
     items-center 
 
-    truncate
+    break-all
 
     p-5
     my-7
 
     w-full;
-  }
-
-  .small_btn {
-    @apply border border-solid rounded-full
-    flex
-    flex-grow flex-shrink 
-
-    w-[50px]
-    h-[50px]
-
-    justify-center 
-    items-center 
-
-    truncate
-
-    p-5;
   }
 
   .btn_dark {

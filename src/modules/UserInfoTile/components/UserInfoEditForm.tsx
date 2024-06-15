@@ -92,7 +92,7 @@ const UserInfoEditForm: FC<TProps> = ({
   }, [dirtyFields, touchedFields]);
 
   return (
-    <div className="w-full max-w-5xl flex flex-col justify-center items-start -mt-5">
+    <div className="w-full max-w-5xl flex flex-col justify-center items-start">
       <form
         className="lex flex-col flex-wrap justify-center w-full"
         onSubmit={handleSubmit(onSubmit)}

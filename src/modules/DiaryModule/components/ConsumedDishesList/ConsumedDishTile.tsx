@@ -7,11 +7,9 @@ type TProps = {
 
 const ConsumedDishTile: FC<TProps> = ({ name, weight }) => {
   return (
-    <div className="truncate flex gap-4 w-full bg-near_white shadow-md rounded-xl p-3 justify-between max-w-max">
-      <p className="truncate">{name}</p>{" "}
-      <div className="flex gap-x-1">
-        <p>{weight}</p> <p>г.</p>
-      </div>
+    <div className="overflow-hidden flex flex-wrap gap-4 w-full bg-near_white shadow-md rounded-xl p-3 justify-between items-center max-w-max">
+      <p className="break-words max-w-full">{name}</p>{" "}
+      <p className="flex gap-x-1">{weight} г</p>
     </div>
   );
 };

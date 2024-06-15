@@ -21,15 +21,16 @@ const FoodElementaryInfo: FC<TProps> = ({
   );
 
   return (
-    <section className="flex flex-col w-full gap-5 -mt-6">
+    <section className="flex flex-col w-full gap-5">
       <div className="flex w-full">
-        <p className="text-xl font-bold truncate">{foodElementaryName}</p>
-        <div className="ml-auto gap-x-2 flex justify-center items-start w-16 flex-shrink-0"></div>
+        <p className="text-xl font-bold break-words max-w-full flex-shrink-1 flex-grow-1">
+          {foodElementaryName}
+        </p>
       </div>
 
       <div className="flex flex-col w-full">
-        <div className="font-semibold mb-1 text-[17px] truncate">
-          Калорийность на 100г:
+        <div className="font-semibold mb-1 text-[17px] break-all">
+          Калорийность на 100 г:
         </div>
         <div className="flex flex-wrap gap-3 w-full">
           <CharacteristicTilesList characteristicsList={calories} />
@@ -37,8 +38,8 @@ const FoodElementaryInfo: FC<TProps> = ({
       </div>
 
       <div className="flex flex-col w-full">
-        <div className="font-semibold mb-1 text-[17px] truncate">
-          Нутриенты на 100г:
+        <div className="font-semibold mb-1 text-[17px] break-all">
+          Нутриенты на 100 г:
         </div>
         <div className="flex flex-wrap gap-3 w-full">
           <CharacteristicTilesList characteristicsList={nutrients} />

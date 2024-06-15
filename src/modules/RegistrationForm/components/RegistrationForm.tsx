@@ -174,9 +174,9 @@ const RegistrationForm: FC = () => {
 
   return (
     <section className="flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md">
-      <h2 className="mb-5">Зарегистрируйтесь в FoodDiary</h2>
+      <h2 className="mb-5 w-full break-words">Зарегистрируйтесь в FoodDiary</h2>
 
-      <form className="" onSubmit={handleSubmit(onSubmit)}>
+      <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <div className="w-full flex-grow">
           <InputIlluminated
             id="email"
@@ -236,15 +236,17 @@ const RegistrationForm: FC = () => {
           Зарегистрироваться
         </button>
 
-        <p className="truncate">
-          Есть аккаунт?{" "}
-          <Link
-            to="/login"
-            className="underline hover:text-light_near_black transition duration-1000 hover:duration-500"
-          >
-            Войдите
-          </Link>
-        </p>
+        <div className="w-full overflow-hidden">
+          <p className="break-words w-full">
+            Есть аккаунт?{" "}
+            <Link
+              to="/login"
+              className="underline hover:text-light_near_black transition duration-1000 hover:duration-500"
+            >
+              Войдите
+            </Link>
+          </p>
+        </div>
       </form>
     </section>
   );

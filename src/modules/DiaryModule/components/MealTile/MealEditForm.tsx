@@ -825,7 +825,7 @@ const MealEditForm: FC<TProps> = ({
           </div>
         ) : (
           <>
-            <div className="w-full flex-grow flex flex-wrap sm:flex-nowrap justify-center items-start gap-y-1 gap-x-3 mb-5 -mt-5">
+            <div className="w-full flex-grow flex flex-wrap sm:flex-nowrap justify-center items-start gap-y-1 gap-x-3 mb-5">
               <div className="w-full">
                 <InputIlluminated
                   id={"FoodRecipeEditForm_creationTime"}

@@ -39,19 +39,18 @@ const MealTileBody: FC<TProps> = ({
 
   return (
     <>
-      <section className="flex flex-col w-full gap-5 -mt-6">
-        <div className="flex w-full">
-          <div className="flex gap-5 truncate">
-            <p className="text-xl font-bold truncate">
-              {creationTime.split(".")[0].split(":").slice(0, 2).join(":")}
-            </p>
-            <p className="text-xl font-bold truncate">{mealTypeName}</p>
-          </div>
-          <div className="ml-auto gap-x-2 flex justify-center items-start w-16 flex-shrink-0"></div>
+      <section className="flex flex-col w-full gap-5">
+        <div className="flex flex-wrap w-full gap-x-5 break-all">
+          <p className="text-xl font-bold break-all">
+            {creationTime.split(".")[0].split(":").slice(0, 2).join(":")}
+          </p>
+          <p className="text-xl font-bold break-all">{mealTypeName}</p>
         </div>
 
         <div className="flex flex-col w-full">
-          <div className="font-semibold mb-1 text-[17px] truncate">Состав:</div>
+          <div className="font-semibold mb-1 text-[17px] break-all">
+            Состав:
+          </div>
           <div className="flex flex-wrap gap-3 w-full">
             {consumedElementaries.length > 0 ? (
               <ConsumedDishesList consumedDishes={consumedElementaries} />
@@ -63,7 +62,7 @@ const MealTileBody: FC<TProps> = ({
         </div>
 
         <div className="flex flex-col w-full">
-          <div className="font-semibold mb-1 text-[17px] truncate">
+          <div className="font-semibold mb-1 text-[17px] break-all">
             Калорийность:
           </div>
           <div className="flex flex-wrap gap-3 w-full">
@@ -72,7 +71,7 @@ const MealTileBody: FC<TProps> = ({
         </div>
 
         <div className="flex flex-col w-full">
-          <div className="font-semibold mb-1 text-[17px] truncate">
+          <div className="font-semibold mb-1 text-[17px] break-all">
             Нутриенты:
           </div>
           <div className="flex flex-wrap gap-3 w-full">

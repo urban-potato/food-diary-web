@@ -65,7 +65,7 @@ const Layout: FC = () => {
   }, []);
 
   return (
-    <section className="min-h-screen h-full  flex flex-col text-near_black bg-near_white text-base">
+    <section className="min-h-screen h-full w-full max-w-full flex flex-col text-near_black bg-near_white text-base">
       {!endLoading ? (
         <span className="flex justify-center items-center h-screen w-full">
           <Preloader />

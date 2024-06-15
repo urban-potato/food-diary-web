@@ -11,8 +11,8 @@ const FoodCharacteristicTypesInfoTileBody: FC<TProps> = ({
 }) => {
   return (
     <div className="flex flex-col w-full gap-y-4">
-      <div className="w-full text-xl font-bold flex justify-center items-center -mt-5 mb-3">
-        <p className="truncate">Нутриенты</p>
+      <div className="w-full text-xl font-bold flex justify-center items-center mb-3">
+        <p className="break-words max-w-full">Нутриенты</p>
       </div>
 
       <div className="flex flex-wrap w-full gap-4">

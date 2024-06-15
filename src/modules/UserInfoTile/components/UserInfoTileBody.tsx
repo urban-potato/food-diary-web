@@ -28,30 +28,30 @@ const UserInfoTileBody: FC<TProps> = ({ userInfo }) => {
   };
 
   return (
-    <div className="flex flex-col w-full gap-y-4">
-      <div className="-mt-4 flex flex-wrap items-center gap-x-2">
-        <p className="text-ellipsis overflow-hidden font-bold text-lg">
+    <div className="flex flex-col w-full gap-y-4 ">
+      <div className="flex flex-wrap items-center gap-x-2 overflow-hidden">
+        <p className="break-all font-bold text-lg">
           Почта:{" "}
         </p>
-        <p className="text-ellipsis overflow-hidden">{userInfo.email}</p>
+        <p className="break-all">{userInfo.email}</p>
       </div>
 
-      <div className="flex flex-wrap items-center gap-x-2">
-        <p className="text-ellipsis overflow-hidden font-bold text-lg">Имя: </p>
+      <div className="flex flex-wrap items-center gap-x-2 overflow-hidden">
+        <p className="break-all font-bold text-lg">Имя: </p>
         {userInfo.firstName ? (
-          <p className="text-ellipsis overflow-hidden">{userInfo.firstName}</p>
+          <p className="break-all">{userInfo.firstName}</p>
         ) : (
-          <p className="text-rose-700 font-bold">не указано</p>
+          <p className="text-rose-700 font-bold break-all">не указано</p>
         )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-x-2 ">
-        <p className="text-ellipsis overflow-hidden font-bold text-lg">
+      <div className="flex flex-wrap items-center gap-x-2 overflow-hidden">
+        <p className="break-all font-bold text-lg">
           Фамилия:{" "}
         </p>
 
         {userInfo.lastName ? (
-          <p className="text-ellipsis overflow-hidden">{userInfo.lastName}</p>
+          <p className="break-all">{userInfo.lastName}</p>
         ) : (
           <p className="text-rose-700 font-bold">не указано</p>
         )}

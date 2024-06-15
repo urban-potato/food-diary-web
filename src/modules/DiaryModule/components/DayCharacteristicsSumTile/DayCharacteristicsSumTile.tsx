@@ -5,12 +5,16 @@ import { useGetAllFoodCharacteristicTypesQuery } from "../../../UserInfoTile";
 import { useAppDispatch } from "../../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
+import { cn } from "../../../../global/helpers/cn.helper";
 
 type TProps = {
   characteristicsSum: ICharacteristicsSum[];
-};
+} & React.HTMLAttributes<HTMLDivElement>;
 
-const DayCharacteristicsSumTile: FC<TProps> = ({ characteristicsSum }) => {
+const DayCharacteristicsSumTile: FC<TProps> = ({
+  characteristicsSum,
+  className,
+}) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -44,8 +48,10 @@ const DayCharacteristicsSumTile: FC<TProps> = ({ characteristicsSum }) => {
 
   return (
     <div
-      className="bg-gradient-to-r from-pink-200 to-violet-200 shadow-lg rounded-xl p-5 
-      flex flex-col flex-wrap justify-center items-start gap-3 w-full"
+      className={cn(
+        "bg-gradient-to-r from-pink-200 to-violet-200 shadow-lg rounded-xl p-5 max-w-full flex flex-col flex-wrap justify-center items-center gap-3 w-full",
+        className
+      )}
     >
       <CharacteristicTilesList characteristicsList={characteristicsSumList} />
     </div>
