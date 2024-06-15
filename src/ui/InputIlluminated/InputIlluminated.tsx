@@ -58,11 +58,11 @@ const InputIlluminated: FC<TProps> = ({
       <div className="flex mb-1 w-full max-w-full">
         <label
           htmlFor={id}
-          className={cn("block w-full max-w-full ", labelClassName)}
+          className={cn("block w-full max-w-full", labelClassName)}
         >
           <h3 className="flex gap-x-1 overflow-hidden w-full max-w-full">
             <p className="brake-words w-max max-w-full">{inputLabel}</p>
-            <p className={isRequired ? "text-red" : "hidden"}>*</p>
+            <p className={isRequired ? "text-red w-max" : "hidden"}>*</p>
           </h3>
         </label>
         {isSpaceAfterLabelNeeded ? (
