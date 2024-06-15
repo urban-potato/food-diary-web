@@ -8,6 +8,7 @@ import { useAppDispatch } from "../../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
 import { cn } from "../../../../global/helpers/cn.helper";
+import LoaderWithBlock from "../../../../components/LoaderWithBlock/LoaderWithBlock";
 
 type TProps = {
   mealDayId: string;
@@ -26,6 +27,7 @@ const MealTile: FC<TProps> = ({
   className,
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
+  const [mainlIsLoading, setMainIsLoading] = useState(false);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -45,9 +47,15 @@ const MealTile: FC<TProps> = ({
 
   return (
     <div
-      className={cn("outer_box_style group w-full max-w-5xl mt-5 overflow-hidden", className)}
+      className={cn(
+        "outer_box_style group w-full max-w-5xl mt-5 overflow-hidden",
+        className
+      )}
     >
       <div className="box_style"></div>
+
+      {mainlIsLoading && <LoaderWithBlock />}
+
       <div className="box_content_transition flex flex-col flex-wrap w-full justify-center items-start p-7">
         <div className="box_icons">
           <TileIcons
@@ -67,6 +75,7 @@ const MealTile: FC<TProps> = ({
             setIsEditMode={setIsEditMode}
             isEditMode={isEditMode}
             originalMealDayId={mealDayId}
+            setMainIsLoading={setMainIsLoading}
           />
         ) : (
           <MealTileBody

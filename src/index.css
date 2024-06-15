@@ -139,6 +139,20 @@
     group-focus-within:scale-101;
   }
 
+  .loader_with_block {
+    @apply bg-white opacity-70 rounded-xl w-full h-full absolute z-50 flex justify-center items-center 
+
+    transition duration-1000 
+
+     
+    group-hover:duration-500 
+    group-hover:scale-101
+
+     
+    group-focus-within:duration-500 
+    group-focus-within:scale-101;
+  }
+
   .box_content_transition {
     @apply relative
         

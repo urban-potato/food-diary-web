@@ -48,6 +48,7 @@ type TProps = {
   setIsEditMode: Function;
   isEditMode: boolean;
   originalMealDayId: string;
+  setMainIsLoading: Function;
 };
 
 type TMealEditFormData = {
@@ -106,6 +107,7 @@ const MealEditForm: FC<TProps> = ({
   setIsEditMode,
   isEditMode,
   originalMealDayId,
+  setMainIsLoading,
 }) => {
   const [mealTypeOptions, setMealTypeOptions] = useState<Array<TSelectOption>>(
     new Array()
@@ -337,6 +339,8 @@ const MealEditForm: FC<TProps> = ({
   };
 
   const onSubmit: SubmitHandler<TMealEditFormData> = async (data) => {
+    setMainIsLoading(true);
+
     const isChangeTimeNeeded = originalCreationTime != data.creationTime;
 
     // Delete Elementaries List
@@ -461,6 +465,8 @@ const MealEditForm: FC<TProps> = ({
             await doAddConsumedElementary(addFoodElementaryData)
               .unwrap()
               .catch((error) => {
+                setMainIsLoading(false);
+
                 handleApiCallError({
                   error: error,
                   dispatch: dispatch,
@@ -483,6 +489,8 @@ const MealEditForm: FC<TProps> = ({
             await doAddConsumedRecipe(addFoodRecipeData)
               .unwrap()
               .catch((error) => {
+                setMainIsLoading(false);
+
                 handleApiCallError({
                   error: error,
                   dispatch: dispatch,
@@ -494,6 +502,8 @@ const MealEditForm: FC<TProps> = ({
           await doDeleteCourseMeal(originalCourseMealId)
             .unwrap()
             .catch((error) => {
+              setMainIsLoading(false);
+
               handleApiCallError({
                 error: error,
                 dispatch: dispatch,
@@ -502,6 +512,8 @@ const MealEditForm: FC<TProps> = ({
             });
         })
         .catch((error) => {
+          setMainIsLoading(false);
+
           handleApiCallError({
             error: error,
             dispatch: dispatch,
@@ -532,6 +544,8 @@ const MealEditForm: FC<TProps> = ({
         await doChangeMealType(changeMealTypeData)
           .unwrap()
           .catch((error) => {
+            setMainIsLoading(false);
+
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -563,6 +577,8 @@ const MealEditForm: FC<TProps> = ({
         await doDeleteConsumedElementary(deleteConsumedElementaryData)
           .unwrap()
           .catch((error) => {
+            setMainIsLoading(false);
+
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -590,6 +606,8 @@ const MealEditForm: FC<TProps> = ({
         await doDeleteConsumedRecipe(deleteConsumedRecipeData)
           .unwrap()
           .catch((error) => {
+            setMainIsLoading(false);
+
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -624,6 +642,8 @@ const MealEditForm: FC<TProps> = ({
         )
           .unwrap()
           .catch((error) => {
+            setMainIsLoading(false);
+
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -650,6 +670,8 @@ const MealEditForm: FC<TProps> = ({
         await doChangeConsumedRecipeWeight(changeConsumedRecipeWeightData)
           .unwrap()
           .catch((error) => {
+            setMainIsLoading(false);
+
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -676,6 +698,8 @@ const MealEditForm: FC<TProps> = ({
         await doAddConsumedElementary(addFoodElementaryData)
           .unwrap()
           .catch((error) => {
+            setMainIsLoading(false);
+
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -699,6 +723,8 @@ const MealEditForm: FC<TProps> = ({
         await doAddConsumedRecipe(addFoodRecipeData)
           .unwrap()
           .catch((error) => {
+            setMainIsLoading(false);
+
             handleApiCallError({
               error: error,
               dispatch: dispatch,
@@ -707,6 +733,8 @@ const MealEditForm: FC<TProps> = ({
           });
       }
     }
+
+    setMainIsLoading(false);
 
     reset();
 
