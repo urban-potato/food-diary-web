@@ -620,7 +620,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
 
               <div className="w-full max-w-[280px] mt-3">
                 <ButtonIlluminated
-                  children={"Добавить нутриент"}
+                  children={"Еще один нутриент"}
                   type="button"
                   onClick={() => {
                     newCharacteristicsForbiddenToAddIdsRef.current.push("");

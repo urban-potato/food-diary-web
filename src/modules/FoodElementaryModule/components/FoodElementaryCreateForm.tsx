@@ -452,7 +452,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({
 
                 <div className="w-full max-w-[280px] mt-3">
                   <ButtonIlluminated
-                    children={"Добавить нутриент"}
+                    children={"Еще один нутриент"}
                     type="button"
                     onClick={() => handleAddNutrient()}
                     className="p-[12px]"
