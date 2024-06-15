@@ -9,12 +9,13 @@ import {
 } from "../../AuthorizationForm/api/authorization.api.ts";
 import { useLazyGetUserInfoQuery } from "../../UserInfoTile/index.ts";
 import { setTokenToLocalStorage } from "../../../global/helpers/local-storage.helper.ts";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import { login } from "../../UserInfoTile/index.ts";
 import { registrationValidationSchema } from "../constants/RegistrationForm.constants.ts";
 import { useRegisterMutation } from "../api/registration.api.ts";
 import { notify } from "../../../global/helpers/notify.helper.tsx";
+import LoaderWithBlock from "../../../components/LoaderWithBlock/LoaderWithBlock.tsx";
 
 interface FormType {
   email: string;
@@ -23,6 +24,8 @@ interface FormType {
 }
 
 const RegistrationForm: FC = () => {
+  const [mainlIsLoading, setMainIsLoading] = useState(false);
+
   const {
     register,
     reset,
@@ -46,6 +49,8 @@ const RegistrationForm: FC = () => {
   const [doRegister] = useRegisterMutation();
 
   const onSubmit: SubmitHandler<FormType> = async (data) => {
+    setMainIsLoading(true);
+
     const { email, password } = data;
 
     const registerData = {
@@ -158,6 +163,8 @@ const RegistrationForm: FC = () => {
           toastType: "error",
         });
       });
+
+    setMainIsLoading(false);
   };
 
   const isAuth = useIsAuth();
@@ -173,7 +180,11 @@ const RegistrationForm: FC = () => {
   }
 
   return (
-    <section className="flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md">
+    <section className="relative flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md">
+      {mainlIsLoading && (
+        <LoaderWithBlock className="loader_with_block_auth_reg" />
+      )}
+
       <h2 className="mb-5 w-full break-words">Зарегистрируйтесь в FoodDiary</h2>
 
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>

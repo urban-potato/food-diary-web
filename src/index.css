@@ -153,6 +153,10 @@
     group-focus-within:scale-101;
   }
 
+  .loader_with_block_auth_reg {
+    @apply absolute z-50 h-full w-full flex justify-center items-center;
+  }
+
   .box_content_transition {
     @apply relative
         

@@ -7,15 +7,18 @@ import {
   useLoginMutation,
 } from "../api/authorization.api.ts";
 import { setTokenToLocalStorage } from "../../../global/helpers/local-storage.helper.ts";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import InputIlluminated from "../../../ui/InputIlluminated/InputIlluminated.tsx";
 import { AuthorizationData } from "../types/AuthorizationForm.types.ts";
 import { authorizationValidationSchema } from "../constants/AuthorizationForm.constants.ts";
 import { notify } from "../../../global/helpers/notify.helper.tsx";
 import { login, useLazyGetUserInfoQuery } from "../../UserInfoTile/index.ts";
 import { useAppDispatch } from "../../../global/store/store-hooks.ts";
+import LoaderWithBlock from "../../../components/LoaderWithBlock/LoaderWithBlock.tsx";
 
 const AuthorizationForm: FC = () => {
+  const [mainlIsLoading, setMainIsLoading] = useState(false);
+
   const {
     register,
     reset,
@@ -38,6 +41,8 @@ const AuthorizationForm: FC = () => {
   const [doGetUserInfo] = useLazyGetUserInfoQuery();
 
   const onSubmit: SubmitHandler<AuthorizationData> = async (data) => {
+    setMainIsLoading(true);
+
     const { email, password } = data;
 
     const loginData = {
@@ -120,6 +125,8 @@ const AuthorizationForm: FC = () => {
           toastType: "error",
         });
       });
+
+    setMainIsLoading(false);
   };
 
   const isAuth = useIsAuth();
@@ -135,7 +142,11 @@ const AuthorizationForm: FC = () => {
   }
 
   return (
-    <section className="flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md">
+    <section className="relative flex-grow flex flex-col gap-y-3 justify-center w-full max-w-md">
+      {mainlIsLoading && (
+        <LoaderWithBlock className="loader_with_block_auth_reg" />
+      )}
+
       <h2 className="mb-5 break-words w-full">Войдите в аккаунт</h2>
 
       <form className="flex flex-col w-full" onSubmit={handleSubmit(onSubmit)}>
