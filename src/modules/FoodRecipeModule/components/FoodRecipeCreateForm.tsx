@@ -293,7 +293,7 @@ const FoodRecipeCreateForm: FC<TProps> = ({ setShowCreateForm }) => {
 
                 <div className="w-full max-w-[280px] mt-3">
                   <ButtonIlluminated
-                    children={"Еще одно блюдо"}
+                    children={"Еще один ингредиент"}
                     type="button"
                     onClick={() => handleAddSelect()}
                     className="p-[12px]"
