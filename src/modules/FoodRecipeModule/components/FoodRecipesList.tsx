@@ -36,14 +36,9 @@ const FoodRecipesList: FC = () => {
     ?.slice()
     ?.sort((a: IFoodRecipe, b: IFoodRecipe) => a.name.localeCompare(b.name))
     ?.map((item: IFoodRecipe) => {
-      if (item.ingredients.length > 0) {
-        return (
-          <FoodRecipeTile
-            key={`foodRecipesTiles_${item.id}`}
-            foodRecipe={item}
-          />
-        );
-      }
+      return (
+        <FoodRecipeTile key={`foodRecipesTiles_${item.id}`} foodRecipe={item} />
+      );
     });
 
   return (

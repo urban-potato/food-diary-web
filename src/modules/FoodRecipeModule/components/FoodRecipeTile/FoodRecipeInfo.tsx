@@ -40,16 +40,18 @@ const FoodRecipeInfo: FC<TProps> = ({
         </p>
       </div>
 
-      {ingredients.length > 0 ? (
-        <div className="flex flex-col w-full">
-          <div className="font-semibold mb-1 text-[17px] break-all">
-            Состав:
-          </div>
-          <div className="flex flex-wrap gap-3 w-full">
+      <div className="flex flex-col w-full">
+        <div className="font-semibold mb-1 text-[17px] break-all">Состав:</div>
+        <div className="flex flex-wrap gap-3 w-full">
+          {ingredients.length > 0 ? (
             <Ingredients ingredients={ingredients} />
-          </div>
+          ) : (
+            <p className="w-full break-words">
+              Отсутствует. Добавьте ингредиенты.
+            </p>
+          )}
         </div>
-      ) : null}
+      </div>
 
       <div className="flex flex-col w-full">
         <div className="font-semibold mb-1 text-[17px] break-all">

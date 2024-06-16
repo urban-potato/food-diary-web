@@ -36,11 +36,12 @@ const FoodRecipeTile: FC<TProps> = ({ foodRecipe }) => {
       });
   };
 
-  const sortedIngredients = foodRecipe.ingredients
-    .slice()
-    .sort((a: IIngredient, b: IIngredient) =>
-      a.foodElementary.name.localeCompare(b.foodElementary.name)
-    );
+  const sortedIngredients =
+    foodRecipe?.ingredients
+      ?.slice()
+      ?.sort((a: IIngredient, b: IIngredient) =>
+        a.foodElementary.name.localeCompare(b.foodElementary.name)
+      ) ?? [];
 
   return (
     <div className="outer_box_style group w-full max-w-5xl mt-5">
