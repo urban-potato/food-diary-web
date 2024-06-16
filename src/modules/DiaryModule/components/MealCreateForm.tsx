@@ -133,17 +133,15 @@ const MealCreateForm: FC<TProps> = ({
   }
 
   const loadSelectFoodOptions = () => {
-    const filteredElementaryOptions = dataGetAllFoodElementary?.items?.map(
-      (item: IFoodElementary) => {
+    const filteredElementaryOptions: TSelectFood[] =
+      dataGetAllFoodElementary?.items?.map((item: IFoodElementary) => {
         return { value: item.id, label: item.name, isElementary: true };
-      }
-    );
+      });
 
-    const filteredRecipeOptions = dataGetAllFoodRecipe?.items?.map(
-      (item: IFoodRecipe) => {
+    const filteredRecipeOptions: TSelectFood[] =
+      dataGetAllFoodRecipe?.items?.map((item: IFoodRecipe) => {
         return { value: item.id, label: item.name, isElementary: false };
-      }
-    );
+      });
 
     const filteredOptions = filteredElementaryOptions
       ?.concat(filteredRecipeOptions)
