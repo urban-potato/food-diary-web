@@ -34,6 +34,7 @@ import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../global/helpers/handle-api-call-error.helper";
 import { compareLabels } from "../../../global/helpers/compare-labels.helper";
 import LoaderWithBlock from "../../../components/LoaderWithBlock/LoaderWithBlock";
+import SelectRowWithWeightField from "../../../components/SelectRowWithWeightField/SelectRowWithWeightField";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -53,13 +54,13 @@ type TMealCreateFormData = {
   }[];
 };
 
-type TSelectElement = {
+type TSelectFood = {
   label: string;
   value: string;
   isElementary: boolean;
 };
 
-type TSelectOption = {
+type TSelectMealType = {
   label: string;
   value: string;
 };
@@ -69,11 +70,14 @@ const MealCreateForm: FC<TProps> = ({
   showCreateForm,
   date,
 }) => {
-  const [mealTypeOptions, setMealTypeOptions] = useState<Array<TSelectOption>>(
-    new Array()
-  );
+  const [selectFoodOptions, setSelectFoodOptions] = useState<
+    Array<TSelectFood>
+  >(new Array());
+  const [mealTypeOptions, setMealTypeOptions] = useState<
+    Array<TSelectMealType>
+  >(new Array());
   const [selectedMealTypeOption, setSelectedMealTypeOption] =
-    useState<TSelectOption | null>(null);
+    useState<TSelectMealType | null>(null);
 
   const newFoodForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
 
@@ -129,34 +133,34 @@ const MealCreateForm: FC<TProps> = ({
     });
   }
 
-  const loadOptions = (searchValue: string, callback: any) => {
-    const filteredElementaryData: IFoodElementary[] =
-      dataGetAllFoodElementary?.items.filter((item: IFoodElementary) =>
-        item.name.toLowerCase().includes(searchValue.toLowerCase())
-      );
-
-    const filteredElementaryOptions = filteredElementaryData.map((item) => {
-      return { value: item.id, label: item.name, isElementary: true };
-    });
-
-    const filteredReipeData: IFoodRecipe[] = dataGetAllFoodRecipe?.items.filter(
-      (item: IFoodRecipe) =>
-        item.name.toLowerCase().includes(searchValue.toLowerCase())
+  const loadSelectFoodOptions = () => {
+    const filteredElementaryOptions = dataGetAllFoodElementary?.items?.map(
+      (item) => {
+        return { value: item.id, label: item.name, isElementary: true };
+      }
     );
 
-    const filteredRecipeOptions = filteredReipeData.map((item) => {
+    const filteredRecipeOptions = dataGetAllFoodRecipe?.items?.map((item) => {
       return { value: item.id, label: item.name, isElementary: false };
     });
 
     const filteredOptions = filteredElementaryOptions
-      .concat(filteredRecipeOptions)
-      .filter(
-        (item) => !newFoodForbiddenToAddIdsRef.current.includes(item.value)
+      ?.concat(filteredRecipeOptions)
+      ?.filter(
+        (item) => !newFoodForbiddenToAddIdsRef.current.includes(item?.value)
       );
 
-    filteredOptions.sort(compareLabels);
+    filteredOptions?.sort(compareLabels);
 
-    callback(filteredOptions);
+    setSelectFoodOptions(filteredOptions ?? []);
+  };
+
+  useEffect(() => {
+    loadSelectFoodOptions();
+  }, [dataGetAllFoodElementary, dataGetAllFoodRecipe]);
+
+  const handleOnSelectInputChange = () => {
+    trigger();
   };
 
   // Meal Types for Select
@@ -218,6 +222,7 @@ const MealCreateForm: FC<TProps> = ({
     }
 
     addFoodListRemove(itemIndex);
+    loadSelectFoodOptions();
   };
 
   const onSubmit: SubmitHandler<TMealCreateFormData> = async (data) => {
@@ -365,11 +370,10 @@ const MealCreateForm: FC<TProps> = ({
     setShowCreateForm(!showCreateForm);
   };
 
-  const handleOnInputChange = () => {
-    trigger();
-  };
-
-  const handleOnChange = (newElement: TSelectElement, addFoodIndex: number) => {
+  const handleOnSelectValueChange = (
+    newElement: TSelectFood,
+    addFoodIndex: number
+  ) => {
     if (
       addFoodIndex > -1 &&
       addFoodIndex < newFoodForbiddenToAddIdsRef.current.length
@@ -380,6 +384,8 @@ const MealCreateForm: FC<TProps> = ({
         newElement.value
       );
     }
+
+    loadSelectFoodOptions();
   };
 
   const handleAddSelect = () => {
@@ -412,7 +418,7 @@ const MealCreateForm: FC<TProps> = ({
         ),
       ];
 
-      const selectOptions: TSelectOption[] = [];
+      const selectOptions: TSelectMealType[] = [];
 
       sortedMealTypeOptions.forEach((item: IMealType) =>
         selectOptions.push({
@@ -477,7 +483,7 @@ const MealCreateForm: FC<TProps> = ({
                   <Select
                     defaultValue={selectedMealTypeOption}
                     onChange={(newValue) =>
-                      setSelectedMealTypeOption(newValue as TSelectOption)
+                      setSelectedMealTypeOption(newValue as TSelectMealType)
                     }
                     options={mealTypeOptions}
                     placeholder={
@@ -496,7 +502,7 @@ const MealCreateForm: FC<TProps> = ({
               <div className="flex flex-col">
                 {addFoodListFields.map((item, index) => {
                   return (
-                    <AsyncSelectRowWithWeightField
+                    <SelectRowWithWeightField
                       key={`MealCreateForm_Div_addFoodList_${item.id}_${index}`}
                       itemId={item.id}
                       itemIndex={index}
@@ -508,9 +514,8 @@ const MealCreateForm: FC<TProps> = ({
                       register={{
                         ...register(`addFoodList.${index}.weight` as const),
                       }}
-                      loadSelectOptions={loadOptions}
-                      handleOnSelectInputChange={handleOnInputChange}
-                      handleOnSelectValueChange={handleOnChange}
+                      handleOnSelectInputChange={handleOnSelectInputChange}
+                      handleOnSelectValueChange={handleOnSelectValueChange}
                       isDeleteButtonDisabled={
                         addFoodListFields.length < 2 ? true : false
                       }
@@ -523,6 +528,7 @@ const MealCreateForm: FC<TProps> = ({
                         ].filter((item) => !!item) as string[]
                       }
                       linkForNoOptionsMessage={`${ROUTES_LIST.foodSimple}#`}
+                      selectOptions={selectFoodOptions}
                     />
                   );
                 })}
