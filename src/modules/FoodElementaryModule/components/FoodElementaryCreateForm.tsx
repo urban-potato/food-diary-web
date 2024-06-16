@@ -19,7 +19,6 @@ import {
 } from "../../../global/constants/constants.ts";
 import { sortCharacteristics } from "../../../global/helpers/sort-characteristics.helper.ts";
 import DisabledSelectRowWithWeightField from "../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField.tsx";
-import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField.tsx";
 import { replaceIncorrectDecimal } from "../../../global/helpers/replace-incorrect-decimal.helper.ts";
 import { useAppDispatch } from "../../../global/store/store-hooks.ts";
 import { useNavigate } from "react-router-dom";
@@ -27,6 +26,7 @@ import { handleApiCallError } from "../../../global/helpers/handle-api-call-erro
 import Preloader from "../../../components/Preloader/Preloader.tsx";
 import { compareLabels } from "../../../global/helpers/compare-labels.helper.ts";
 import LoaderWithBlock from "../../../components/LoaderWithBlock/LoaderWithBlock.tsx";
+import SelectRowWithWeightField from "../../../components/SelectRowWithWeightField/SelectRowWithWeightField.tsx";
 
 type TProps = {
   setShowCreateForm: Function;
@@ -61,6 +61,8 @@ const FoodElementaryCreateForm: FC<TProps> = ({
   setShowCreateForm,
   showCreateForm,
 }) => {
+  const [selectCharacteristicsOptions, setSelectCharacteristicsOptions] =
+    useState<Array<TSelectElement>>(new Array());
   const newCharacteristicsForbiddenToAddIdsRef = useRef<Array<String>>(
     new Array()
   );
@@ -95,28 +97,28 @@ const FoodElementaryCreateForm: FC<TProps> = ({
   }
 
   // Load Options for Async Select (Add new CHaracteristic)
-  const loadOptions = (searchValue: string, callback: any) => {
-    const filteredCharacteristicTypesData: IFoodCharacteristicType[] =
-      dataGetAllFoodCharacteristicTypes?.items.filter(
-        (item: IFoodCharacteristicType) =>
-          item.name.toLowerCase().includes(searchValue.toLowerCase())
+  const loadSelectCharacteristicsOptions = () => {
+    const filteredCharacteristicTypesOptions: TSelectElement[] =
+      dataGetAllFoodCharacteristicTypes?.items?.map(
+        (item: IFoodCharacteristicType) => {
+          return { value: item.id, label: item.name };
+        }
       );
 
-    const filteredCharacteristicTypesOptions =
-      filteredCharacteristicTypesData.map((item) => {
-        return { value: item.id, label: item.name };
-      });
-
-    const filteredOptions = filteredCharacteristicTypesOptions.filter(
+    const filteredOptions = filteredCharacteristicTypesOptions?.filter(
       (item) =>
-        !newCharacteristicsForbiddenToAddIdsRef.current.includes(item.value) &&
-        !BASIC_CHARACTERISTICS_IDS_LIST.includes(item.value)
+        !newCharacteristicsForbiddenToAddIdsRef.current.includes(item?.value) &&
+        !BASIC_CHARACTERISTICS_IDS_LIST.includes(item?.value)
     );
 
-    filteredOptions.sort(compareLabels);
+    filteredOptions?.sort(compareLabels);
 
-    callback(filteredOptions);
+    setSelectCharacteristicsOptions(filteredOptions ?? []);
   };
+
+  useEffect(() => {
+    loadSelectCharacteristicsOptions();
+  }, [dataGetAllFoodCharacteristicTypes]);
 
   // defaultValues
   let defaultValues = {
@@ -166,6 +168,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({
     }
 
     addCharacteristicListRemove(itemIndex);
+    loadSelectCharacteristicsOptions();
   };
 
   const onSubmit: SubmitHandler<TFoodElementaryCreateFormData> = async (
@@ -258,11 +261,14 @@ const FoodElementaryCreateForm: FC<TProps> = ({
     setShowCreateForm(!showCreateForm);
   };
 
-  const handleOnInputChange = () => {
+  const handleOnSelectInputChange = () => {
     trigger();
   };
 
-  const handleOnChange = (newElement: TSelectElement, addFoodIndex: number) => {
+  const handleOnSelectValueChange = (
+    newElement: TSelectElement,
+    addFoodIndex: number
+  ) => {
     if (
       addFoodIndex > -1 &&
       addFoodIndex < newCharacteristicsForbiddenToAddIdsRef.current.length
@@ -273,6 +279,8 @@ const FoodElementaryCreateForm: FC<TProps> = ({
         newElement.value
       );
     }
+
+    loadSelectCharacteristicsOptions();
   };
 
   useEffect(() => {
@@ -417,7 +425,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({
 
                 {addCharacteristicListFields.map((item, index) => {
                   return (
-                    <AsyncSelectRowWithWeightField
+                    <SelectRowWithWeightField
                       key={`FoodElementaryCreateForm_Div_addCharacteristicsList_${item.id}_${index}`}
                       itemId={item.id}
                       itemIndex={index}
@@ -433,9 +441,8 @@ const FoodElementaryCreateForm: FC<TProps> = ({
                           `addCharacteristicsList.${index}.characteristicValue` as const
                         ),
                       }}
-                      loadSelectOptions={loadOptions}
-                      handleOnSelectInputChange={handleOnInputChange}
-                      handleOnSelectValueChange={handleOnChange}
+                      handleOnSelectInputChange={handleOnSelectInputChange}
+                      handleOnSelectValueChange={handleOnSelectValueChange}
                       hasErrors={!!errors?.addCharacteristicsList}
                       errorMessagesList={
                         [
@@ -446,6 +453,7 @@ const FoodElementaryCreateForm: FC<TProps> = ({
                         ].filter((item) => !!item) as string[]
                       }
                       linkForNoOptionsMessage={`${ROUTES_LIST.profile}#nutrients`}
+                      selectOptions={selectCharacteristicsOptions}
                     />
                   );
                 })}
