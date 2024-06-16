@@ -6,9 +6,23 @@ import InputIlluminated from "../../ui/InputIlluminated/InputIlluminated";
 import ButtonIlluminated from "../../ui/ButtonIlluminated/ButtonIlluminated";
 import { Player } from "@lordicon/react";
 import DELETE_ICON from "../../global/assets/trash.json";
-import { ChangeEvent, FC, useRef } from "react";
+import { ChangeEvent, FC, useRef, useState } from "react";
 import { replaceIncorrectDecimal } from "../../global/helpers/replace-incorrect-decimal.helper";
 import Errors from "../../ui/Errors/Errors";
+import {
+  useFloating,
+  autoUpdate,
+  offset,
+  flip,
+  shift,
+  useHover,
+  useFocus,
+  useDismiss,
+  useRole,
+  useInteractions,
+  FloatingPortal,
+  useClick,
+} from "@floating-ui/react";
 
 type TProps = {
   itemId: any;
@@ -48,6 +62,43 @@ const SelectRowWithWeightField: FC<TProps> = ({
   const deleteIconPlayerRef = useRef<Player>(null);
   const ICON_SIZE = 28;
 
+  const selectValueLabelRef = useRef<string>("");
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { refs, floatingStyles, context } = useFloating({
+    open: isOpen,
+    onOpenChange: setIsOpen,
+    placement: "top",
+    // Make sure the tooltip stays on the screen
+    whileElementsMounted: autoUpdate,
+    middleware: [
+      offset(5),
+      flip({
+        fallbackAxisSideDirection: "start",
+      }),
+      shift(),
+    ],
+  });
+
+  // Event listeners to change the open state
+  //   const hover = useHover(context, { move: false });
+  const focus = useFocus(context);
+  const dismiss = useDismiss(context);
+  // Role props for screen readers
+  const role = useRole(context, { role: "tooltip" });
+
+  const click = useClick(context);
+
+  // Merge all the interactions into prop getters
+  const { getReferenceProps, getFloatingProps } = useInteractions([
+    // hover,
+    click,
+    focus,
+    dismiss,
+    role,
+  ]);
+
   return (
     <div className="form-control flex flex-col mb-1">
       <div className="gap-x-3 flex items-end">
@@ -56,28 +107,46 @@ const SelectRowWithWeightField: FC<TProps> = ({
             <h3>{label}</h3>
             <p className="text-red">*</p>
           </span>
-          <Controller
-            name={controllerName}
-            control={control}
-            render={({ field }) => (
-              <Select
-                {...field}
-                className="relative text-sm rounded-xl"
-                components={{
-                  NoOptionsMessage: NoOptionsMessage(linkForNoOptionsMessage),
-                }}
-                styles={SELECT_STYLES}
-                placeholder={selectPlaceholder}
-                onInputChange={handleOnSelectInputChange}
-                onChange={(newValue) => {
-                  handleOnSelectValueChange(newValue, itemIndex);
-                  field.onChange(newValue);
-                }}
-                maxMenuHeight={150}
-                options={selectOptions}
-              />
+          <div ref={refs.setReference} {...getReferenceProps()}>
+            <Controller
+              name={controllerName}
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  className="relative text-sm rounded-xl"
+                  components={{
+                    NoOptionsMessage: NoOptionsMessage(linkForNoOptionsMessage),
+                  }}
+                  styles={SELECT_STYLES}
+                  placeholder={selectPlaceholder}
+                  onInputChange={handleOnSelectInputChange}
+                  onChange={(newValue) => {
+                    handleOnSelectValueChange(newValue, itemIndex);
+                    field.onChange(newValue);
+
+                    selectValueLabelRef.current = newValue.label;
+                  }}
+                  maxMenuHeight={150}
+                  options={selectOptions}
+                />
+              )}
+            />
+            {selectValueLabelRef.current && (
+              <FloatingPortal>
+                {isOpen && (
+                  <div
+                    className="max-w-max bg-[#444] text-white text-[90%] px-2 py-1 rounded-lg lg:hidden"
+                    ref={refs.setFloating}
+                    style={floatingStyles}
+                    {...getFloatingProps()}
+                  >
+                    {selectValueLabelRef.current}
+                  </div>
+                )}
+              </FloatingPortal>
             )}
-          />
+          </div>
         </div>
 
         <div className="sm:max-w-[100px] max-w-[80px] flex-grow">
