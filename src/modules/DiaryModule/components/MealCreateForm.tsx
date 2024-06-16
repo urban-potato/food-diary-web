@@ -24,7 +24,6 @@ import {
 } from "../../../global/types/entities-types";
 
 import Preloader from "../../../components/Preloader/Preloader";
-import AsyncSelectRowWithWeightField from "../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
 import {
   ROUTES_LIST,
   SELECT_STYLES_SMALLER_HEIGHT,
@@ -135,19 +134,22 @@ const MealCreateForm: FC<TProps> = ({
 
   const loadSelectFoodOptions = () => {
     const filteredElementaryOptions = dataGetAllFoodElementary?.items?.map(
-      (item) => {
+      (item: IFoodElementary) => {
         return { value: item.id, label: item.name, isElementary: true };
       }
     );
 
-    const filteredRecipeOptions = dataGetAllFoodRecipe?.items?.map((item) => {
-      return { value: item.id, label: item.name, isElementary: false };
-    });
+    const filteredRecipeOptions = dataGetAllFoodRecipe?.items?.map(
+      (item: IFoodRecipe) => {
+        return { value: item.id, label: item.name, isElementary: false };
+      }
+    );
 
     const filteredOptions = filteredElementaryOptions
       ?.concat(filteredRecipeOptions)
       ?.filter(
-        (item) => !newFoodForbiddenToAddIdsRef.current.includes(item?.value)
+        (item: TSelectFood) =>
+          !newFoodForbiddenToAddIdsRef.current.includes(item?.value)
       );
 
     filteredOptions?.sort(compareLabels);
