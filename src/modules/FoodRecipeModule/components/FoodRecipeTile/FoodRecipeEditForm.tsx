@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import {
   IFoodElementary,
@@ -16,13 +16,13 @@ import { editFoodRecipeValidationSchema } from "../../constants/FoodRecipeModule
 import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated";
 import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated";
 import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField";
-import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField";
 import { useAppDispatch } from "../../../../global/store/store-hooks";
 import { useNavigate } from "react-router-dom";
 import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper";
 import Preloader from "../../../../components/Preloader/Preloader";
 import { compareLabels } from "../../../../global/helpers/compare-labels.helper";
 import { ROUTES_LIST } from "../../../../global/constants/constants";
+import SelectRowWithWeightField from "../../../../components/SelectRowWithWeightField/SelectRowWithWeightField";
 
 type TProps = {
   foodRecipeId: string;
@@ -64,6 +64,10 @@ const FoodRecipeEditForm: FC<TProps> = ({
   isEditMode,
   setMainIsLoading,
 }) => {
+  const [selectIngredientsOptions, setSelectIngredientsOptions] = useState<
+    Array<TSelectElement>
+  >(new Array());
+
   const ingredientsForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
   const newIngredientsForbiddenToAddIdsRef = useRef<Array<String>>(new Array());
 
@@ -121,26 +125,26 @@ const FoodRecipeEditForm: FC<TProps> = ({
   });
 
   // Load Options for Async Select (Add new Ingredient)
-  const loadOptions = (searchValue: string, callback: any) => {
-    const filteredElementaryData: IFoodElementary[] =
-      dataGetAllFoodElementary?.items.filter((item: IFoodElementary) =>
-        item.name.toLowerCase().includes(searchValue.toLowerCase())
-      );
+  const loadSelectIngredientsOptions = () => {
+    const filteredElementaryOptions: TSelectElement[] =
+      dataGetAllFoodElementary?.items?.map((item: IFoodElementary) => {
+        return { value: item.id, label: item.name };
+      });
 
-    const filteredElementaryOptions = filteredElementaryData.map((item) => {
-      return { value: item.id, label: item.name };
-    });
-
-    const filteredOptions = filteredElementaryOptions.filter(
+    const filteredOptions = filteredElementaryOptions?.filter(
       (item) =>
-        !ingredientsForbiddenToAddIdsRef.current.includes(item.value) &&
-        !newIngredientsForbiddenToAddIdsRef.current.includes(item.value)
+        !ingredientsForbiddenToAddIdsRef.current.includes(item?.value) &&
+        !newIngredientsForbiddenToAddIdsRef.current.includes(item?.value)
     );
 
-    filteredOptions.sort(compareLabels);
+    filteredOptions?.sort(compareLabels);
 
-    callback(filteredOptions);
+    setSelectIngredientsOptions(filteredOptions ?? []);
   };
+
+  useEffect(() => {
+    loadSelectIngredientsOptions();
+  }, [dataGetAllFoodElementary]);
 
   // For Generating Original Ingredients Fields
   const {
@@ -180,6 +184,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
     }
 
     originalIngredientsRemove(itemIndex);
+    loadSelectIngredientsOptions();
   };
 
   const handleRemoveIngredientToAdd = (itemIndex: number) => {
@@ -191,13 +196,17 @@ const FoodRecipeEditForm: FC<TProps> = ({
     }
 
     addIngredientsListRemove(itemIndex);
+    loadSelectIngredientsOptions();
   };
 
-  const handleOnInputChange = () => {
+  const handleOnSelectInputChange = () => {
     trigger();
   };
 
-  const handleOnChange = (newElement: TSelectElement, addFoodIndex: number) => {
+  const handleOnSelectValueChange = (
+    newElement: TSelectElement,
+    addFoodIndex: number
+  ) => {
     if (
       addFoodIndex > -1 &&
       addFoodIndex < newIngredientsForbiddenToAddIdsRef.current.length
@@ -208,6 +217,8 @@ const FoodRecipeEditForm: FC<TProps> = ({
         newElement.value
       );
     }
+
+    loadSelectIngredientsOptions();
   };
 
   useEffect(() => {
@@ -227,6 +238,8 @@ const FoodRecipeEditForm: FC<TProps> = ({
         originalIngredient.ingredientInfo.value
       );
     });
+
+    loadSelectIngredientsOptions();
   }, []);
 
   const onSubmit: SubmitHandler<TFoodRecipeEditFormData> = async (data) => {
@@ -456,7 +469,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
 
               {addIngredientsListFields.map((item, index) => {
                 return (
-                  <AsyncSelectRowWithWeightField
+                  <SelectRowWithWeightField
                     key={`FoodRecipeEditForm_Div_addIngredientsList_${item.id}_${index}`}
                     itemId={item.id}
                     itemIndex={index}
@@ -472,9 +485,8 @@ const FoodRecipeEditForm: FC<TProps> = ({
                         `addIngredientsList.${index}.weight` as const
                       ),
                     }}
-                    loadSelectOptions={loadOptions}
-                    handleOnSelectInputChange={handleOnInputChange}
-                    handleOnSelectValueChange={handleOnChange}
+                    handleOnSelectInputChange={handleOnSelectInputChange}
+                    handleOnSelectValueChange={handleOnSelectValueChange}
                     isDeleteButtonDisabled={
                       originalIngredientsFields.length +
                         addIngredientsListFields.length <
@@ -491,6 +503,7 @@ const FoodRecipeEditForm: FC<TProps> = ({
                       ].filter((item) => !!item) as string[]
                     }
                     linkForNoOptionsMessage={`${ROUTES_LIST.foodSimple}#`}
+                    selectOptions={selectIngredientsOptions}
                   />
                 );
               })}
