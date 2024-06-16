@@ -7,7 +7,7 @@ import {
   useFormState,
 } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ChangeEvent, FC, useEffect, useRef } from "react";
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import ButtonIlluminated from "../../../../ui/ButtonIlluminated/ButtonIlluminated.tsx";
 import InputIlluminated from "../../../../ui/InputIlluminated/InputIlluminated.tsx";
 import {
@@ -27,13 +27,13 @@ import {
   ROUTES_LIST,
 } from "../../../../global/constants/constants.ts";
 import DisabledSelectRowWithWeightField from "../../../../components/DisabledSelectRowWithWeightField/DisabledSelectRowWithWeightField.tsx";
-import AsyncSelectRowWithWeightField from "../../../../components/AsyncSelectRowWithWeightField/AsyncSelectRowWithWeightField.tsx";
 import { replaceIncorrectDecimal } from "../../../../global/helpers/replace-incorrect-decimal.helper.ts";
 import { handleApiCallError } from "../../../../global/helpers/handle-api-call-error.helper.ts";
 import { useAppDispatch } from "../../../../global/store/store-hooks.ts";
 import { useNavigate } from "react-router-dom";
 import Preloader from "../../../../components/Preloader/Preloader.tsx";
 import { compareLabels } from "../../../../global/helpers/compare-labels.helper.ts";
+import SelectRowWithWeightField from "../../../../components/SelectRowWithWeightField/SelectRowWithWeightField.tsx";
 
 type TProps = {
   foodElementaryId: string;
@@ -79,6 +79,9 @@ const FoodElementaryEditForm: FC<TProps> = ({
   isEditMode,
   setMainIsLoading,
 }) => {
+  const [selectCharacteristicsOptions, setSelectCharacteristicsOptions] =
+    useState<Array<TSelectElement>>(new Array());
+
   // Characteristics forbidden to add
   const characteristicsForbiddenToAddIdsRef = useRef<Array<String>>(
     new Array()
@@ -153,29 +156,29 @@ const FoodElementaryEditForm: FC<TProps> = ({
   const { dirtyFields, touchedFields } = useFormState({ control });
 
   // Load Options for Async Select (Add new CHaracteristic)
-  const loadOptions = (searchValue: string, callback: any) => {
-    const filteredCharacteristicTypesData: IFoodCharacteristicType[] =
-      dataGetAllFoodCharacteristicTypes?.items.filter(
-        (item: IFoodCharacteristicType) =>
-          item.name.toLowerCase().includes(searchValue.toLowerCase())
+  const loadSelectCharacteristicsOptions = () => {
+    const filteredCharacteristicTypesOptions: TSelectElement[] =
+      dataGetAllFoodCharacteristicTypes?.items?.map(
+        (item: IFoodCharacteristicType) => {
+          return { value: item.id, label: item.name };
+        }
       );
 
-    const filteredCharacteristicTypesOptions =
-      filteredCharacteristicTypesData.map((item) => {
-        return { value: item.id, label: item.name };
-      });
-
-    const filteredOptions = filteredCharacteristicTypesOptions.filter(
+    const filteredOptions = filteredCharacteristicTypesOptions?.filter(
       (item) =>
-        !characteristicsForbiddenToAddIdsRef.current.includes(item.value) &&
-        !newCharacteristicsForbiddenToAddIdsRef.current.includes(item.value) &&
-        item.value != CALORIES_DEFAULT_ID
+        !characteristicsForbiddenToAddIdsRef.current.includes(item?.value) &&
+        !newCharacteristicsForbiddenToAddIdsRef.current.includes(item?.value) &&
+        item?.value != CALORIES_DEFAULT_ID
     );
 
-    filteredOptions.sort(compareLabels);
+    filteredOptions?.sort(compareLabels);
 
-    callback(filteredOptions);
+    setSelectCharacteristicsOptions(filteredOptions ?? []);
   };
+
+  useEffect(() => {
+    loadSelectCharacteristicsOptions();
+  }, [dataGetAllFoodCharacteristicTypes]);
 
   // For Generating Original Characteristic Fields
   const {
@@ -225,6 +228,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
     }
 
     originalCharacteristicsRemove(itemIndex);
+    loadSelectCharacteristicsOptions();
   };
 
   const handleRemoveCharacteristicToAdd = (itemIndex: number) => {
@@ -236,13 +240,17 @@ const FoodElementaryEditForm: FC<TProps> = ({
     }
 
     addCharacteristicListRemove(itemIndex);
+    loadSelectCharacteristicsOptions();
   };
 
-  const handleOnInputChange = () => {
+  const handleOnSelectInputChange = () => {
     trigger();
   };
 
-  const handleOnChange = (newElement: TSelectElement, addFoodIndex: number) => {
+  const handleOnSelectValueChange = (
+    newElement: TSelectElement,
+    addFoodIndex: number
+  ) => {
     if (
       addFoodIndex > -1 &&
       addFoodIndex < newCharacteristicsForbiddenToAddIdsRef.current.length
@@ -253,6 +261,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
         newElement.value
       );
     }
+
+    loadSelectCharacteristicsOptions();
   };
 
   useEffect(() => {
@@ -281,6 +291,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
         originalCharacteristic.characteristicInfo.characteristicTypeId
       );
     });
+
+    loadSelectCharacteristicsOptions();
   }, []);
 
   useEffect(() => {
@@ -585,7 +597,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
 
               {addCharacteristicListFields.map((item, index) => {
                 return (
-                  <AsyncSelectRowWithWeightField
+                  <SelectRowWithWeightField
                     key={`FoodElementaryEditForm_Div_addCharacteristicsList_${item.id}_${index}`}
                     itemId={item.id}
                     itemIndex={index}
@@ -601,9 +613,8 @@ const FoodElementaryEditForm: FC<TProps> = ({
                         `addCharacteristicsList.${index}.characteristicValue` as const
                       ),
                     }}
-                    loadSelectOptions={loadOptions}
-                    handleOnSelectInputChange={handleOnInputChange}
-                    handleOnSelectValueChange={handleOnChange}
+                    handleOnSelectInputChange={handleOnSelectInputChange}
+                    handleOnSelectValueChange={handleOnSelectValueChange}
                     hasErrors={!!errors?.addCharacteristicsList}
                     errorMessagesList={
                       [
@@ -614,6 +625,7 @@ const FoodElementaryEditForm: FC<TProps> = ({
                       ].filter((item) => !!item) as string[]
                     }
                     linkForNoOptionsMessage={`${ROUTES_LIST.profile}#nutrients`}
+                    selectOptions={selectCharacteristicsOptions}
                   />
                 );
               })}
