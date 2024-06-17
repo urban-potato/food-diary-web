@@ -52,6 +52,26 @@ export const SELECT_STYLES_SMALLER_HEIGHT: StylesConfig = {
   }),
 };
 
+export const SELECT_STYLES_DISABLED: StylesConfig = {
+  ...SELECT_STYLES,
+  control: (styles) => ({
+    ...styles,
+    backgroundColor: "white",
+    borderRadius: "12px",
+    border: 0,
+    boxShadow: "none",
+    color: "black",
+  }),
+  option: (base) => ({
+    ...base,
+    color: "black",
+  }),
+  singleValue: (base) => ({
+    ...base,
+    color: "black",
+  }),
+};
+
 type TFoodType = {
   simple: string;
   complex: string;

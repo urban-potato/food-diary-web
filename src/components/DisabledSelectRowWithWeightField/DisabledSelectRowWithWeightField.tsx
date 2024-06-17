@@ -1,6 +1,9 @@
 import { Controller } from "react-hook-form";
 import Select from "react-select";
-import { DECIMAL_REGEX, SELECT_STYLES } from "../../global/constants/constants";
+import {
+  DECIMAL_REGEX,
+  SELECT_STYLES_DISABLED,
+} from "../../global/constants/constants";
 import ButtonIlluminated from "../../ui/ButtonIlluminated/ButtonIlluminated";
 import { ChangeEvent, FC, useRef, useState } from "react";
 import { Player } from "@lordicon/react";
@@ -109,7 +112,7 @@ const DisabledSelectRowWithWeightField: FC<TProps> = ({
                   <Select
                     {...field}
                     className="relative text-sm rounded-xl"
-                    styles={SELECT_STYLES}
+                    styles={SELECT_STYLES_DISABLED}
                     isDisabled={true}
                     placeholder={selectPlaceholder}
                   />

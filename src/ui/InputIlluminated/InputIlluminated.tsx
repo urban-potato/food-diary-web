@@ -88,7 +88,8 @@ const InputIlluminated: FC<TProps> = ({
           id={id}
           style={{
             backgroundColor: bg,
-            color: isDisabled ? "gray" : "black",
+            // color: isDisabled ? "gray" : "black",
+            color: "black",
           }}
           className={cn("relative text-sm border-0", className)}
           disabled={isDisabled}
